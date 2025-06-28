@@ -1036,13 +1036,13 @@ summer:AddToggle("auto_collect_fruit_toggle", {
     Callback = function(state)
         autoCollectFruit = state
         if billboardGui then
-            local timerLabel = billboardGui:FindFirstChild("Timer")
+            -- local timerLabel = billboardGui:FindFirstChild("Timer")
             local checkEvent = billboardGui:FindFirstChild("TextLabel")
-            if timerLabel and timerLabel:IsA("TextLabel") then
-                local timerValue = parseCompactTime(timerLabel.Text)
-                local eventIsOngoing = checkEvent == "Summer Harvest Ends:"
+            if checkEvent and checkEvent:IsA("TextLabel") then
+                -- local timerValue = parseCompactTime(timerLabel.Text)
+                local eventIsOngoing = checkEvent.Text == "Summer Harvest Ends:"
                 -- print("Next Summer Event in", timerValue)
-                local state = timerValue <= 0
+                -- local state = timerValue <= 0
                 if autoCollectFruit and eventIsOngoing == true then
                     Library:Notify("Auto collect for selected fruits enabled!")
                     task.spawn(function()

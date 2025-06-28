@@ -402,9 +402,6 @@ end
 
 task.spawn(function()
     while true do
-        -- local sign = workspace.Interaction.UpdateItems.SummerHarvestEvent.Sign
-        local part = sign:GetChildren()[4]
-        local billboardGui = part:FindFirstChild("BillboardGui")
         if billboardGui then
             local timerLabel = billboardGui:FindFirstChild("Timer")
             if timerLabel and timerLabel:IsA("TextLabel") then
@@ -1002,9 +999,6 @@ creditsGroup:AddButton({
 
 task.spawn(function()
     while true do
-        -- local sign = workspace.Interaction.UpdateItems.SummerHarvestEvent.Sign
-        local part = sign:GetChildren()[4]
-        local billboardGui = part:FindFirstChild("BillboardGui")
         if billboardGui then
             local timerLabel = billboardGui:FindFirstChild("Timer")
             local checkEvent = billboardGui:FindFirstChild("TextLabel")
@@ -1041,9 +1035,6 @@ summer:AddToggle("auto_collect_fruit_toggle", {
     Default = false,
     Callback = function(state)
         autoCollectFruit = state
-        local sign = workspace.Interaction.UpdateItems.SummerHarvestEvent.Sign
-        local part = sign:GetChildren()[4]
-        local billboardGui = part:FindFirstChild("BillboardGui")
         if billboardGui then
             local timerLabel = billboardGui:FindFirstChild("Timer")
             local checkEvent = billboardGui:FindFirstChild("TextLabel")

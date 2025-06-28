@@ -1029,63 +1029,70 @@ task.spawn(function()
 end)
 
 local autoCollectFruit = false
+local isCollecting = false
 
 summer:AddToggle("auto_collect_fruit_toggle", {
     Text = "Auto Collect Summer Fruit",
     Default = false,
     Callback = function(state)
         autoCollectFruit = state
-        if billboardGui then
-            -- local timerLabel = billboardGui:FindFirstChild("Timer")
-            local checkEvent = billboardGui:FindFirstChild("TextLabel")
-            if checkEvent and checkEvent:IsA("TextLabel") then
-                -- local timerValue = parseCompactTime(timerLabel.Text)
-                local eventIsOngoing = checkEvent.Text == "Summer Harvest Ends:"
-                -- print("Next Summer Event in", timerValue)
-                -- local state = timerValue <= 0
-                if autoCollectFruit and eventIsOngoing == true then
-                    Library:Notify("Auto collect for selected fruits enabled!")
-                    task.spawn(function()
-                        while autoCollectFruit do
-                            local players = game:GetService("Players")
-                            local replicated_storage = game:GetService("ReplicatedStorage")
-                            local get_farm = workspace.Farm:GetChildren()[farmNumber]
-                            local byte_net_reliable = replicated_storage:WaitForChild("ByteNetReliable")
-                            local buffer = buffer.fromstring("\1\1\0\1")
+        if autoCollectFruit then
+            task.spawn(function()
+                while autoCollectFruit do
+                    task.wait(1) -- avoid a tight loop
 
-                            local local_player = players.LocalPlayer
-                            local farm = get_farm
-                            if not farm or not farm.Important or not farm.Important:FindFirstChild("Plants_Physical") then
-                                Library:Notify("Could not find your farm plants.")
-                                break
-                            end
+                    if not billboardGui then continue end
 
-                            for _, v in next, farm.Important.Plants_Physical:GetChildren() do
-                                if isTargetFruit(v) then
-                                    byte_net_reliable:FireServer(buffer, { v })
+                    local checkEvent = billboardGui:FindFirstChild("TextLabel")
+                    if not (checkEvent and checkEvent:IsA("TextLabel")) then
+                        Library:Notify("There is an error to timer. Please report it on discord")
+                        break
+                    end
+
+                    local eventIsOngoing = checkEvent.Text == "Summer Harvest Ends:"
+                    if eventIsOngoing and not isCollecting then
+                        isCollecting = true
+                        -- Library:Notify("Auto collect for selected fruits enabled!")
+
+                        task.spawn(function()
+                            while autoCollectFruit and eventIsOngoing do
+                                local players = game:GetService("Players")
+                                local replicated_storage = game:GetService("ReplicatedStorage")
+                                local byte_net_reliable = replicated_storage:WaitForChild("ByteNetReliable")
+                                local buffer = buffer.fromstring("\1\1\0\1")
+                                local farm = workspace.Farm:GetChildren()[farmNumber]
+
+                                if not farm or not farm:FindFirstChild("Important") or not farm.Important:FindFirstChild("Plants_Physical") then
+                                    Library:Notify("Could not find your farm plants.")
+                                    break
                                 end
-                                if v:FindFirstChild("Fruits", true) then
-                                    for _, i in next, v.Fruits:GetChildren() do
-                                        if isTargetFruit(i) then
-                                            byte_net_reliable:FireServer(buffer, { i })
-                                            
+
+                                for _, v in next, farm.Important.Plants_Physical:GetChildren() do
+                                    if isTargetFruit(v) then
+                                        byte_net_reliable:FireServer(buffer, { v })
+                                    end
+                                    local fruits = v:FindFirstChild("Fruits", true)
+                                    if fruits then
+                                        for _, i in next, fruits:GetChildren() do
+                                            if isTargetFruit(i) then
+                                                byte_net_reliable:FireServer(buffer, { i })
+                                            end
                                         end
                                     end
                                 end
+                                task.wait(2)
                             end
-                            task.wait(2)
-                        end
-                        Library:Notify("Auto collect summer fruits enabled!")
-                    end)
-                elseif autoCollectFruit and not eventIsOngoing then
-                    Library:Notify("Auto collect summer fruit is on, wait for the summer event to start.")
+                            isCollecting = false
+                        end)
+                    -- elseif not eventIsOngoing then
+                    --     Library:Notify("Auto collect summer fruit is on, wait for the summer event to start.")
+                    end
                 end
-            else
-            Library:Notify("There is an error to timer. Please report it on discord")
-            end
+            end)
         end
     end
 })
+
 
 
 summer:AddToggle("summer_toggle", {

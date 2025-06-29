@@ -142,16 +142,10 @@ local function tpAndSell()
         )
         task.wait(0.2)
         ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
-        Library:Notify("Teleported and sold inventory!")
         if returnCFrame then
             task.wait(0.2)
             hrp.CFrame = returnCFrame
-            Library:Notify("Returned to your garden spawn point!")
-        else
-            Library:Notify("Could not find your garden spawn point!")
         end
-    else
-        Library:Notify("HumanoidRootPart not found!")
     end
 end
 
@@ -190,7 +184,6 @@ local function highlightBiggestFruit()
         end
     end
     if not farm then
-        Library:Notify("No owned farm found.")
         removeHighlight()
         lastBiggest = nil
         return
@@ -198,7 +191,6 @@ local function highlightBiggestFruit()
 
     local plants = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
     if not plants then
-        Library:Notify("No Plants_Physical found.")
         removeHighlight()
         lastBiggest = nil
         return
@@ -288,9 +280,6 @@ local function savePosition()
     local hrp = char:FindFirstChild("HumanoidRootPart")
     if hrp then
         savedPosition = hrp.Position
-        Library:Notify("Position saved!")
-    else
-        Library:Notify("Could not save position (HumanoidRootPart missing).")
     end
 end
 
@@ -298,7 +287,6 @@ local function teleportTo(pos)
     local char = player.Character or player.CharacterAdded:Wait()
     local hrp = char:FindFirstChild("HumanoidRootPart")
     if not hrp then
-        Library:Notify("Could not teleport (HumanoidRootPart missing).")
         return
     end
     if typeof(pos) == "Vector3" then
@@ -313,16 +301,8 @@ end
 
 local function sellInventory()
     ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
-    Library:Notify("Inventory sold!")
 end
 
--- Submit all plants for Night Quest
-local function submitNightQuest()
-    ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("NightQuestRemoteEvent"):FireServer("SubmitAllPlants")
-    Library:Notify("Submitted all plants for Night Quest!")
-end
-
--- Teleport, sell, and return
 local function teleportSellReturn()
     savePosition()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -334,7 +314,6 @@ local function teleportSellReturn()
     task.wait(0.2)
     if savedPosition then
         teleportTo(savedPosition)
-        Library:Notify("Returned to saved position!")
     end
 end
 
@@ -358,20 +337,6 @@ local function teleportNightQuestReturn()
     task.wait(0.2)
     if savedPosition then
         teleportTo(savedPosition)
-        Library:Notify("Returned to saved position!")
-    end
-end
-
--- Favorite currently equipped tool
-local function favoriteEquippedTool()
-    local char = player.Character
-    local backpack = player.Backpack
-    local tool = char and char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
-    if tool and tool:GetAttribute("Favorite") == true then
-        ReplicatedStorage.GameEvents.Favorite_Item:FireServer({tool})
-        Library:Notify("Favorited equipped tool!")
-    else
-        Library:Notify("No favorite tool equipped.")
     end
 end
 
@@ -438,13 +403,14 @@ task.wait(1)
 
 local window = Library:CreateWindow({
     Title = "Y-Hub",
+    Footer = ".gg/tmS5Qbsq2F",
     Center = true,
     AutoShow = true,
     Size = UDim2.fromOffset(350, 180),
     ShowCustomCursor = false,
     ToggleKeybind = Enum.KeyCode.LeftControl
 })
-
+local creditsTab = window:AddTab("Credits")
 local mainTab = window:AddTab("Main")
 local shopTab = window:AddTab("Shop")
 local eventTab = window:AddTab("Event")
@@ -478,7 +444,6 @@ group:AddToggle("auto_sell_toggle", {
     Callback = function(state)
         autoSell = state
         if autoSell then
-            Library:Notify("Auto TP & Sell enabled.")
             task.spawn(function()
                 while autoSell do
                     if getFruitCount() >= fruitThreshold then
@@ -488,8 +453,6 @@ group:AddToggle("auto_sell_toggle", {
                     task.wait(1)
                 end
             end)
-        else
-            Library:Notify("Auto TP & Sell disabled.")
         end
     end
 })
@@ -530,7 +493,6 @@ lPlayer:AddToggle("noclip_toggle", {
                     end
                 end
             end)
-            Library:Notify("Noclip enabled.")
         else
             if noclipConn then noclipConn:Disconnect() noclipConn = nil end
             local char = player.Character
@@ -541,7 +503,6 @@ lPlayer:AddToggle("noclip_toggle", {
                     end
                 end
             end
-            Library:Notify("Noclip disabled.")
         end
     end
 })
@@ -578,11 +539,9 @@ lPlayer:AddToggle("speedwalk_toggle", {
                     child.WalkSpeed = speedValue
                 end
             end)
-            Library:Notify("Speedwalk enabled.")
         else
             if hum then hum.WalkSpeed = 16 end
             if speedConn then speedConn:Disconnect() speedConn = nil end
-            Library:Notify("Speedwalk disabled.")
         end
     end
 })
@@ -610,8 +569,6 @@ seedShop:AddDropdown("seed_dropdown", {
         else
             selectedSeeds = rawSelected
         end
-
-        Library:Notify("Selected seeds: " .. table.concat(selectedSeeds, ", "))
     end
 })
 
@@ -621,7 +578,6 @@ seedShop:AddToggle("auto_buy_selected_seeds", {
     Callback = function(value)
         autoBuySeeds = value
         if autoBuySeeds then
-            Library:Notify("Auto-buy enabled!")
             task.spawn(function()
                 local event = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuySeedStock")
 
@@ -633,10 +589,7 @@ seedShop:AddToggle("auto_buy_selected_seeds", {
                     end
                     task.wait(0.5)
                 end
-                Library:Notify("Auto-buy disabled!")
             end)
-        else
-            Library:Notify("Auto-buy disabled!")
         end
     end
 })
@@ -676,8 +629,6 @@ harvestShop:AddDropdown("harvest_dropdown", {
         else
             selectedHarvestShop = rawSelecteddd
         end
-
-        Library:Notify("Selected item(s): " .. table.concat(selectedHarvestShop, ", "))
     end
 })
 
@@ -703,8 +654,6 @@ gearShop:AddDropdown("gear_dropdown", {
         else
             selectedGears = rawSelectedd
         end
-
-        Library:Notify("Selected gears: " .. table.concat(selectedGears, ", "))
     end
 })
 
@@ -715,7 +664,6 @@ harvestShop:AddToggle("auto_buy_harvest", {
     Callback = function(state)
         autobuyHarvest = state
         if autobuyHarvest then
-            Library:Notify("Auto-buy items enabled!")
             task.spawn(function()
                 local event = game:GetService("ReplicatedStorage").GameEvents:WaitForChild("BuyEventShopStock")
 
@@ -741,10 +689,7 @@ harvestShop:AddToggle("auto_buy_harvest", {
                     end
                     task.wait(0.5)
                 end
-                Library:Notify("Auto-buy item disabled!")
             end)
-        else
-            Library:Notify("Auto-buy item disabled!")
         end
     end
 })
@@ -756,7 +701,6 @@ gearShop:AddToggle("auto_buy_selected_gears", {
     Callback = function(value)
         autoBuyGears = value
         if autoBuyGears then
-            Library:Notify("Auto-buy gears enabled!")
             task.spawn(function()
                 local event = game:GetService("ReplicatedStorage").GameEvents:WaitForChild("BuyGearStock")
 
@@ -782,10 +726,7 @@ gearShop:AddToggle("auto_buy_selected_gears", {
                     end
                     task.wait(0.5)
                 end
-                Library:Notify("Auto-buy gears disabled!")
             end)
-        else
-            Library:Notify("Auto-buy gears disabled!")
         end
     end
 })
@@ -797,7 +738,6 @@ petGroup:AddToggle("auto_buy_pets_toggle", {
     Callback = function(val)
         autoBuyPetsToggle = val
         if val then
-            Library:Notify("Auto buy all pets enabled.")
             task.spawn(function()
                 while autoBuyPetsToggle do
                     for i = 1, 3 do
@@ -809,8 +749,6 @@ petGroup:AddToggle("auto_buy_pets_toggle", {
                     task.wait(60)
                 end
             end)
-        else
-            Library:Notify("Auto buy all pets disabled.")
         end
     end
 })
@@ -823,7 +761,6 @@ local cosmeticUI = rShop:AddToggle("cosmetic_toggle", {
         local ui = player.PlayerGui:FindFirstChild("CosmeticShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -837,7 +774,6 @@ cosmeticUI:AddKeyPicker("cosmetic_keybind", {
         local ui = player.PlayerGui:FindFirstChild("CosmeticShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -849,7 +785,6 @@ local gearShop = rShop:AddToggle("gear_toggle", {
         local ui = player.PlayerGui:FindFirstChild("Gear_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -862,7 +797,6 @@ gearShop:AddKeyPicker("gear_keybind", {
         local ui = player.PlayerGui:FindFirstChild("Gear_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -874,7 +808,6 @@ local seedUI = rShop:AddToggle("seed_toggle", {
         local ui = player.PlayerGui:FindFirstChild("Seed_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -887,7 +820,6 @@ seedUI:AddKeyPicker("seed_keybind", {
         local ui = player.PlayerGui:FindFirstChild("Seed_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -899,7 +831,6 @@ local harvestShop = rShop:AddToggle("harvestshop_toggle", {
         local ui = player.PlayerGui:FindFirstChild("EventShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -912,7 +843,6 @@ harvestShop:AddKeyPicker("harvestshop_keybind", {
         local ui = player.PlayerGui:FindFirstChild("EventShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -922,7 +852,6 @@ rShop:AddButton("Daily Quest", function()
     local ui = player.PlayerGui:FindFirstChild("DailyQuests_UI")
     if ui then
         ui.Enabled = not ui.Enabled
-        Library:Notify("Daily Quest UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
     end
 end)
 
@@ -945,14 +874,11 @@ antiAfkGroup:AddToggle("anti_afk_toggle", {
                 task.wait(1)
                 VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
             end)
-            Library:Notify("Anti-AFK enabled!")
         else
-            -- Disconnect the event
             if afkConnection then
                 afkConnection:Disconnect()
                 afkConnection = nil
             end
-            Library:Notify("Anti-AFK disabled!")
         end
     end
 })
@@ -973,7 +899,6 @@ group2:AddInput("harvest_fruit_input", {
                 harvestFruitNames[fruit] = true
             end
         end
-        Library:Notify("Harvest fruit filter set!")
     end
 })
 
@@ -982,7 +907,6 @@ group2:AddInput("min_weight_input", {
     Default = "0",
     Callback = function(val)
         minWeight = tonumber(val) or 0
-        Library:Notify("Min Weight set to: " .. tostring(minWeight))
     end
 })
 
@@ -991,7 +915,6 @@ group2:AddInput("max_weight_input", {
     Default = "9999",
     Callback = function(val)
         maxWeight = tonumber(val) or 9999
-        Library:Notify("Max Weight set to: " .. tostring(maxWeight))
     end
 })
 
@@ -1020,7 +943,6 @@ group2:AddToggle("auto_collect_toggle", {
     Callback = function(state)
         autoCollect = state
         if autoCollect then
-            Library:Notify("Auto Collect enabled!")
             task.spawn(function()
                 while autoCollect do
                     local players = game:GetService("Players")
@@ -1032,7 +954,6 @@ group2:AddToggle("auto_collect_toggle", {
                     local local_player = players.LocalPlayer
                     local farm = get_farm
                     if not farm or not farm.Important or not farm.Important:FindFirstChild("Plants_Physical") then
-                        Library:Notify("Could not find your farm plants.")
                         break
                     end
 
@@ -1050,48 +971,10 @@ group2:AddToggle("auto_collect_toggle", {
                     end
                     task.wait(2)
                 end
-                Library:Notify("Auto Collect disabled!")
             end)
-        else
-            Library:Notify("Auto Collect disabled!")
         end
     end
 })
-
--- local targetFruits = {
---     ["Pineapple"] = true, ["Watermelon"] = true, ["Cauliflower"] = true, ["Green Apple"] = true,
---     ["Banana"] = true, ["Avocado"] = true, ["Kiwi"] = true, ["Prickly Pear"] = true,
---     ["Feijoa"] = true, ["Sugar Apple"] = true, ["Loquat"] = true, ["Wild Carrot"] = true,
---     ["Pear"] = true, ["Cantaloupe"] = true, ["Parasol Flower"] = true, ["Rosy Delight"] = true,
---     ["Elephant Ears"] = true, ["Bell Pepper"] = true, ["Carrot"] = true, ["Blueberry"] = true,
---     ["Tomato"] = true, ["Strawberry"] = true, ["Deliphinium"] = true, ["Lili of the Valley"] = true,
---     ["Traveler\'s Fruit"] = true, ["Peace Lily"] = true, ["Aloe Vera"] = true, ["Guanabana"] = true,
---     ["White Mullberry"] = true, ["Pitcher Plant"] = true, ["Rafflesia"] = true
--- }
-
--- local targetFruits = {
---     ["Carrot"] = true, ["Blueberry"] = true,
---     ["Pineapple"] = true, ["Watermelon"] = true, ["Cauliflower"] = true, ["Green Apple"] = true,
---     ["Banana"] = true, ["Avocado"] = true, ["Kiwi"] = true, ["Prickly Pear"] = true,
---     ["Feijoa"] = true, ["Sugar Apple"] = true, ["Loquat"] = true, ["Wild Carrot"] = true,
---     ["Pear"] = true, ["Cantaloupe"] = true, ["Parasol Flower"] = true, ["Rosy Delight"] = true,
---     ["Elephant Ears"] = true, ["Bell Pepper"] = true, 
---     ["Tomato"] = true, ["Strawberry"] = true
--- }
-
-local module = require(game:GetService("ReplicatedStorage").Modules.PlantTraitsData)
-local summerPlants = module.Summer
-
-local targetFruits = {}
-for plant, _ in pairs(summerPlants) do
-    targetFruits[plant] = true
-end
-
-local function isTargetFruit(item)
-    if not item then return false end
-    local baseName = item.Name:match("^(.-) %[[^%]]+%]$") or item.Name
-    return targetFruits[baseName] == true
-end
 
 
 local infiniteJump = false
@@ -1114,7 +997,7 @@ UserInputService.JumpRequest:Connect(function()
     end
 end)
 
-local creditsTab = window:AddTab("Misc")
+
 local creditsGroup = creditsTab:AddLeftGroupbox("Discord")
 
 creditsGroup:AddButton({
@@ -1163,6 +1046,22 @@ task.spawn(function()
         task.wait(1)
     end
 end)
+
+local module = require(game:GetService("ReplicatedStorage").Modules.PlantTraitsData)
+local summerPlants = module.Summer
+
+local targetFruits = {}
+for plant, _ in pairs(summerPlants) do
+    if plant ~= "Strawberry" then
+        targetFruits[plant] = true
+    end
+end
+
+local function isTargetFruit(item)
+    if not item then return false end
+    local baseName = item.Name:match("^(.-) %[[^%]]+%]$") or item.Name
+    return targetFruits[baseName] == true
+end
 local autoCollectTargetFruit = false
 summer:AddToggle("auto_collect_targetfruit", {
     Text = "Auto Collect Summer Fruit",
@@ -1170,13 +1069,33 @@ summer:AddToggle("auto_collect_targetfruit", {
     Callback = function(state)
         autoCollectTargetFruit = state
 
-        local checkEvent = billboardGui:FindFirstChild("TextLabel")
+        -- Safely get the event label
+        local checkEvent = nil
+        local success, result = pcall(function()
+            return workspace.SummerHarvestEvent.Sign.Part.BillboardGui.TextLabel
+        end)
+        if success and result then
+            checkEvent = result
+        else
+            -- Try the fallback path
+            local sign = workspace:FindFirstChild("SummerHarvestEvent") and workspace.SummerHarvestEvent:FindFirstChild("Sign")
+            if sign then
+                local children = sign:GetChildren()
+                if children[4] and children[4]:FindFirstChild("BillboardGui") then
+                    checkEvent = children[4].BillboardGui:FindFirstChild("TextLabel")
+                end
+            end
+        end
+
+        if not checkEvent then
+            return
+        end
+
         local event = checkEvent.Text
         local isHarvestOngoing = event == "Summer Harvest Ends:"
         if autoCollectTargetFruit and isHarvestOngoing then
-            Library:Notify("Auto Collect Target Fruit enabled!")
-
             task.spawn(function()
+                local notifiedFull = false
                 while autoCollectTargetFruit do
                     -- Check backpack fruit count
                     local fruitCount = 0
@@ -1187,7 +1106,10 @@ summer:AddToggle("auto_collect_targetfruit", {
                     end
 
                     if fruitCount >= 200 then
-                        Library:Notify("Backpack fruit limit reached (200). Waiting...")
+                        if not notifiedFull then
+                            Library:Notify("Backpack fruit limit reached (200). Waiting...")
+                            notifiedFull = true
+                        end
                         -- Wait until the count drops below 200 or toggle is turned off
                         repeat
                             task.wait(2)
@@ -1199,19 +1121,28 @@ summer:AddToggle("auto_collect_targetfruit", {
                             end
                         until fruitCount < 200 or not autoCollectTargetFruit
                         if not autoCollectTargetFruit then break end
+                        notifiedFull = false
                     end
 
                     local replicated_storage = game:GetService("ReplicatedStorage")
-                    local byte_net_reliable = replicated_storage:WaitForChild("ByteNetReliable")
+                    local byte_net_reliable = replicated_storage:FindFirstChild("ByteNetReliable")
                     local buffer = buffer.fromstring("\1\1\0\1")
                     local farm = workspace.Farm:GetChildren()[farmNumber]
-
-                    if not farm or not farm.Important or not farm.Important:FindFirstChild("Plants_Physical") then
-                        Library:Notify("Could not find your farm plants.")
+                    if not farm then
+                        break
+                    end
+                    local important = farm:FindFirstChild("Important")
+                    if not important then
+                        break
+                    end
+                    local plantsPhysical = important:FindFirstChild("Plants_Physical")
+                    if not plantsPhysical then
                         break
                     end
 
-                    for _, v in ipairs(farm.Important.Plants_Physical:GetChildren()) do
+                    local collected = false
+                    for _, v in ipairs(plantsPhysical:GetChildren()) do
+                        if not autoCollectTargetFruit then break end
                         if isTargetFruit(v) then
                             byte_net_reliable:FireServer(buffer, { v })
                         end
@@ -1219,25 +1150,19 @@ summer:AddToggle("auto_collect_targetfruit", {
                         local fruits = v:FindFirstChild("Fruits", true)
                         if fruits then
                             for _, i in ipairs(fruits:GetChildren()) do
+                                if not autoCollectTargetFruit then break end
                                 if isTargetFruit(i) then
                                     byte_net_reliable:FireServer(buffer, { i })
                                 end
                             end
-                            task.wait(1)
                         end
                     end
-
                     task.wait(1)
                 end
-
-                Library:Notify("Auto Collect Target Fruit disabled!")
             end)
-        else
-            Library:Notify("Auto Collect Target Fruit disabled!")
         end
     end
 })
-
 
 summer:AddToggle("summer_toggle", {
     Text = "Auto Submit Summer",
@@ -1271,8 +1196,6 @@ plant:AddDropdown("seed_dropdown", {
     Default = {},               
     Callback = function(selected)
         local rawSelected = keysOf(selected)
-
-        -- If "All" is selected, include all except "All"
         if table.find(rawSelected, "All") then
             selectedSeeds = {}
             for _, name in ipairs(seedList) do
@@ -1283,8 +1206,6 @@ plant:AddDropdown("seed_dropdown", {
         else
             selectedSeeds = rawSelected
         end
-
-        Library:Notify("Selected seeds: " .. table.concat(selectedSeeds, ", "))
     end
 })
 local autoPlant = false
@@ -1352,10 +1273,11 @@ plant:AddToggle("auto_plant_toggle", {
                                 :FireServer(unpack(args))
                         else
                             Library:Notify("Missing or unequipped: " .. fullSeedName)
+                            break
                         end
                     end
 
-                    task.wait(2)
+                    task.wait(0.1)
                 end
                 Library:Notify("Auto Plant disabled!")
             end)

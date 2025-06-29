@@ -1145,7 +1145,7 @@ task.spawn(function()
                 -- print(isHarvestOngoing)
                 local state = timerValue <= 0
                 -- print(state)
-                if autoSubmit and isHarvestOngoing == false then
+                if autoSubmit and isHarvestOngoing then
                     for _, item in ipairs(backpack:GetChildren()) do
                         if item:IsA("Tool") then
                             local baseName = getBaseName(item.Name)
@@ -1163,7 +1163,6 @@ task.spawn(function()
         task.wait(1)
     end
 end)
-
 local autoCollectTargetFruit = false
 summer:AddToggle("auto_collect_targetfruit", {
     Text = "Auto Collect Target Fruit",
@@ -1179,6 +1178,29 @@ summer:AddToggle("auto_collect_targetfruit", {
 
             task.spawn(function()
                 while autoCollectTargetFruit do
+                    -- Check backpack fruit count
+                    local fruitCount = 0
+                    for _, item in ipairs(player.Backpack:GetChildren()) do
+                        if item:IsA("Tool") then
+                            fruitCount = fruitCount + 1
+                        end
+                    end
+
+                    if fruitCount >= 200 then
+                        Library:Notify("Backpack fruit limit reached (200). Waiting...")
+                        -- Wait until the count drops below 200 or toggle is turned off
+                        repeat
+                            task.wait(2)
+                            fruitCount = 0
+                            for _, item in ipairs(player.Backpack:GetChildren()) do
+                                if item:IsA("Tool") then
+                                    fruitCount = fruitCount + 1
+                                end
+                            end
+                        until fruitCount < 200 or not autoCollectTargetFruit
+                        if not autoCollectTargetFruit then break end
+                    end
+
                     local replicated_storage = game:GetService("ReplicatedStorage")
                     local byte_net_reliable = replicated_storage:WaitForChild("ByteNetReliable")
                     local buffer = buffer.fromstring("\1\1\0\1")

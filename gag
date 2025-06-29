@@ -459,6 +459,7 @@ local summer = eventTab:AddLeftGroupbox("Summer Event")
 local seedShop = shopTab:AddLeftGroupbox("Seed Shop")
 local gearShop = shopTab:AddLeftGroupbox("Gear Shop")
 local petGroup = shopTab:AddRightGroupbox("Egg Shop")
+local plant = mainTab:AddLeftGroupbox("Plant")
 
 group:AddSlider("fruit_slider", {
     Text = "Fruit Threshold",
@@ -1173,7 +1174,7 @@ summer:AddToggle("auto_collect_targetfruit", {
         local checkEvent = billboardGui:FindFirstChild("TextLabel")
         local event = checkEvent.Text
         local isHarvestOngoing = event == "Summer Harvest Ends:"
-        if autoCollectTargetFruit and isHarvestOngoing == true then
+        if autoCollectTargetFruit and isHarvestOngoing then
             Library:Notify("Auto Collect Target Fruit enabled!")
 
             task.spawn(function()
@@ -1200,10 +1201,11 @@ summer:AddToggle("auto_collect_targetfruit", {
                                     byte_net_reliable:FireServer(buffer, { i })
                                 end
                             end
+                            task.wait(1)
                         end
                     end
 
-                    task.wait(2)
+                    task.wait(1)
                 end
 
                 Library:Notify("Auto Collect Target Fruit disabled!")
@@ -1221,5 +1223,122 @@ summer:AddToggle("summer_toggle", {
     Callback = function(Value)
         autoSubmit = Value
         -- print("Auto Submit Summer:", Value)
+    end
+})
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local seedData = require(ReplicatedStorage.Data.SeedData)
+
+local function allSeed()
+    local seeds = { "All" } -- Optionally include "All" at the top
+    for _, data in pairs(seedData) do
+        table.insert(seeds, data.SeedName)
+    end
+    return seeds
+end
+
+local seedList = allSeed()
+local selectedSeeds = {}
+
+plant:AddDropdown("seed_dropdown", {
+    Values = seedList,
+    Multi = true,
+    Searchable = true,
+    Text = "Seeds",
+    Default = {},               
+    Callback = function(selected)
+        local rawSelected = keysOf(selected)
+
+        -- If "All" is selected, include all except "All"
+        if table.find(rawSelected, "All") then
+            selectedSeeds = {}
+            for _, name in ipairs(seedList) do
+                if name ~= "All" then
+                    table.insert(selectedSeeds, name)
+                end
+            end
+        else
+            selectedSeeds = rawSelected
+        end
+
+        Library:Notify("Selected seeds: " .. table.concat(selectedSeeds, ", "))
+    end
+})
+local autoPlant = false
+local seedIndex = 1
+
+plant:AddToggle("auto_plant_toggle", {
+    Text = "Auto Plant",
+    Tooltip = "Stand at the place where you want to auto plant.",
+    Default = false,
+    Callback = function(state)
+        autoPlant = state
+        if autoPlant then
+            if #selectedSeeds == 0 then
+                Library:Notify("No seeds selected!")
+                autoPlant = false
+                return
+            end
+
+            Library:Notify("Auto Plant enabled!")
+            task.spawn(function()
+                while autoPlant do
+                    local player = game:GetService("Players").LocalPlayer
+                    local character = player.Character or player.CharacterAdded:Wait()
+                    local backpack = player:WaitForChild("Backpack")
+                    local hrp = character:FindFirstChild("HumanoidRootPart")
+
+                    if hrp and #selectedSeeds > 0 then
+                        local fullSeedName = selectedSeeds[seedIndex]
+                        seedIndex += 1
+                        if seedIndex > #selectedSeeds then
+                            seedIndex = 1
+                        end
+
+                        -- Search both Backpack and Character
+                        local function findSeedTool(name)
+                            for _, container in ipairs({backpack, character}) do
+                                for _, item in ipairs(container:GetChildren()) do
+                                    if item:IsA("Tool") and item.Name:match("^" .. name) then
+                                        return item
+                                    end
+                                end
+                            end
+                            return nil
+                        end
+
+                        local tool = findSeedTool(fullSeedName)
+
+                        if tool and tool.Parent ~= character then
+                            tool.Parent = character
+                            task.wait(0.3)
+                        end
+
+                        -- Make sure it's held before planting
+                        if findSeedTool(fullSeedName) then
+                            local cropName = fullSeedName:gsub(" Seed", "")
+                            local pos = hrp.Position
+                            local args = {
+                                vector.create(pos.X, pos.Y, pos.Z),
+                                cropName
+                            }
+
+                            game:GetService("ReplicatedStorage")
+                                :WaitForChild("GameEvents")
+                                :WaitForChild("Plant_RE")
+                                :FireServer(unpack(args))
+                        else
+                            Library:Notify("Missing or unequipped: " .. fullSeedName)
+                        end
+                    end
+
+                    task.wait(2)
+                end
+                Library:Notify("Auto Plant disabled!")
+            end)
+        else
+            Library:Notify("Auto Plant disabled!")
+        end
     end
 })

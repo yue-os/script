@@ -962,7 +962,7 @@ local harvestFruitNames = {}
 
 
 group2:AddInput("harvest_fruit_input", {
-    Text = "Fruit Names (comma separated, leave blank for all)",
+    Text = "Fruit Names (Leave blank if all)",
     Default = "",
     Tooltip = "Use comma(,) to seperate fruits",
     Callback = function(val)
@@ -1165,7 +1165,7 @@ task.spawn(function()
 end)
 local autoCollectTargetFruit = false
 summer:AddToggle("auto_collect_targetfruit", {
-    Text = "Auto Collect Target Fruit",
+    Text = "Auto Collect Summer Fruit",
     Default = false,
     Callback = function(state)
         autoCollectTargetFruit = state

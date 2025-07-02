@@ -485,6 +485,7 @@ local window = Library:CreateWindow({
     ToggleKeybind = Enum.KeyCode.LeftControl
 })
 
+local creditsTab = window:AddTab("Misc")
 local mainTab = window:AddTab("Main")
 local shopTab = window:AddTab("Shop")
 local eventTab = window:AddTab("Event")
@@ -1136,7 +1137,6 @@ UserInputService.JumpRequest:Connect(function()
     end
 end)
 
-local creditsTab = window:AddTab("Misc")
 local creditsGroup = creditsTab:AddLeftGroupbox("Discord")
 
 creditsGroup:AddButton({

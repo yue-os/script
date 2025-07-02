@@ -35,7 +35,11 @@ local billboardGui = part:FindFirstChild("BillboardGui")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ItemModule = require(ReplicatedStorage:WaitForChild("Item_Module"))
+local MutationHandler = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("MutationHandler"))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local FormatWithCommas = require(ReplicatedStorage.Modules:WaitForChild("CommaFormatNumber"))
 
 local setclipboard = setclipboard or function(text)
     if syn then
@@ -50,8 +54,6 @@ end
 setclipboard("https://discord.gg/WswepWXvr9")
 Library:Notify("Discord link copied to clipboard! Paste in browser to join.")
 
-
-
 local myFarm
 for i, farm in ipairs(workspace.Farm:GetChildren()) do
     local owner = farm:WaitForChild("Important")
@@ -60,7 +62,7 @@ for i, farm in ipairs(workspace.Farm:GetChildren()) do
     if owner and tostring(owner.Value) == tostring(player) then
         myFarm = farm
         farmNumber = i
-        -- ownedFarm = myFarm.Name .. "[" .. tostring(farmNumber) .. "]"
+        
         break
     end
 end
@@ -83,14 +85,13 @@ local function getBaseName(itemName)
     return base or itemName
 end
 
-
 local function equipSummerFruit()
     for _, item in ipairs(backpack:GetChildren()) do
         if item:IsA("Tool") then
             local baseName = getBaseName(item.Name)
             if summerFruits[baseName] then
                 item.Parent = character
-                -- print("Equipped:", item.Name)
+                
                 break
             end
         end
@@ -166,7 +167,6 @@ local function getFruitCount()
     return count
 end
 
-
 local function removeHighlight()
     if currentHighlight then
         currentHighlight:Destroy()
@@ -177,81 +177,128 @@ local function removeHighlight()
         currentBillboard = nil
     end
 end
+local function CalculatePlantValue(plant)
+	local itemString = plant:FindFirstChild("Item_String")
+	local itemName = itemString and itemString.Value or plant.Name
+
+	local variant = plant:FindFirstChild("Variant")
+	if not variant then return 0 end
+
+	local weight = plant:FindFirstChild("Weight")
+	if not weight then return 0 end
+
+	local baseData = ItemModule.Return_Data(itemName)
+	if not baseData or #baseData < 3 then
+		warn("Invalid ItemData for:", itemName)
+		return 0
+	end
+
+	local variantMultiplier = ItemModule.Return_Multiplier(variant.Value)
+	local valueMulti = MutationHandler:CalcValueMulti(plant)
+	local clamp = math.clamp(weight.Value / baseData[2], 0.95, 1e8)
+
+	return math.round(baseData[3] * valueMulti * variantMultiplier * (clamp * clamp))
+end
 
 local function highlightBiggestFruit()
-    local farm = nil
-    for _, f in ipairs(workspace.Farm:GetChildren()) do
-        local important = f:FindFirstChild("Important")
-        local data = important and important:FindFirstChild("Data")
-        local owner = data and data:FindFirstChild("Owner")
-        if owner and owner.Value == player.Name then
-            farm = f
-            break
+	local farm = nil
+	for _, f in ipairs(workspace.Farm:GetChildren()) do
+		local important = f:FindFirstChild("Important")
+		local data = important and important:FindFirstChild("Data")
+		local owner = data and data:FindFirstChild("Owner")
+		if owner and owner.Value == player.Name then
+			farm = f
+			break
+		end
+	end
+	if not farm then
+		Library:Notify("No owned farm found.")
+		removeHighlight()
+		lastBiggest = nil
+		return
+	end
+
+	local plants = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
+	if not plants then
+		Library:Notify("No Plants_Physical found.")
+		removeHighlight()
+		lastBiggest = nil
+		return
+	end
+
+	local biggest, maxWeight = nil, -math.huge
+	for _, plant in ipairs(plants:GetChildren()) do
+        local fruitsFolder = plant:FindFirstChild("Fruits")
+        if fruitsFolder then
+            for _, fruit in ipairs(fruitsFolder:GetChildren()) do
+                local weightObj = fruit:FindFirstChild("Weight")
+                if weightObj and tonumber(weightObj.Value) and tonumber(weightObj.Value) > maxWeight then
+                    biggest = fruit
+                    maxWeight = tonumber(weightObj.Value)
+                end
+            end
         end
     end
-    if not farm then
-        Library:Notify("No owned farm found.")
-        removeHighlight()
-        lastBiggest = nil
-        return
-    end
 
-    local plants = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
-    if not plants then
-        Library:Notify("No Plants_Physical found.")
-        removeHighlight()
-        lastBiggest = nil
-        return
-    end
 
-    local biggest, maxWeight = nil, -math.huge
-    for _, fruit in ipairs(plants:GetChildren()) do
-        local weightObj = fruit:FindFirstChild("Weight")
-        if weightObj and tonumber(weightObj.Value) and tonumber(weightObj.Value) > maxWeight then
-            biggest = fruit
-            maxWeight = tonumber(weightObj.Value)
-        end
-    end
-
-    if biggest ~= lastBiggest then
-        removeHighlight()
-        lastBiggest = biggest
-        if biggest and biggest:IsA("Model") then
-            -- Highlight
-            local highlight = Instance.new("Highlight")
-            highlight.FillColor = Color3.fromRGB(0, 255, 0)
-            highlight.OutlineColor = Color3.fromRGB(0, 150, 0)
+	if biggest ~= lastBiggest then
+		removeHighlight()
+		lastBiggest = biggest
+		if biggest and biggest:IsA("Model") then
+			
+			local highlight = Instance.new("Highlight")
             highlight.FillTransparency = 0.3
             highlight.OutlineTransparency = 0
             highlight.Adornee = biggest
             highlight.Parent = biggest
             currentHighlight = highlight
 
-            -- Billboard for weight
-            local head = biggest:FindFirstChildWhichIsA("BasePart")
-            if head then
-                local bb = Instance.new("BillboardGui")
-                bb.Size = UDim2.new(0, 100, 0, 40)
-                bb.AlwaysOnTop = true
-                bb.StudsOffset = Vector3.new(0, 3, 0)
-                bb.Adornee = head
-                bb.Parent = head
+            -- Disconnect old rainbow connection if it exists
+            if rainbowConnection then
+                rainbowConnection:Disconnect()
+            end
 
-                local label = Instance.new("TextLabel")
-                label.Size = UDim2.new(1, 0, 1, 0)
+            -- Start rainbow animation
+            rainbowConnection = RunService.RenderStepped:Connect(function()
+                local hue = (tick() * 0.5) % 1 -- adjust speed here
+                local color = Color3.fromHSV(hue, 1, 1)
+                if currentHighlight then
+                    currentHighlight.FillColor = color
+                    currentHighlight.OutlineColor = color:lerp(Color3.new(1, 1, 1), 0.2) -- make outline slightly brighter
+                end
+            end)
+
+
+			local head = biggest:FindFirstChildWhichIsA("BasePart")
+			if head then
+				local value = CalculatePlantValue(biggest)
+
+				local bb = Instance.new("BillboardGui")
+				bb.Size = UDim2.new(0, 160, 0, 60)
+				bb.AlwaysOnTop = true
+				bb.StudsOffset = Vector3.new(0, 3, 0)
+				bb.Adornee = head
+				bb.Parent = head
+
+				local label = Instance.new("TextLabel")
+				label.Size = UDim2.new(1, 0, 1, 0)
                 label.BackgroundTransparency = 1
-                label.TextColor3 = Color3.fromRGB(0, 255, 0)
+                label.TextColor3 = Color3.fromRGB(255, 255, 255) -- fallback
                 label.TextStrokeTransparency = 0.2
                 label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
                 label.TextScaled = true
                 label.Font = Enum.Font.FredokaOne
-                label.Text = "Weight: " .. string.format("%.2f", maxWeight) .. "kg"
-                label.Parent = bb
-
-                currentBillboard = bb
-            end
-        end
-    end
+                label.RichText = true
+                label.Text = string.format(
+                    "<font color='rgb(255,255,255)'>Weight: %.2fkg</font>\n<font color='rgb(255,200,0)'>Price: %s ¢</font>",
+                    maxWeight,
+                    FormatWithCommas(value)
+                )
+				label.Parent = bb
+				currentBillboard = bb
+			end
+		end
+	end
 end
 
 local function getShopSeeds()
@@ -261,7 +308,6 @@ local function getShopSeeds()
 
     local seedList = {}
 
-    -- Insert "All" as the very first option
     table.insert(seedList, "All")
 
     for _, seedFrame in pairs(seedsFrame:GetChildren()) do
@@ -271,7 +317,7 @@ local function getShopSeeds()
                 local seedText = mainFrame:FindFirstChild("Seed_Text")
                 if seedText and seedText:IsA("TextLabel") then
                     local rawName = seedText.Text or ""
-                    -- Strip the word "Seed" and surrounding spaces
+                    
                     local cleaned = rawName:gsub("%s*[sS]eed%s*", ""):gsub("^%s*(.-)%s*$", "%1")
                     table.insert(seedList, cleaned)
                 end
@@ -281,7 +327,6 @@ local function getShopSeeds()
 
     return seedList
 end
-
 
 local function savePosition()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -316,13 +361,12 @@ local function sellInventory()
     Library:Notify("Inventory sold!")
 end
 
--- Submit all plants for Night Quest
+
 local function submitNightQuest()
     ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("NightQuestRemoteEvent"):FireServer("SubmitAllPlants")
     Library:Notify("Submitted all plants for Night Quest!")
 end
 
--- Teleport, sell, and return
 local function teleportSellReturn()
     savePosition()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -345,8 +389,6 @@ local function parseCompactTime(str)
     return mins * 60 + secs
 end
 
-
--- Teleport, submit night quest, and return
 local function teleportNightQuestReturn()
     savePosition()
     local char = player.Character or player.CharacterAdded:Wait()
@@ -362,7 +404,6 @@ local function teleportNightQuestReturn()
     end
 end
 
--- Favorite currently equipped tool
 local function favoriteEquippedTool()
     local char = player.Character
     local backpack = player.Backpack
@@ -402,7 +443,7 @@ local function getGearShop()
 
     local gearList = {}
 
-    -- Insert "All" at the first position
+    
     table.insert(gearList, "All")
 
     for _, gearFrame in pairs(gearsFrame:GetChildren()) do
@@ -419,7 +460,6 @@ local function getGearShop()
 
     return gearList
 end
-
 
 task.spawn(function()
     while true do
@@ -601,7 +641,7 @@ seedShop:AddDropdown("seed_dropdown", {
     Callback = function(selected)
         local rawSelected = keysOf(selected)
 
-        -- If "All" is selected, include all except "All"
+        
         if table.find(rawSelected, "All") then
             selectedSeeds = {}
             for _, name in ipairs(seedList) do
@@ -694,7 +734,7 @@ gearShop:AddDropdown("gear_dropdown", {
     Callback = function(selected)
         local rawSelectedd = keysOf(selected)
 
-        -- If "All" is selected, include all except "All"
+        
         if table.find(rawSelectedd, "All") then
             selectedGears = {}
             for _, name in ipairs(gearList) do
@@ -726,7 +766,7 @@ harvestShop:AddToggle("auto_buy_harvest", {
                         local toBuy = {}
 
                         if table.find(selectedHarvestShop, "All") then
-                            -- Buy every gear except the "All" option
+                            
                             for _, itemName in ipairs(harvestList) do
                                 if itemName ~= "All" then
                                     table.insert(toBuy, itemName)
@@ -736,7 +776,7 @@ harvestShop:AddToggle("auto_buy_harvest", {
                             toBuy = selectedHarvestShop
                         end
 
-                        -- print("[DEBUG] Buying gears:", table.concat(toBuy, ", "))
+                        
                         for _, itemName in ipairs(toBuy) do
                             event:FireServer(itemName)
                         end
@@ -767,7 +807,7 @@ gearShop:AddToggle("auto_buy_selected_gears", {
                         local toBuy = {}
 
                         if table.find(selectedGears, "All") then
-                            -- Buy every gear except the "All" option
+                            
                             for _, gearName in ipairs(gearList) do
                                 if gearName ~= "All" then
                                     table.insert(toBuy, gearName)
@@ -777,7 +817,7 @@ gearShop:AddToggle("auto_buy_selected_gears", {
                             toBuy = selectedGears
                         end
 
-                        -- print("[DEBUG] Buying gears:", table.concat(toBuy, ", "))
+                        
                         for _, gearName in ipairs(toBuy) do
                             event:FireServer(gearName)
                         end
@@ -940,7 +980,7 @@ antiAfkGroup:AddToggle("anti_afk_toggle", {
         antiAfkEnabled = Value
 
         if antiAfkEnabled then
-            -- Connect the event
+            
             afkConnection = player.Idled:Connect(function()
                 local VirtualUser = game:GetService("VirtualUser")
                 VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -949,7 +989,7 @@ antiAfkGroup:AddToggle("anti_afk_toggle", {
             end)
             Library:Notify("Anti-AFK enabled!")
         else
-            -- Disconnect the event
+            
             if afkConnection then
                 afkConnection:Disconnect()
                 afkConnection = nil
@@ -970,7 +1010,7 @@ group2:AddInput("harvest_fruit_input", {
     Callback = function(val)
         harvestFruitNames = {}
         for fruit in string.gmatch(val, "([^,]+)") do
-            fruit = fruit:match("^%s*(.-)%s*$") -- trim spaces
+            fruit = fruit:match("^%s*(.-)%s*$") 
             if fruit ~= "" then
                 harvestFruitNames[fruit] = true
             end
@@ -1008,7 +1048,7 @@ local function harvestFilter(item, minW, maxW)
     local weight = tonumber(weightObj.Value)
     if not weight then return false end
     local baseName = getBaseName(item.Name)
-    -- If no fruit filter, accept all names
+    
     if next(harvestFruitNames) == nil then
         return weight >= minW and weight <= maxW
     end
@@ -1059,27 +1099,6 @@ group2:AddToggle("auto_collect_toggle", {
         end
     end
 })
-
--- local targetFruits = {
---     ["Pineapple"] = true, ["Watermelon"] = true, ["Cauliflower"] = true, ["Green Apple"] = true,
---     ["Banana"] = true, ["Avocado"] = true, ["Kiwi"] = true, ["Prickly Pear"] = true,
---     ["Feijoa"] = true, ["Sugar Apple"] = true, ["Loquat"] = true, ["Wild Carrot"] = true,
---     ["Pear"] = true, ["Cantaloupe"] = true, ["Parasol Flower"] = true, ["Rosy Delight"] = true,
---     ["Elephant Ears"] = true, ["Bell Pepper"] = true, ["Carrot"] = true, ["Blueberry"] = true,
---     ["Tomato"] = true, ["Strawberry"] = true, ["Deliphinium"] = true, ["Lili of the Valley"] = true,
---     ["Traveler\'s Fruit"] = true, ["Peace Lily"] = true, ["Aloe Vera"] = true, ["Guanabana"] = true,
---     ["White Mullberry"] = true, ["Pitcher Plant"] = true, ["Rafflesia"] = true
--- }
-
--- local targetFruits = {
---     ["Carrot"] = true, ["Blueberry"] = true,
---     ["Pineapple"] = true, ["Watermelon"] = true, ["Cauliflower"] = true, ["Green Apple"] = true,
---     ["Banana"] = true, ["Avocado"] = true, ["Kiwi"] = true, ["Prickly Pear"] = true,
---     ["Feijoa"] = true, ["Sugar Apple"] = true, ["Loquat"] = true, ["Wild Carrot"] = true,
---     ["Pear"] = true, ["Cantaloupe"] = true, ["Parasol Flower"] = true, ["Rosy Delight"] = true,
---     ["Elephant Ears"] = true, ["Bell Pepper"] = true, 
---     ["Tomato"] = true, ["Strawberry"] = true
--- }
 
 local module = require(game:GetService("ReplicatedStorage").Modules.PlantTraitsData)
 local summerPlants = module.Summer
@@ -1144,15 +1163,15 @@ task.spawn(function()
                 local timerValue = parseCompactTime(timerLabel.Text)
                 local event = checkEvent.Text
                 local isHarvestOngoing = event == "Summer Harvest Ends:"
-                -- print(isHarvestOngoing)
+                
                 local state = timerValue <= 0
-                -- print(state)
+                
                 if autoSubmit and isHarvestOngoing then
                     for _, item in ipairs(backpack:GetChildren()) do
                         if item:IsA("Tool") then
                             local baseName = getBaseName(item.Name)
                             if summerFruits[baseName] then
-                                -- item.Parent = character
+                                
                                 task.wait(0.1)
                                 submitSummer()
                                 task.wait(0.1)
@@ -1180,7 +1199,7 @@ summer:AddToggle("auto_collect_targetfruit", {
 
             task.spawn(function()
                 while autoCollectTargetFruit do
-                    -- Check backpack fruit count
+                    
                     local fruitCount = 0
                     for _, item in ipairs(player.Backpack:GetChildren()) do
                         if item:IsA("Tool") then
@@ -1190,7 +1209,7 @@ summer:AddToggle("auto_collect_targetfruit", {
 
                     if fruitCount >= 200 then
                         Library:Notify("Backpack fruit limit reached (200). Waiting...")
-                        -- Wait until the count drops below 200 or toggle is turned off
+                        
                         repeat
                             task.wait(2)
                             fruitCount = 0
@@ -1246,7 +1265,7 @@ summer:AddToggle("summer_toggle", {
     Default = false,
     Callback = function(Value)
         autoSubmit = Value
-        -- print("Auto Submit Summer:", Value)
+        
     end
 })
 
@@ -1255,7 +1274,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local seedData = require(ReplicatedStorage.Data.SeedData)
 
 local function allSeed()
-    local seeds = { "All" } -- Optionally include "All" at the top
+    local seeds = { "All" } 
     for _, data in pairs(seedData) do
         table.insert(seeds, data.SeedName)
     end
@@ -1274,7 +1293,7 @@ plant:AddDropdown("seed_dropdown", {
     Callback = function(selected)
         local rawSelected = keysOf(selected)
 
-        -- If "All" is selected, include all except "All"
+        
         if table.find(rawSelected, "All") then
             selectedSeeds = {}
             for _, name in ipairs(seedList) do
@@ -1320,7 +1339,7 @@ plant:AddToggle("auto_plant_toggle", {
                             seedIndex = 1
                         end
 
-                        -- Search both Backpack and Character
+                        
                         local function findSeedTool(name)
                             for _, container in ipairs({backpack, character}) do
                                 for _, item in ipairs(container:GetChildren()) do
@@ -1339,7 +1358,7 @@ plant:AddToggle("auto_plant_toggle", {
                             task.wait(0.3)
                         end
 
-                        -- Make sure it's held before planting
+                        
                         if findSeedTool(fullSeedName) then
                             local cropName = fullSeedName:gsub(" Seed", "")
                             local pos = hrp.Position
@@ -1367,12 +1386,12 @@ plant:AddToggle("auto_plant_toggle", {
     end
 })
 
--- Get the pet registry module
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local petRegistryModule = ReplicatedStorage:WaitForChild("Data"):WaitForChild("PetRegistry"):WaitForChild("PetList")
 local petRegistry = require(petRegistryModule)
 
--- Build the pet list from the registry
+
 local petlist = {}
 for petName, _ in pairs(petRegistry) do
     table.insert(petlist, petName)
@@ -1380,17 +1399,17 @@ end
 table.sort(petlist)
 
 local selectedpets = {}
--- Normalize selectedpets to a flat array of names
+
 local function getSelectedNames()
     local names = {}
     if typeof(selectedpets) == "table" then
         if #selectedpets > 0 then
-            -- Array-style table
+            
             for _, name in ipairs(selectedpets) do
                 table.insert(names, name)
             end
         else
-            -- Dictionary-style table
+            
             for name, val in pairs(selectedpets) do
                 if val then table.insert(names, name) end
             end
@@ -1408,7 +1427,7 @@ pet:AddDropdown("sellpetsd", {
     Callback = function(selected)
         print("Callback fired")
         selectedpets = selected
-        -- Try both array and dictionary style
+        
         if #selectedpets > 0 then
             print(table.concat(selectedpets, ", "))
         else
@@ -1499,5 +1518,111 @@ pet:AddToggle("autoacceptpet", {
         giftEvent.OnClientEvent:Connect(function(petUUID, petName, fromPlayerName)
             acceptGiftRemote:FireServer(true, petUUID)
         end)
+    end
+})
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Modules
+local giftingService = require(ReplicatedStorage.Modules.PetServices.PetGiftingService)
+local activePets = require(ReplicatedStorage.Modules.PetServices.ActivePetsService)
+local petRegistry = require(ReplicatedStorage.Data.PetRegistry)
+local enumRegistry = require(ReplicatedStorage.Data.EnumRegistry.InventoryServiceEnums)
+
+-- Constants
+local MIN_DISTANCE = petRegistry.PetConfig.PET_GIFTING_CONFIG.MINIMUM_DISTANCE_FOR_GIFTING
+
+-- Toggle state
+local autogiftpets = false
+
+-- Utility: Get base name (strip "[Weight] [Age]" etc)
+local function getBaseName(toolName)
+    return (toolName:gsub("%s*%b[]", "")):gsub("^%s*(.-)%s*$", "%1")
+end
+
+-- Utility: Find nearest valid player within range
+local function getClosestPlayer()
+    local closest = nil
+    local shortest = math.huge
+    local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+    for _, other in ipairs(Players:GetPlayers()) do
+        if other ~= LocalPlayer and other.Character then
+            local dist = (myChar:GetPivot().Position - other.Character:GetPivot().Position).Magnitude
+            if dist < MIN_DISTANCE and dist < shortest then
+                closest = other
+                shortest = dist
+            end
+        end
+    end
+
+    return closest
+end
+
+-- Toggle in UI
+pet:AddToggle("autogiftpets", {
+    Text = "Auto Gift Selected Pets",
+    Tooltip = "Will gift pet to nearest player",
+    Default = false,
+    Callback = function(state)
+        autogiftpets = state
+
+        if autogiftpets then
+            task.spawn(function()
+                print("[AutoGift] Enabled")
+
+                while autogiftpets do
+                    local backpack = LocalPlayer:FindFirstChild("Backpack")
+                    local character = player.Character
+                    local targetPlayer = getClosestPlayer()
+
+                    if targetPlayer and backpack then
+                        for _, selectedName in ipairs(getSelectedNames()) do
+                            for _, tool in ipairs(backpack:GetChildren()) do
+                                if tool:IsA("Tool") and tool:GetAttribute("ItemType") == "Pet" then
+                                    local baseName = getBaseName(tool.Name)
+
+                                    if baseName == selectedName and not tool:GetAttribute("d") then
+                                        local currentTool = character:FindFirstChildOfClass("Tool")
+                                        if currentTool and currentTool ~= tool then
+                                            currentTool.Parent = backpack
+                                            task.wait(0.1)
+                                        end
+                                        tool.Parent = character
+                                        local timeout = 3
+                                        while tool.Parent ~= character and timeout > 0 do
+                                            task.wait(0.1)
+                                            timeout -= 0.1
+                                        end
+                                        if tool.Parent == character then
+                                            giftingService:GivePet(targetPlayer)
+                                            task.wait(0.1)
+                                        end
+
+                                        break
+                                    end
+                                    
+                                    local timeout = 3
+                                    while tool.Parent ~= character and timeout > 0 do
+                                        task.wait(0.1)
+                                        timeout -= 0.1
+                                    end
+
+                                end
+                            end
+                        end
+                    end
+
+                    task.wait(1)
+                end
+
+                print("[AutoGift] Disabled")
+            end)
+        else
+            print("[AutoGift] Turned Off")
+        end
     end
 })

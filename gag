@@ -8,7 +8,10 @@ for _, v in ipairs(CoreGui:GetDescendants()) do
     end
 end
 
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/Library.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/SaveManager.lua"))()
+local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/ThemeManager.lua"))()
 local player = game.Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -301,33 +304,6 @@ local function highlightBiggestFruit()
 	end
 end
 
-local function getShopSeeds()
-    local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    local seedShopGui = playerGui:WaitForChild("Seed_Shop")
-    local seedsFrame = seedShopGui:WaitForChild("Frame"):WaitForChild("ScrollingFrame")
-
-    local seedList = {}
-
-    table.insert(seedList, "All")
-
-    for _, seedFrame in pairs(seedsFrame:GetChildren()) do
-        if seedFrame:IsA("Frame") then
-            local mainFrame = seedFrame:FindFirstChild("Main_Frame")
-            if mainFrame then
-                local seedText = mainFrame:FindFirstChild("Seed_Text")
-                if seedText and seedText:IsA("TextLabel") then
-                    local rawName = seedText.Text or ""
-                    
-                    local cleaned = rawName:gsub("%s*[sS]eed%s*", ""):gsub("^%s*(.-)%s*$", "%1")
-                    table.insert(seedList, cleaned)
-                end
-            end
-        end
-    end
-
-    return seedList
-end
-
 local function savePosition()
     local char = player.Character or player.CharacterAdded:Wait()
     local hrp = char:FindFirstChild("HumanoidRootPart")
@@ -410,9 +386,6 @@ local function favoriteEquippedTool()
     local tool = char and char:FindFirstChildOfClass("Tool") or backpack:FindFirstChildOfClass("Tool")
     if tool and tool:GetAttribute("Favorite") == true then
         ReplicatedStorage.GameEvents.Favorite_Item:FireServer({tool})
-        Library:Notify("Favorited equipped tool!")
-    else
-        Library:Notify("No favorite tool equipped.")
     end
 end
 
@@ -436,6 +409,34 @@ local function getHarvestShop()
     return harvestList
 end
 
+
+local function getShopSeeds()
+    local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    local seedShopGui = playerGui:WaitForChild("Seed_Shop")
+    local seedsFrame = seedShopGui:WaitForChild("Frame"):WaitForChild("ScrollingFrame")
+
+    local seedList = {}
+
+    table.insert(seedList, "All")
+
+    for _, seedFrame in pairs(seedsFrame:GetChildren()) do
+        if seedFrame:IsA("Frame") then
+            local mainFrame = seedFrame:FindFirstChild("Main_Frame")
+            if mainFrame then
+                local seedText = mainFrame:FindFirstChild("Seed_Text")
+                if seedText and seedText:IsA("TextLabel") then
+                    local rawName = seedText.Text or ""
+                    
+                    local cleaned = rawName:gsub("%s*[sS]eed%s*", ""):gsub("^%s*(.-)%s*$", "%1")
+                    table.insert(seedList, cleaned)
+                end
+            end
+        end
+    end
+    return seedList
+end
+
+
 local function getGearShop()
     local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     local gearShopGui = playerGui:WaitForChild("Gear_Shop")
@@ -443,7 +444,6 @@ local function getGearShop()
 
     local gearList = {}
 
-    
     table.insert(gearList, "All")
 
     for _, gearFrame in pairs(gearsFrame:GetChildren()) do
@@ -485,12 +485,12 @@ local window = Library:CreateWindow({
     ToggleKeybind = Enum.KeyCode.LeftControl
 })
 
-local creditsTab = window:AddTab("Misc")
-local mainTab = window:AddTab("Main")
-local shopTab = window:AddTab("Shop")
-local eventTab = window:AddTab("Event")
-local playerTab = window:AddTab("Player")
-local petTab = window:AddTab("Pet")
+local creditsTab = window:AddTab("Misc", "accessibility")
+local mainTab = window:AddTab("Main", "book-user")
+local shopTab = window:AddTab("Shop", "shopping-cart")
+local eventTab = window:AddTab("Event", "sparkle")
+local playerTab = window:AddTab("Player", "user")
+local petTab = window:AddTab("Pet", "egg")
 
 local utilGroup = mainTab:AddLeftGroupbox("Teleport")
 local group = mainTab:AddLeftGroupbox("Fruit")
@@ -503,6 +503,10 @@ local gearShop = shopTab:AddLeftGroupbox("Gear Shop")
 local petGroup = shopTab:AddRightGroupbox("Egg Shop")
 local plant = mainTab:AddLeftGroupbox("Plant")
 local pet = petTab:AddLeftGroupbox("Pets")
+local harvestShop = shopTab:AddLeftGroupbox("Harvest Shop")
+local setting = {
+    ["UI Settings"] = window:AddTab("UI Settings", "settings")
+}
 
 group:AddSlider("fruit_slider", {
     Text = "Fruit Threshold",
@@ -633,7 +637,6 @@ lPlayer:AddToggle("speedwalk_toggle", {
 
 local seedList = getShopSeeds()
 local selectedSeeds = {}
-
 seedShop:AddDropdown("seed_dropdown", {
     Values = seedList,
     Multi = true,
@@ -674,6 +677,7 @@ seedShop:AddToggle("auto_buy_selected_seeds", {
                         for _, seedName in ipairs(selectedSeeds) do
                             event:FireServer(seedName)
                         end
+                        -- Library:Notify("Bought " .. seedName)
                     end
                     task.wait(0.5)
                 end
@@ -700,7 +704,6 @@ group:AddButton("TP, Sell, Return", teleportSellReturn)
 
 local harvestList = getHarvestShop()
 local selectedHarvestShop = {}
-local harvestShop = shopTab:AddLeftGroupbox("Harvest Shop")
 harvestShop:AddDropdown("harvest_dropdown", {
     Text = "Harvest Shop Items",
     Values = harvestList,
@@ -781,6 +784,7 @@ harvestShop:AddToggle("auto_buy_harvest", {
                         
                         for _, itemName in ipairs(toBuy) do
                             event:FireServer(itemName)
+                            Library:Notify("Bought " .. itemName)
                         end
                     end
                     task.wait(0.5)
@@ -1081,15 +1085,18 @@ group2:AddToggle("auto_collect_toggle", {
                     end
 
                     for _, v in next, farm.Important.Plants_Physical:GetChildren() do
+                        if not autoCollect then break end
                         if harvestFilter(v, minWeight, maxWeight) then
                             byte_net_reliable:FireServer(buffer, { v })
                         end
                         if v:FindFirstChild("Fruits", true) then
+                            
                             for _, i in next, v.Fruits:GetChildren() do
                                 if harvestFilter(i, minWeight, maxWeight) then
                                     byte_net_reliable:FireServer(buffer, { i })
                                 end
                             end
+                            task.wait(0.1)
                         end
                     end
                     task.wait(2)
@@ -1627,3 +1634,22 @@ pet:AddToggle("autogiftpets", {
         end
     end
 })
+
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+SaveManager:SetIgnoreIndexes({"MenuKeybind"})
+
+ThemeManager:SetFolder("Y-Hub")
+SaveManager:SetFolder("Y-Hub/Grow-a-Garden")
+
+ThemeManager:ApplyToTab(setting["UI Settings"])
+SaveManager:BuildConfigSection(setting["UI Settings"])
+
+if SaveManager:GetAutoloadConfig() == "none" then
+    SaveManager:SaveAutoloadConfig("Grow-a-Garden")
+end
+
+SaveManager:LoadAutoloadConfig()
+print("Autosaving to:", SaveManager:GetAutoloadConfig())
+SaveManager:AutoSave(1)

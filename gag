@@ -538,6 +538,7 @@ group:AddToggle("auto_sell_toggle", {
 
 group:AddToggle("highlight_biggest_toggle", {
     Text = "Show Biggest",
+    Tooltip = "ESP biggest fruit with weight and price ¢",
     Default = false,
     Callback = function(state)
         highlightToggle = state

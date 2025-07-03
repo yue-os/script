@@ -8,10 +8,10 @@ for _, v in ipairs(CoreGui:GetDescendants()) do
     end
 end
 
-
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/Library.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/SaveManager.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/ThemeManager.lua"))()
+local Players = game.Players
 local player = game.Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -36,13 +36,19 @@ local sign = workspace.SummerHarvestEvent.Sign
 local part = sign:GetChildren()[4]
 local billboardGui = part:FindFirstChild("BillboardGui")
 local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ItemModule = require(ReplicatedStorage:WaitForChild("Item_Module"))
 local MutationHandler = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("MutationHandler"))
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local FormatWithCommas = require(ReplicatedStorage.Modules:WaitForChild("CommaFormatNumber"))
+local PetRegistry = require(ReplicatedStorage.Data.PetRegistry)
+local PetEggs = PetRegistry.PetEggs
+local PetEggService = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("PetEggService")
+local giftingService = require(ReplicatedStorage.Modules.PetServices.PetGiftingService)
+local activePets = require(ReplicatedStorage.Modules.PetServices.ActivePetsService)
+local petRegistry = require(ReplicatedStorage.Data.PetRegistry)
+local MIN_DISTANCE = petRegistry.PetConfig.PET_GIFTING_CONFIG.MINIMUM_DISTANCE_FOR_GIFTING
+local enumRegistry = require(ReplicatedStorage.Data.EnumRegistry.InventoryServiceEnums)
+
 
 local setclipboard = setclipboard or function(text)
     if syn then
@@ -79,7 +85,6 @@ local summerFruits = {
     ["Traveler\'s Fruit"] = true, ["Peace Lily"] = true, ["Aloe Vera"] = true, ["Guanabana"] = true,
     ["White Mullberry"] = true, ["Pitcher Plant"] = true, ["Rafflesia"] = true
 }
-local player = game.Players.LocalPlayer
 local backpack = player:WaitForChild("Backpack")
 local character = player.Character or player.CharacterAdded:Wait()
 
@@ -203,6 +208,40 @@ local function CalculatePlantValue(plant)
 	return math.round(baseData[3] * valueMulti * variantMultiplier * (clamp * clamp))
 end
 
+local function hatchegg()
+    for _, egg in ipairs(workspace:GetDescendants()) do
+        if egg:GetAttribute("OWNER") == player.Name and egg:GetAttribute("EggName") then
+            local eggName = egg:GetAttribute("EggName")
+
+            -- ✅ Filter: Only process selected eggs
+            if table.find(selectedeggs, eggName) then
+                local eggData = PetEggs[eggName]
+                if eggData and eggData.RarityData and eggData.RarityData.Items then
+                    print("Egg:", eggName)
+                    for petName, petInfo in pairs(eggData.RarityData.Items) do
+                        local odds = petInfo.ItemOdd or "?"
+                        
+                        local weightRange = {"?", "?"}
+                        if petInfo.GeneratedPetData and petInfo.GeneratedPetData.WeightRange then
+                            weightRange = petInfo.GeneratedPetData.WeightRange
+                        end
+
+                        local minWeight = tonumber(weightRange[1]) or 0
+                        local maxWeight = tonumber(weightRange[2]) or 0
+
+                        print(("  Pet: %s | Odds: %s | Weight Range: %.2f - %.2f"):format(
+                            petName, tostring(odds), minWeight, maxWeight
+                        ))
+                    end
+
+                else
+                    print("No data for egg:", eggName)
+                end
+            end
+        end
+    end
+end
+
 local function highlightBiggestFruit()
 	local farm = nil
 	for _, f in ipairs(workspace.Farm:GetChildren()) do
@@ -293,7 +332,7 @@ local function highlightBiggestFruit()
                 label.Font = Enum.Font.FredokaOne
                 label.RichText = true
                 label.Text = string.format(
-                    "<font color='rgb(255,255,255)'>Weight: %.2fkg</font>\n<font color='rgb(255,200,0)'>Price: %s ¢</font>",
+                    "<font color='rgb(255,255,255)'>Weight: %.2fkg</font>\n<font color='rgb(255,200,0)'>Value: %s ¢</font>",
                     maxWeight,
                     FormatWithCommas(value)
                 )
@@ -461,6 +500,17 @@ local function getGearShop()
     return gearList
 end
 
+local function getallegg()
+    local eggpath = game:GetService("ReplicatedStorage").Assets.Models.EggModels
+    local egglist = {}
+    table.insert(egglist, "All")
+    for _, egg in pairs(eggpath:GetChildren()) do
+        local eggName = egg.Name
+        table.insert(egglist, eggName)
+    end
+    return egglist
+end
+
 task.spawn(function()
     while true do
         if billboardGui then
@@ -479,6 +529,7 @@ task.wait(1)
 local window = Library:CreateWindow({
     Title = "Y-Hub",
     Center = true,
+    Icon = 128171209017859,
     AutoShow = true,
     Size = UDim2.fromOffset(350, 180),
     ShowCustomCursor = false,
@@ -495,6 +546,7 @@ local petTab = window:AddTab("Pet", "egg")
 local utilGroup = mainTab:AddLeftGroupbox("Teleport")
 local group = mainTab:AddLeftGroupbox("Fruit")
 local group2 = mainTab:AddRightGroupbox("Auto Harvest")
+local antiAfkGroup = mainTab:AddRightGroupbox("Anti-AFK")
 local lPlayer = playerTab:AddLeftGroupbox("Player")
 local rShop = shopTab:AddRightGroupbox("UI")
 local summer = eventTab:AddLeftGroupbox("Summer Event")
@@ -503,19 +555,18 @@ local gearShop = shopTab:AddLeftGroupbox("Gear Shop")
 local petGroup = shopTab:AddRightGroupbox("Egg Shop")
 local plant = mainTab:AddLeftGroupbox("Plant")
 local pet = petTab:AddLeftGroupbox("Pets")
+local hatch = petTab:AddRightGroupbox("Hatch")
 local harvestShop = shopTab:AddLeftGroupbox("Harvest Shop")
 local setting = {
     ["UI Settings"] = window:AddTab("UI Settings", "settings")
 }
 
-group:AddSlider("fruit_slider", {
+group:AddInput("fruit_input", {
     Text = "Fruit Threshold",
-    Min = 1,
-    Max = 200,
-    Default = 10,
-    Rounding = 0,
+    Default = "10",
+    Numeric = true, -- optional: restrict to numeric input only
     Callback = function(val)
-        fruitThreshold = val
+        fruitThreshold = tonumber(val) or 0
     end
 })
 
@@ -543,7 +594,7 @@ group:AddToggle("auto_sell_toggle", {
 
 group:AddToggle("highlight_biggest_toggle", {
     Text = "Show Biggest",
-    Tooltip = "ESP biggest fruit with weight and price ¢",
+    Tooltip = "ESP biggest fruit with weight and value ¢",
     Default = false,
     Callback = function(state)
         highlightToggle = state
@@ -728,6 +779,54 @@ harvestShop:AddDropdown("harvest_dropdown", {
     end
 })
 
+local egglist = getallegg()
+local selectedeggs = {}
+hatch:AddDropdown("egg_dropdown", {
+    Text = "Eggs",
+    Default = {},
+    Values = egglist,
+    Multi = true,
+    Searchable = true,
+    Callback = function(selected)
+        local eggselected = keysOf(selected)
+
+        
+        if table.find(eggselected, "All") then
+            selectedeggs = {}
+            for _, name in ipairs(egglist) do
+                if name ~= "All" then
+                    table.insert(selectedeggs, name)
+                end
+            end
+        else
+            selectedeggs = eggselected
+        end
+
+        Library:Notify("Selected eggs: " .. table.concat(selectedeggs, ", "))
+    end
+})
+
+local function hatchSelectedEggs()
+    for _, egg in ipairs(workspace:GetDescendants()) do
+        if egg:IsA("Model") and egg:GetAttribute("OWNER") == player.Name and egg:GetAttribute("READY") then
+            local eggName = egg:GetAttribute("EggName")
+            if eggName and table.find(selectedeggs, eggName) then
+                PetEggService:FireServer("HatchPet", egg)
+                task.wait(0.1)
+            end
+        end
+    end
+end
+
+-- Add a toggle or button to trigger it manually
+hatch:AddToggle("autohatchtoggle", {
+    Text = "Auto Hatch",
+    Default = false,
+    Callback = function(state)
+        hatchSelectedEggs()
+    end
+})
+
 local gearList = getGearShop()
 local selectedGears = {}
 gearShop:AddDropdown("gear_dropdown", {
@@ -845,7 +944,7 @@ petGroup:AddToggle("auto_buy_pets_toggle", {
     Callback = function(val)
         autoBuyPetsToggle = val
         if val then
-            Library:Notify("Auto buy all pets enabled.")
+            Library:Notify("Auto buy all eggs enabled.")
             task.spawn(function()
                 while autoBuyPetsToggle do
                     for i = 1, 3 do
@@ -858,7 +957,7 @@ petGroup:AddToggle("auto_buy_pets_toggle", {
                 end
             end)
         else
-            Library:Notify("Auto buy all pets disabled.")
+            Library:Notify("Auto buy all eggs disabled.")
         end
     end
 })
@@ -974,8 +1073,6 @@ rShop:AddButton("Daily Quest", function()
     end
 end)
 
-
-local antiAfkGroup = mainTab:AddRightGroupbox("Anti-AFK")
 local antiAfkEnabled = false
 local afkConnection
 
@@ -1433,7 +1530,7 @@ pet:AddDropdown("sellpetsd", {
     Searchable = true,
     Values = petlist,
     Callback = function(selected)
-        print("Callback fired")
+        -- print("Callback fired")
         selectedpets = selected
         
         if #selectedpets > 0 then
@@ -1442,11 +1539,6 @@ pet:AddDropdown("sellpetsd", {
             local names = {}
             for name, val in pairs(selectedpets) do
                 if val then table.insert(names, name) end
-            end
-            if #names > 0 then
-                print(table.concat(names, ", "))
-            else
-                print("No pets selected")
             end
         end
     end
@@ -1507,12 +1599,9 @@ pet:AddToggle("toggleselpet", {
     end
 })
 
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local LocalPlayer = Players.LocalPlayer
 local giftEvent = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("GiftPet")
 local acceptGiftRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("AcceptPetGift")
-local giftNotification = LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("Gift_Notification")
+local giftNotification = player:WaitForChild("PlayerGui"):FindFirstChild("Gift_Notification")
 
 pet:AddToggle("autoacceptpet", {
     Text = "Auto Accept Pet",
@@ -1520,28 +1609,18 @@ pet:AddToggle("autoacceptpet", {
     Callback = function(state)
         autoacceptpet = state
         
-        if giftNotification then
-            giftNotification:Destroy()
-        end
+        -- if giftNotification then
+        --     giftNotification:Destroy()
+        -- end
         giftEvent.OnClientEvent:Connect(function(petUUID, petName, fromPlayerName)
             acceptGiftRemote:FireServer(true, petUUID)
         end)
     end
 })
 
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
 -- Modules
-local giftingService = require(ReplicatedStorage.Modules.PetServices.PetGiftingService)
-local activePets = require(ReplicatedStorage.Modules.PetServices.ActivePetsService)
-local petRegistry = require(ReplicatedStorage.Data.PetRegistry)
-local enumRegistry = require(ReplicatedStorage.Data.EnumRegistry.InventoryServiceEnums)
 
 -- Constants
-local MIN_DISTANCE = petRegistry.PetConfig.PET_GIFTING_CONFIG.MINIMUM_DISTANCE_FOR_GIFTING
 
 -- Toggle state
 local autogiftpets = false
@@ -1555,10 +1634,10 @@ end
 local function getClosestPlayer()
     local closest = nil
     local shortest = math.huge
-    local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local myChar = player.Character or player.CharacterAdded:Wait()
 
     for _, other in ipairs(Players:GetPlayers()) do
-        if other ~= LocalPlayer and other.Character then
+        if other ~= player and other.Character then
             local dist = (myChar:GetPivot().Position - other.Character:GetPivot().Position).Magnitude
             if dist < MIN_DISTANCE and dist < shortest then
                 closest = other
@@ -1570,7 +1649,6 @@ local function getClosestPlayer()
     return closest
 end
 
--- Toggle in UI
 pet:AddToggle("autogiftpets", {
     Text = "Auto Gift Selected Pets",
     Tooltip = "Will gift pet to nearest player",
@@ -1580,10 +1658,10 @@ pet:AddToggle("autogiftpets", {
 
         if autogiftpets then
             task.spawn(function()
-                print("[AutoGift] Enabled")
+                Library:Notify("[AutoGift] Enabled")
 
                 while autogiftpets do
-                    local backpack = LocalPlayer:FindFirstChild("Backpack")
+                    local backpack = player:FindFirstChild("Backpack")
                     local character = player.Character
                     local targetPlayer = getClosestPlayer()
 
@@ -1627,13 +1705,17 @@ pet:AddToggle("autogiftpets", {
                     task.wait(1)
                 end
 
-                print("[AutoGift] Disabled")
+                Library:Notify("[AutoGift] Disabled")
             end)
         else
-            print("[AutoGift] Turned Off")
+            Library:Notify("[AutoGift] Turned Off")
         end
     end
 })
+local unload = setting["UI Settings"]:AddRightGroupbox("Unload Y-Hub")
+unload:AddButton("Unload", function()
+    Library:Unload()
+end)
 
 ThemeManager:SetLibrary(Library)
 SaveManager:SetLibrary(Library)

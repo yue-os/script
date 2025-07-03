@@ -97,7 +97,7 @@ local function startFloat()
     end)
 end
 
-mainGroup:AddToggle("float", {
+local floattoggle = mainGroup:AddToggle("float", {
     Text = "Float",
     Default = false,
     Callback = function(state)
@@ -109,6 +109,21 @@ mainGroup:AddToggle("float", {
         end
     end
 })
+
+floattoggle:AddKeyPicker("floatkey", {
+    Text = "Float",
+    Default = "F",
+    Mode = "Toggle",
+    Callback = function(state)
+        floatt = state
+        if floatt then
+            startFloat()
+        else
+            stopFloat()
+        end
+    end
+})
+
 
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -245,12 +260,31 @@ local function teleportToGround()
 end
 
 local steal = mainTab:AddLeftGroupbox("Steal")
-steal:AddButton("Up", function()
-    teleportToSky()
-end)
-steal:AddButton("Down", function()
-    teleportToGround()
-end)
+local stealtog = steal:AddToggle("stealt", {
+    Text = "Steal",
+    Default = false,
+    Callback = function(state)
+        stealt = state
+        if stealt then
+            teleportToSky()
+        else
+            teleportToGround()
+        end
+    end
+})
+stealtog:AddKeyPicker("stealkey", {
+    Text = "Steal",
+    Default = "R",
+    Mode = "Toggle",
+    Callback = function(state)
+        stealtt = state
+        if stealtt then
+            teleportToSky()
+        else
+            teleportToGround()
+        end
+    end
+})
 
 player.CharacterAdded:Connect(function(newChar)
     char = newChar

@@ -178,9 +178,6 @@ mainGroup:AddToggle("infinityjump", {
     end
 })
 
-mainGroup:AddButton("Jump Boost", function()
-end)
-
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
@@ -208,21 +205,21 @@ local function setSpeedBoost(state)
 end
 
 player.CharacterAdded:Connect(function(character)
-    character:WaitForChild("Humanoid").WalkSpeed = speedBoostEnabled and BOOSTED_SPEED or DEFAULT_SPEED
+    character:WaitForChild("Humanoid").WalkSpeed = rootPart.Velocity and BOOSTED_SPEED or DEFAULT_SPEED
 end)
 
-mainGroup:AddToggle("speedboost", {
-    Text = "Speed Boost",
-    Default = false,
-    Callback = function(state)
-        speedb = state
-        if speedb then
-            setSpeedBoost(true)
-        else
-            setSpeedBoost(false)
-        end
-    end
-})
+-- mainGroup:AddToggle("speedboost", {
+--     Text = "Speed Boost",
+--     Default = false,
+--     Callback = function(state)
+--         speedb = state
+--         if speedb then
+--             setSpeedBoost(true)
+--         else
+--             setSpeedBoost(false)
+--         end
+--     end
+-- })
 
 local player = game:GetService("Players").LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()

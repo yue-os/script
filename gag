@@ -2160,7 +2160,7 @@ do
 			-- 	warn("Name: ", attrItemName)
 			end
 
-			local decodedType = ReversedItemTypeEnums[attrItemType]
+			local decodedType = item_codes[attrItemType]
 			if not decodedType then
 				warn("⚠️ Unknown attrItemType:", attrItemType, "from tool:", tool.Name)
 				continue

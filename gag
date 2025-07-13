@@ -2164,8 +2164,8 @@ do
 			if not decodedType then
 				warn("⚠️ Unknown attrItemType:", attrItemType, "from tool:", tool.Name)
 				continue
-			else
-				warn("dType: ",decodedType)
+			-- else
+			-- 	warn("dType: ",decodedType)
 			end
 
 			-- Matching check

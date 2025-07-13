@@ -2145,7 +2145,7 @@ do
 			local attrUUIDKey = inventory_enums["ITEM_UUID"]
 
 			local attrItemType = tool:GetAttribute(attrTypeKey)
-			local attrItemName = tool:GetAttribute(attrNameKey)
+			local attrItemName = tool:GetAttribute(attrNameKey) or tool:GetAttribute("f") or tool:GetAttribute("l") 
 
 			-- Safety checks
 			if not attrItemType then

@@ -2142,7 +2142,7 @@ do
 			local attrItemName = tool:GetAttribute(inventory_enums["ItemName"])
 
 			local decodedType = item_codes[attrItemType]
-			print(decodedType)
+			print("Type: ", decodedType)
 			if decodedType == req.ItemType and attrItemName == req.ItemData.ItemName then
 				print("✅ MATCHED:", decodedType, "|", attrItemName)
 				tool.Parent = player.Character

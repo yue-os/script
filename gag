@@ -2131,18 +2131,23 @@ do
 	--------------------------------------------------------------
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
-			if tool:IsA("Tool") then
-				local code = tool:GetAttribute("ItemType")
-				local actualType = item_types_reverse[code]
-				local cleanName = baseName(tool.Name)
+			if not tool:IsA("Tool") then continue end
 
-				print("🧪 Tool:", cleanName, "| Type:", actualType)
+			local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"]) -- "s"
+			local attrItemName = tool:GetAttribute(inventory_enums["ItemName"]) -- "Cleaning Spray"
 
-				if actualType == req.ItemType and cleanName == req.ItemData.ItemName then
-					tool.Parent = player.Character
-					equipTool(tool)
-					return tool:GetAttribute("UUID") or tool:GetAttribute("c")
+			local decodedType = nil
+			for k, v in pairs(item_types) do
+				if v == attrItemType then
+					decodedType = k -- will become "SprayBottle"
+					break
 				end
+			end
+
+			if decodedType == req.ItemType and attrItemName == req.ItemData.ItemName then
+				tool.Parent = player.Character
+				equipTool(tool)
+				return tool:GetAttribute(inventory_enums["ITEM_UUID"]) or tool:GetAttribute("c")
 			end
 		end
 		return nil

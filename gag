@@ -2134,6 +2134,8 @@ do
 	--------------------------------------------------------------
 	-- 2. locate + equip the required input tool, returning UUID
 	--------------------------------------------------------------
+	local ReversedItemTypeEnums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
+
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
 			if not tool:IsA("Tool") then continue end
@@ -2155,7 +2157,7 @@ do
 				continue
 			end
 
-			local decodedType = item_codes[attrItemType]
+			local decodedType = ReversedItemTypeEnums[attrItemType]
 			if not decodedType then
 				warn("⚠️ Unknown attrItemType:", attrItemType, "from tool:", tool.Name)
 				continue

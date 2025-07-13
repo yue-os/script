@@ -2138,7 +2138,7 @@ do
 
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
-			if not tool:IsA("Tool") and baseName(tool.Name) == req.ItemData.ItemName then continue end
+			if not tool:IsA("Tool") and not baseName(tool.Name) == req.ItemData.ItemName then continue end
 			local attrTypeKey = inventory_enums["ITEM_TYPE"]
 			local attrNameKey = inventory_enums["ItemName"]
 			local attrUUIDKey = inventory_enums["ITEM_UUID"]
@@ -2150,10 +2150,14 @@ do
 			if not attrItemType then
 				warn("⚠️ Missing ITEM_TYPE attribute for tool:", baseName(tool.Name))
 				continue
+			else
+				warn("Type: ", attrItemType)
 			end
 			if not attrItemName then
 				warn("⚠️ Missing ItemName attribute for tool:", baseName(tool.Name))
 				continue
+			else
+				warn("Name: ", attrItemName)
 			end
 
 			local decodedType = ReversedItemTypeEnums[attrItemType]

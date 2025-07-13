@@ -2131,7 +2131,7 @@ do
 			and baseName(tool.Name) == req.ItemData.ItemName
 			then
 				tool.Parent = player.Character                  -- equip
-				equip_tool_reliable(tool)                                -- your reliable equip
+				equipTool(tool)                                -- your reliable equip
 				return tool:GetAttribute("UUID") or tool:GetAttribute("c")
 			end
 		end

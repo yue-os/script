@@ -2149,11 +2149,11 @@ do
 
 			-- Safety checks
 			if not attrItemType then
-				warn("⚠️ Missing ITEM_TYPE attribute for tool:", tool.Name)
+				warn("⚠️ Missing ITEM_TYPE attribute for tool:", baseName(tool.Name))
 				continue
 			end
 			if not attrItemName then
-				warn("⚠️ Missing ItemName attribute for tool:", tool.Name)
+				warn("⚠️ Missing ItemName attribute for tool:", baseName(tool.Name))
 				continue
 			end
 

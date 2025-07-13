@@ -1,0 +1,58 @@
+    Text    = "Auto Claim",
+            -- fire a Claim on your Dino bench every 5s
+                "Claim",
+local dinoUi = dino:AddToggle("dino_quest_toggle", {
+    Text = "Dino Quest UI",
+        local ui = player.PlayerGui:FindFirstChild("DinoQuests_UI")
+rShop:AddButton("Daily Quest", function()
+    local ui = player.PlayerGui:FindFirstChild("DailyQuests_UI")
+        Library:Notify("Daily Quest UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+UserInputService.JumpRequest:Connect(function()
+            if syn and syn.request then
+                syn.request({Url = "https://discord.gg/WswepWXvr9", Method = "GET"})
+--      ▸ Automatically switches to another quest when
+    local STALL_TIME = 5       -- seconds with 0 progress → abandon quest
+        for _,cont in pairs(DataService:GetData().QuestContainers) do
+                for _,q in ipairs(cont.Quests or {}) do
+        while _G.autoDinoQuest and not Library.Unloaded do
+            if bagCnt()>=200 then repeat task.wait(2) until bagCnt()<100 or not _G.autoDinoQuest end
+            if not _G.autoDinoQuest then break end
+        if planting or not _G.autoDinoQuest then return end
+        while _G.autoDinoQuest and not Library.Unloaded do
+        while _G.autoDinoQuest and not Library.Unloaded do
+		while _G.autoDinoQuest and not Library.Unloaded do
+            while _G.autoDinoQuest and not Library.Unloaded do
+                for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
+                        for _,q in ipairs(cont.Quests or {}) do
+    _G.autoDinoQuest = false
+    dino:AddToggle("auto_dino_quest", {
+        Text = "Auto Dino Quest",
+            _G.autoDinoQuest = v
+            if v then Library:Notify("[AutoDinoQuest] Enabled") supervisor()
+            else     Library:Notify("[AutoDinoQuest] Disabled") end
+dino:AddToggle("auto_claimq", {
+	Text = "Auto Claim Quest",
+		claimQ = state
+		local questSlot = {1, 2, 3}
+			while claimQ and not Library.Unloaded do
+				for _, v in ipairs(questSlot) do
+						game:GetService("ReplicatedStorage").GameEvents.ClaimDinoQuest:InvokeServer(v)
+						-- print("Tried claiming quest", v)
+				task.wait(2) -- Wait before repeating the claim cycle
+local reclaimRemote = ReplicatedStorage.GameEvents:WaitForChild("ReclaimerService_RE")
+plant:AddToggle("auto_reclaim", {
+	Text = "Auto Reclaim",
+		autoReclaim = state
+			while autoReclaim and not Library.Unloaded do
+				local didReclaim = false
+						if not autoReclaim then break end
+						reclaimRemote:FireServer("TryReclaim", plant)
+						didReclaim = true
+						print("✅ Reclaimed", plant.Name)
+				task.wait(didReclaim and 0.3 or 1)
+local auto_claim_enabled = false
+dino:AddToggle("auto_claim", {
+    Text    = "Auto Claim",
+        auto_claim_enabled = state
+        if auto_claim_enabled then
+                    :FireServer("ClaimReward")

@@ -2750,13 +2750,13 @@ pet:AddToggle("togglesellpet", {
                             if tool:GetAttribute("ItemType") == "Pet" then
                                 local baseName = getBaseName(tool.Name)
                                 local weight, age = extractStatsFromName(tool.Name)
-
+								local fave = tool:GetAttribute("d")
                                 if baseName == selectedName then
                                     local passesWeight = (not minPetWeight or weight >= minPetWeight)
                                         and (not maxPetWeight or weight <= maxPetWeight)
-                                    local passesAge = (not minPetAge or age >= minPetAge)
+                                    local passesAge = (not minPetAge or age <= minPetAge)
 
-                                    if passesWeight and passesAge then
+                                    if passesWeight and passesAge and not fave then
                                         local current = character:FindFirstChildOfClass("Tool")
                                         if current and current ~= tool then
                                             current.Parent = backpack

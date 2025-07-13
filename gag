@@ -2150,20 +2150,22 @@ do
 			if not attrItemType then
 				warn("⚠️ Missing ITEM_TYPE attribute for tool:", baseName(tool.Name))
 				continue
-			else
-				warn("Type: ", attrItemType)
+			-- else
+			-- 	warn("Type: ", attrItemType)
 			end
 			if not attrItemName then
 				warn("⚠️ Missing ItemName attribute for tool:", baseName(tool.Name))
 				continue
-			else
-				warn("Name: ", attrItemName)
+			-- else
+			-- 	warn("Name: ", attrItemName)
 			end
 
 			local decodedType = ReversedItemTypeEnums[attrItemType]
 			if not decodedType then
 				warn("⚠️ Unknown attrItemType:", attrItemType, "from tool:", tool.Name)
 				continue
+			else
+				warn("dType: ",decodedType)
 			end
 
 			-- Matching check

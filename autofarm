@@ -1,0 +1,51 @@
+local myFarm
+for i, farm in ipairs(workspace.Farm:GetChildren()) do
+    local owner = farm:WaitForChild("Important")
+        myFarm = farm
+        farmNumber = i
+    ["Harvest Tool"]      = "f",
+	local farm = nil
+	for _, f in ipairs(workspace.Farm:GetChildren()) do
+			farm = f
+	if not farm then
+		Library:Notify("No owned farm found.")
+	local plants = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
+    local cFrame = myFarm.Spawn_Point.CFrame
+local group2 = mainTab:AddRightGroupbox("Auto Harvest")
+local object_physical = myFarm.Important:FindFirstChild("Objects_Physical")
+local plant_locations = myFarm.Important.Plant_Locations
+	["Harvest Tool"] = "f",
+local harvestShop = rShop:AddToggle("harvestshop_toggle", {
+    Text = "Harvest Shop",
+            Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+-- harvestShop:AddKeyPicker("harvestshop_keybind", {
+--     Text = "Harvest Shop",
+--             Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+local harvestFruitNames = {}
+	Tooltip = "Select plants to Harvest",
+-- group2:AddInput("harvest_fruit_input", {
+--         harvestFruitNames = {}
+--                 harvestFruitNames[fruit] = true
+--         Library:Notify("Harvest fruit filter set!")
+local function harvestFilter(item, minW, maxW)
+                    for _, v in next, myFarm.Important.Plants_Physical:GetChildren() do
+                        if harvestFilter(v, minWeight, maxWeight) then
+                                if harvestFilter(i, minWeight, maxWeight) then
+-- 🦖  Auto-Dino-Quest  (Harvest • Plant • GrowPetToAge)
+    local farm     = workspace.Farm:GetChildren()[farmNumber]
+    -- HARVEST  (stalls out after STALL_TIME)
+    local harvesting=false
+    local function harvestCrop(crop)
+        if harvesting then return end
+        harvesting = true
+        local lastProg, stallT = progress("Harvest",crop)
+            local pf = farm and farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
+            local prog,target = progress("Harvest",crop)
+        harvesting=false
+                            if     q.Type == "Harvest"       then task.spawn(harvestCrop , arg1)
+local plantsFolder = myFarm:FindFirstChild("Important"):FindFirstChild("Plants_Physical")
+local plantsFolder = myFarm:WaitForChild("Important"):WaitForChild("Plants_Physical")
+			local farm = myFarm
+			local plantFolder = farm and farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
+    if not myFarm then return {} end
+    local plantsFolder = myFarm:FindFirstChild("Important"):FindFirstChild("Plants_Physical")

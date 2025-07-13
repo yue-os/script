@@ -2126,15 +2126,21 @@ do
 	--------------------------------------------------------------
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
-			if tool:IsA("Tool")
-			and tool:GetAttribute("ItemType") == req.ItemType
-			and baseName(tool.Name) == req.ItemData.ItemName
-			then
-				tool.Parent = player.Character                  -- equip
-				equipTool(tool)                                -- your reliable equip
-				return tool:GetAttribute("UUID") or tool:GetAttribute("c")
+			if tool:IsA("Tool") then
+				local toolType = tool:GetAttribute("ItemType")
+				local cleanName = baseName(tool.Name)
+				print("Checking:", tool.Name, "| Base:", cleanName, "| Type:", toolType)
+
+				if toolType == req.ItemType and cleanName == req.ItemData.ItemName then
+					tool.Parent = player.Character
+					equipTool(tool)
+					print("Required:", req.ItemData.ItemName, "| Type:", req.ItemType)
+
+					return tool:GetAttribute("UUID") or tool:GetAttribute("c")
+				end
 			end
 		end
+
 		return nil
 	end
 

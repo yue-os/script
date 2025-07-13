@@ -2143,12 +2143,15 @@ do
 					break
 				end
 			end
-
 			if decodedType == req.ItemType and attrItemName == req.ItemData.ItemName then
 				tool.Parent = player.Character
 				equipTool(tool)
 				return tool:GetAttribute(inventory_enums["ITEM_UUID"]) or tool:GetAttribute("c")
 			end
+			
+			print("Looking for", req.ItemType, "|", req.ItemData.ItemName)
+			print("→ Found tool with type:", decodedType, "| name:", attrItemName)
+
 		end
 		return nil
 	end

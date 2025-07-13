@@ -2136,7 +2136,7 @@ do
 	--------------------------------------------------------------
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
-			if not tool:IsA("Tool") then
+			if tool:IsA("Tool") then
 				local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"])
 				-- print("attrType: ", attrItemType)
 				local attrItemName = tool:GetAttribute(inventory_enums["ItemName"])

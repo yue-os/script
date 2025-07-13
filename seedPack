@@ -1,0 +1,58 @@
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local Remotes = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Remotes"))
+local SeedPackData = require(ReplicatedStorage:WaitForChild("Data"):WaitForChild("SeedPackData"))
+
+-- Utilities
+local function getPackList()
+    local list = {}
+    for name in pairs(SeedPackData.Packs) do
+        table.insert(list, name)
+    end
+    table.sort(list)
+    return list
+end
+
+local state = {
+    selected = {},
+    auto = false,
+    busy = false
+}
+
+Remotes.SeedPack.Result.listen(function()
+    state.busy = false
+    Remotes.SeedPack.SpinFinished.send()
+end)
+
+creditsGroup:AddDropdown("Select Pack", {
+    Values = getPackList(),
+    Multi = true,
+    Callback = function(packs)
+        state.selected = packs
+    end
+})
+
+creditsGroup:AddToggle("Auto Open", {
+    Default = false,
+    Callback = function(toggle)
+        state.auto = toggle
+        if not toggle then return end
+
+        task.spawn(function()
+            while state.auto do
+                if not state.busy and #state.selected > 0 then
+                    for _, pack in ipairs(state.selected) do
+                        state.busy = true
+                        Remotes.SeedPack.Open.send(pack)
+                        repeat task.wait(0.1) until not state.busy or not state.auto
+                        if not state.auto then break end
+                    end
+                end
+                task.wait(1)
+            end
+        end)
+    end
+})

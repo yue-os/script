@@ -2700,19 +2700,19 @@ pet:AddDropdown("sellpetsd", {
         end
     end
 })
-
+local minPetWeight = 0
 pet:AddInput("MinWeight", {
     Text = "Min Weight (kg)",
-    Placeholder = "e.g. 1.5",
+    Placeholder = "Default 0",
     Callback = function(value)
         minPetWeight = tonumber(value)
         Library:Notify("Min weight set to: " .. (minPetWeight or "none"))
     end
 })
-
+local minPetWeight = 999
 pet:AddInput("MaxWeight", {
     Text = "Max Weight (kg)",
-    Placeholder = "e.g. 5",
+    Placeholder = "Default: 999",
     Callback = function(value)
         maxPetWeight = tonumber(value)
         Library:Notify("Max weight set to: " .. (maxPetWeight or "none"))

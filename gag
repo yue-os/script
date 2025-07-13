@@ -115,10 +115,11 @@ local item_types = {
     ["SprayBottle"]       = "s"
 }
 
-local item_types_reverse = {}
+local item_codes = {}
 for k, v in pairs(item_types) do
-	item_types_reverse[v] = k
+	item_codes[v] = k
 end
+
 
 local function keysOf(dict)
     local list = {}
@@ -2137,28 +2138,23 @@ do
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
 			if not tool:IsA("Tool") then continue end
 
-			local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"]) -- "s"
-			local attrItemName = tool:GetAttribute(inventory_enums["ItemName"]) -- "Cleaning Spray"
+			local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"])
+			local attrItemName = tool:GetAttribute(inventory_enums["ItemName"])
 
-			local decodedType = nil
-			for k, v in pairs(item_types) do
-				if v == attrItemType then
-					decodedType = k -- will become "SprayBottle"
-					break
-				end
-			end
+			local decodedType = item_codes[attrItemType]
+
 			if decodedType == req.ItemType and attrItemName == req.ItemData.ItemName then
+				print("✅ MATCHED:", decodedType, "|", attrItemName)
 				tool.Parent = player.Character
 				equipTool(tool)
 				return tool:GetAttribute(inventory_enums["ITEM_UUID"]) or tool:GetAttribute("c")
 			end
-			
-			print("Looking for", req.ItemType, "|", req.ItemData.ItemName)
-			print("→ Found tool with type:", decodedType, "| name:", attrItemName)
-
 		end
+
+		print("❌ No tool found for:", req.ItemType, "|", req.ItemData.ItemName)
 		return nil
 	end
+
 
 
 	--------------------------------------------------------------

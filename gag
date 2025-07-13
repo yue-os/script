@@ -2139,6 +2139,7 @@ do
 			-- if not tool:IsA("Tool") then continue end
 
 			local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"])
+			print("attrType: ", attrItemType)
 			local attrItemName = tool:GetAttribute(inventory_enums["ItemName"])
 
 			local decodedType = item_codes[attrItemType]

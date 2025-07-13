@@ -799,14 +799,14 @@ local plant_locations = myFarm.Important.Plant_Locations
 
 local placingEggs = false
 
-local minToPlace = 3
-hatch:AddInput("amountoplace", {
-    Text = "Your max egg slot available",
-    Placeholder = "Default is 3",
-    Callback = function(value)
-        minToPlace = tonumber(value)
-    end
-})
+-- local minToPlace = 3
+-- hatch:AddInput("amountoplace", {
+--     Text = "Your max egg slot available",
+--     Placeholder = "Default is 3",
+--     Callback = function(value)
+--         minToPlace = tonumber(value)
+--     end
+-- })
 ------------------------------------------------------------------
 --  🐣  AUTO-PLACE EGGS
 ------------------------------------------------------------------
@@ -858,6 +858,8 @@ end
 
 local autoPlaceEggs = false
 
+
+
 hatch:AddToggle("auto_place_eggs", {
   Text    = "Auto Place Eggs",
   Default = false,
@@ -883,7 +885,9 @@ task.spawn(function()
         ----------------------------------------------------------
         -- your existing “while garden has room, loop through eggs” logic
         ----------------------------------------------------------
-        local gardenHasRoom = #object_physical:GetChildren() < minToPlace
+		local data = require(ReplicatedStorage.Modules.DataService):GetData()
+		local totalEgg = data.PetsData.PurchasedEggSlots + 3
+        local gardenHasRoom = #object_physical:GetChildren() < totalEgg
         if gardenHasRoom then
           for _, tool in ipairs(backpack:GetChildren()) do
             if not autoPlaceEggs then break end
@@ -912,14 +916,14 @@ task.spawn(function()
 
                 EggRE:FireServer("CreateEgg", pos)
                 task.wait(0.25)
-
-                if #object_physical:GetChildren() > minToPlace then
+				
+                if #object_physical:GetChildren() > totalEgg then
                   break
                 end
               end
 
               player.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
-              if #object_physical:GetChildren() > minToPlace then
+              if #object_physical:GetChildren() > totalEgg then
                 break
               end
             end
@@ -1449,7 +1453,7 @@ petGroup:AddToggle("auto_buy_egg", {
 						end
 					end
 
-					task.wait(5) -- cooldown
+					task.wait(1) -- cooldown
 				end
 			end)
 		else

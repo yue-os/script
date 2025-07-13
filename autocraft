@@ -1,0 +1,112 @@
+-- gui.Name = "CraftTeleportUI"
+-- btn.Name = "CraftButton"
+local craft = eventTab:AddRightGroupbox("Crafting")
+local function setRecipe(itemName)
+    local craftingTable = dinoEvent:WaitForChild("DinoCraftingTable")
+        :WaitForChild("CraftingGlobalObjectService")
+    remote:FireServer("SetRecipe", craftingTable, "DinoEventWorkbench", itemName)
+    table.insert(dlist, "No Recipes Found")
+local selectedRecipe = nil
+    Text = "Recipes Available",
+        selectedRecipe = selected
+            Library:Notify("Selected recipe: " .. selected)
+            Library:Notify("No recipe selected.")
+local autoCraftEnabled = false
+dino:AddToggle("auto_craft_toggle", {
+    Text = "Auto Set Recipe",
+        autoCraftEnabled = val
+-- Auto Craft Loop (Lightweight, safe)
+        if autoCraftEnabled and selectedRecipe and selectedRecipe ~= "All" then
+                setRecipe(selectedRecipe)
+        task.wait(2) -- Craft interval (adjust as needed)
+local CraftingRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService")
+local craftingTable = workspace.DinoEvent.DinoCraftingTable
+-- 🧬 Dino Recipe to Slot Map
+local recipeSlotMap = {
+				CraftingRemote:FireServer("InputItem", craftingTable, "DinoEventWorkbench", slot, {
+	if not selectedRecipe or not recipeSlotMap[selectedRecipe] then return end
+	local requiredItems = recipeSlotMap[selectedRecipe]
+	CraftingRemote:FireServer("Craft", craftingTable, "DinoEventWorkbench")
+	local craftingTable = workspace:WaitForChild("Interaction")
+		:WaitForChild("DinoCraftingTable")
+	for _, descendant in ipairs(craftingTable:GetDescendants()) do
+dino:AddToggle("auto_craft", {
+        local craftingTable = workspace:WaitForChild("Interaction"):WaitForChild("UpdateItems"):WaitForChild("DinoEvent"):WaitForChild("DinoCraftingTable")
+            game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService"):FireServer("Craft", craftingTable, "DinoEventWorkbench")
+dino:AddToggle("claim_craft", {
+        auto_claim_craft = state
+        if auto_claim_craft then
+            CraftingRemote:FireServer(
+                crafting_table,
+    local RecipeRegistry = require(ReplicatedStorage.Data.CraftingData.CraftingRecipeRegistry)
+	local RecipeRegistry = require(ReplicatedStorage.Data.CraftingData.CraftingRecipeRegistry)
+	local craftingRemote = ReplicatedStorage.GameEvents.CraftingGlobalObjectService
+			return workspace.CraftingTables.EventCraftingWorkBench
+			return workspace.DinoEvent.DinoCraftingTable
+	-- 4. re-written craft worker (stall-aware + one-liner remotes)
+	local crafting = false
+	local function craftItem(itemName)
+		if crafting then return end
+		crafting = true
+		local recipe = RecipeRegistry.ItemRecipes[itemName]
+		if not recipe then
+			Library:Notify("[AutoCraft] No recipe for "..itemName, 3)
+			crafting = false
+		print("is recipe", recipe)
+		local machineType = recipe.MachineTypes[1]
+			Library:Notify("[AutoCraft] Missing bench for "..machineType, 3)
+			crafting = false
+		local lastProg, t0 = progress("Craft", itemName), os.clock()
+				-- 1) set recipe
+				craftingRemote:FireServer("SetRecipe", bench, machineType, itemName)
+				for slot, req in ipairs(recipe.Inputs or {}) do
+						Library:Notify("[AutoCraft] Need "..req.ItemData.ItemName, 3)
+					craftingRemote:FireServer(
+				-- 3) craft
+				craftingRemote:FireServer("Craft", bench, machineType)
+					local prog, tgt = progress("Craft", itemName)
+				break  -- done crafting this batch
+		crafting = false
+                            elseif q.Type == "Craft" then
+								if itemName then task.spawn(craftItem, itemName) end
+local registry           = require(replicated_storage.Data.CraftingData.CraftingRecipeRegistry)
+local crafting_remote    = replicated_storage.GameEvents.CraftingGlobalObjectService
+-- flattened recipe lookup
+local recipes_by_name = registry.ItemRecipes               -- { [itemName] = recipeData, ... }
+local selected_recipe, selected_machine_type, auto_craft_enabled = nil, nil, false
+local all_recipe_names = {}
+for name in pairs(recipes_by_name) do
+    table.insert(all_recipe_names, name)
+table.sort(all_recipe_names)
+craft:AddDropdown("craft_dropdown", {
+    Text       = "Select Recipe",
+    Tooltip    = "Pick any recipe to craft",
+    Values     = all_recipe_names,
+    Callback   = function(recipe_name)
+        selected_recipe        = recipe_name
+        selected_machine_type  = recipes_by_name[recipe_name].MachineTypes[1]
+        -- print("🍳 Selected:", recipe_name, "→", selected_machine_type)
+craft:AddToggle("auto_craft_toggle", {
+    Text    = "Auto Craft",
+        auto_craft_enabled = state
+local CS   = require(ReplicatedStorage.Modules.CraftingService.CraftingGlobalObjectService)
+    local data = CS:GetIndividualCraftingMachineData(
+        bench:GetAttribute("CraftingObjectType")
+    if data and data.CraftingItems and data.CraftingItems[1] then
+        return data.CraftingItems[1].TimeRemaining > 0
+        if auto_craft_enabled and selected_recipe and selected_machine_type then
+            local tbl = workspace.CraftingTables
+            if isOnCooldown(tbl.EventCraftingWorkBench)
+            or  isOnCooldown(tbl.SeedEventCraftingWorkBench) then
+                   and m:GetAttribute("CraftingObjectType") == selected_machine_type
+                -- scan all idle machines and trigger craft
+                       and machine:GetAttribute("CraftingObjectType") == selected_machine_type
+						crafting_remote:FireServer("Claim", machine, selected_machine_type, 1)
+                        -- print("🏆 Claimed:", selected_recipe)
+                        -- set recipe
+                        crafting_remote:FireServer("SetRecipe", machine, selected_machine_type, selected_recipe)
+                        for slot, input_req in ipairs(recipes_by_name[selected_recipe].Inputs or {}) do
+                            crafting_remote:FireServer(
+                        -- craft & claim
+                            crafting_remote:FireServer("Craft", machine, selected_machine_type)
+                            -- print("🎬 Crafting started:", selected_recipe)

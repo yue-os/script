@@ -2136,19 +2136,20 @@ do
 	--------------------------------------------------------------
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
-			-- if not tool:IsA("Tool") then continue end
+			if not tool:IsA("Tool") then
+				local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"])
+				-- print("attrType: ", attrItemType)
+				local attrItemName = tool:GetAttribute(inventory_enums["ItemName"])
 
-			local attrItemType = tool:GetAttribute(inventory_enums["ITEM_TYPE"])
-			print("attrType: ", attrItemType)
-			local attrItemName = tool:GetAttribute(inventory_enums["ItemName"])
-
-			local decodedType = item_codes[attrItemType]
-			print("Type: ", decodedType)
-			if decodedType == req.ItemType and attrItemName == req.ItemData.ItemName then
-				print("✅ MATCHED:", decodedType, "|", attrItemName)
-				tool.Parent = player.Character
-				equipTool(tool)
-				return tool:GetAttribute(inventory_enums["ITEM_UUID"]) or tool:GetAttribute("c")
+				local decodedType = item_codes[attrItemType]
+				print("Decoded Type: ", decodedType, "reqType: ", req.ItemType)
+				print("attrName", attrItemName, "reqName: ", req.ItemData.ItemName)
+				if decodedType == req.ItemType and attrItemName == req.ItemData.ItemName then
+					print("✅ MATCHED:", decodedType, "|", attrItemName)
+					tool.Parent = player.Character
+					equipTool(tool)
+					return tool:GetAttribute(inventory_enums["ITEM_UUID"]) or tool:GetAttribute("c")
+				end
 			end
 		end
 

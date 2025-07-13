@@ -115,6 +115,11 @@ local item_types = {
     ["SprayBottle"]       = "s"
 }
 
+local item_types_reverse = {}
+for k, v in pairs(item_types) do
+	item_types_reverse[v] = k
+end
+
 local function keysOf(dict)
     local list = {}
     if type(dict) ~= "table" then
@@ -2127,22 +2132,22 @@ do
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
 			if tool:IsA("Tool") then
-				local toolType = tool:GetAttribute("ItemType")
+				local code = tool:GetAttribute("ItemType")
+				local actualType = item_types_reverse[code]
 				local cleanName = baseName(tool.Name)
-				print("Checking:", tool.Name, "| Base:", cleanName, "| Type:", toolType)
 
-				if toolType == req.ItemType and cleanName == req.ItemData.ItemName then
+				print("🧪 Tool:", cleanName, "| Type:", actualType)
+
+				if actualType == req.ItemType and cleanName == req.ItemData.ItemName then
 					tool.Parent = player.Character
 					equipTool(tool)
-					print("Required:", req.ItemData.ItemName, "| Type:", req.ItemType)
-
 					return tool:GetAttribute("UUID") or tool:GetAttribute("c")
 				end
 			end
 		end
-
 		return nil
 	end
+
 
 	--------------------------------------------------------------
 	-- 3. correct model look-up for each workbench

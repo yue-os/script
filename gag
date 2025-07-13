@@ -2754,7 +2754,7 @@ pet:AddToggle("togglesellpet", {
                                 if baseName == selectedName then
                                     local passesWeight = (not minPetWeight or weight >= minPetWeight)
                                         and (not maxPetWeight or weight <= maxPetWeight)
-                                    local passesAge = (not minPetAge or age <= minPetAge)
+                                    local passesAge = (not minPetAge or age < minPetAge)
 
                                     if passesWeight and passesAge and not fave then
                                         local current = character:FindFirstChildOfClass("Tool")

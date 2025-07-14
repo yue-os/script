@@ -51,7 +51,7 @@ function u.myFarm()
 	end
 	return nil
 end
-local myFarm = u.myFarm()
+-- local myFarm = u.myFarm()
 
 
 -- ========== BASIC UTILS ==========
@@ -308,7 +308,7 @@ end
 function u.teleportSellReturn()
     savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
-    local cFrame = myFarm.Spawn_Point.CFrame
+    local cFrame = u.myFarm().Spawn_Point.CFrame
     if not hrp then return end
     hrp.CFrame = CFrame.new(86.57965850830078, 2.999999761581421, 0.4267919063568115)
     task.wait(0.25)
@@ -489,7 +489,7 @@ function u.getTrowel()
 		end
 	end
 end
-local plantFolder = myFarm:FindFirstChild("Important") and myFarm.Important:FindFirstChild("Plants_Physical")
+local plantFolder = u.myFarm():FindFirstChild("Important") and u.myFarm().Important:FindFirstChild("Plants_Physical")
 function u.moveSelectedPlantType()
 	if not savedPosition then
 		Library:Notify("⚠️ Please save a position first!")

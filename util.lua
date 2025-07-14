@@ -51,7 +51,7 @@ function u.myFarm()
 	end
 	return nil
 end
-
+local myFarm = u.myFarm()
 
 
 -- ========== BASIC UTILS ==========

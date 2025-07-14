@@ -566,7 +566,7 @@ task.spawn(function()
       ----------------------------------------------------------
       if place_egg_method == "" then
         getgenv().Library:Notify("⚠️  Select a placement method first!")
-      elseif place_egg_method == "Selected Position" and not selected_position_egg then
+      elseif place_egg_method == "Selected Position" and not getgenv().selected_position_egg then
         getgenv().Library:Notify("⚠️  Save a position first!")
       elseif #getgenv().selectedeggs == 0 then
         getgenv().Library:Notify("⚠️  Pick at least one egg!")

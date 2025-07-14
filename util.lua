@@ -536,12 +536,12 @@ function u.moveSelectedPlantType()
 	end
 end
 
-local selectedeggs = getgenv().selectedeggs or {}
+
 function u.hatchSelectedEggs()
     for _, egg in ipairs(workspace:GetDescendants()) do
         if egg:IsA("Model") and egg:GetAttribute("OWNER") == player.Name and egg:GetAttribute("READY") then
             local eggName = egg:GetAttribute("EggName")
-            if eggName and table.find(selectedeggs, eggName) then
+            if eggName and table.find(getgenv().selectedeggs, eggName) then
                 PetEggService:FireServer("HatchPet", egg)
                 task.wait(0.1)
             end
@@ -568,8 +568,8 @@ task.spawn(function()
         getgenv().Library:Notify("⚠️  Select a placement method first!")
       elseif place_egg_method == "Selected Position" and not selected_position_egg then
         getgenv().Library:Notify("⚠️  Save a position first!")
-      elseif #selectedeggs == 0 then
-        getgenv().Library:Notify("⚠️  Tick at least one egg!")
+      elseif #getgenv().selectedeggs == 0 then
+        getgenv().Library:Notify("⚠️  Pick at least one egg!")
       else
         ----------------------------------------------------------
         -- your existing “while garden has room, loop through eggs” logic
@@ -582,10 +582,10 @@ task.spawn(function()
             if not autoPlaceEggs then break end
             if tool:IsA("Tool")
 				and tool:GetAttribute(u.inventory_enums.ITEM_TYPE) == u.item_types.PetEgg
-				and table.find(selectedeggs, tool:GetAttribute(u.inventory_enums.EggName))
+				and table.find(getgenv().selectedeggs, tool:GetAttribute(u.inventory_enums.EggName))
             then
               if not u.equipTool(tool) then 
-				-- print("NO: ", selectedeggs)
+				    getgenv().Library:Notify(string.format("NO: ", selectedeggs), 3)
 				break 
 			end
 

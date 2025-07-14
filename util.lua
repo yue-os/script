@@ -270,7 +270,7 @@ function u.highlightBiggestFruit()
     end
 end
 
-local function savePosition()
+function u.savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if hrp then
         getgenv().savedPosition = hrp.CFrame
@@ -307,7 +307,7 @@ end
 
 
 function u.teleportSellReturn()
-    savePosition()
+    u.savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     local cFrame = u.myFarm().Spawn_Point.CFrame
     if not hrp then return end

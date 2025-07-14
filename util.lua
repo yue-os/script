@@ -294,7 +294,7 @@ function u.allPlants()
     local seeds = { "All" } 
 
     for _, data in pairs(seedData) do
-        local cleanedName = cleanPlantName(data.SeedName)
+        local cleanedName = u.cleanPlantName(data.SeedName)
         if not table.find(seeds, cleanedName) then
             table.insert(seeds, cleanedName)
         end

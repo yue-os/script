@@ -312,7 +312,7 @@ function u.teleportSellReturn()
     if not hrp then return end
     hrp.CFrame = CFrame.new(86.57965850830078, 2.999999761581421, 0.4267919063568115)
     task.wait(0.25)
-    sellInventory()
+    u.sellInventory()
     task.wait(0.2)
     hrp.CFrame = cFrame
 end

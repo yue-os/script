@@ -17,7 +17,7 @@ local noclipEnabled = false
 local speedwalkEnabled = false
 local speedValue = 16
 local noclipConn, speedConn
-local savedPosition = nil
+-- local savedPosition = nil
 local backpack = player:WaitForChild("Backpack")
 local character = player.Character or player.CharacterAdded:Wait()
 local UserInputService = game:GetService("UserInputService")
@@ -270,61 +270,6 @@ function u.highlightBiggestFruit()
     end
 end
 
-
-
-function u.getTrowel()
-	for _, tool in ipairs(player.Backpack:GetChildren()) do
-		if tool:IsA("Tool") and tool.Name:match("^Trowel") then
-			return tool
-		end
-	end
-end
-
-local plantFolder = u.myFarm():FindFirstChild("Important") and u.myFarm().Important:FindFirstChild("Plants_Physical")
-function u.moveSelectedPlantType()
-	if not getgenv().savedPosition then
-		getgenv().Library:Notify("⚠️ Please save a position first!")
-		return
-	end
-
-	local trowel = u.getTrowel()
-	if not trowel then
-		getgenv().Library:Notify("🛠️ Trowel not found in backpack.")
-		return
-	end
-
-	local selected = getgenv().selectedPlantss[1]
-	if not selected then
-		getgenv().Library:Notify("🔍 No plant selected from dropdown.")
-		return
-	end
-
-	local trowelRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TrowelRemote")
-	
-	if not plantFolder then
-		warn("❌ Could not find Plants_Physical.")
-		return
-	end
-
-	for _, plant in ipairs(plantFolder:GetChildren()) do
-		if plant:IsA("Model") and plant.Name == selected then
-			local success, err = pcall(function()
-				-- Pick up
-				trowelRemote:InvokeServer("Pickup", trowel, plant)
-				task.wait(0.2)
-
-				-- Place at saved position
-				trowelRemote:InvokeServer("Place", trowel, plant, savedPosition)
-				task.wait(0.1)
-			end)
-
-			if not success then
-				warn("❌ Error moving plant:", plant.Name, err)
-			end
-		end
-	end
-end
-
 function u.savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if hrp then
@@ -537,6 +482,59 @@ function u.harvestFilter(item, minW, maxW)
     return table.find(getgenv().selectedPlants, baseName) and weight >= minW and weight <= maxW
 end
 
+
+function u.getTrowel()
+	for _, tool in ipairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name:match("^Trowel") then
+			return tool
+		end
+	end
+end
+
+local plantFolder = u.myFarm():FindFirstChild("Important") and u.myFarm().Important:FindFirstChild("Plants_Physical")
+function u.moveSelectedPlantType()
+	if not getgenv().savedPosition then
+		getgenv().Library:Notify("⚠️ Please save a position first!")
+		return
+	end
+
+	local trowel = u.getTrowel()
+	if not trowel then
+		getgenv().Library:Notify("🛠️ Trowel not found in backpack.")
+		return
+	end
+
+	local selected = getgenv().selectedPlantss[1]
+	if not selected then
+		getgenv().Library:Notify("🔍 No plant selected from dropdown.")
+		return
+	end
+
+	local trowelRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TrowelRemote")
+	
+	if not plantFolder then
+		warn("❌ Could not find Plants_Physical.")
+		return
+	end
+
+	for _, plant in ipairs(plantFolder:GetChildren()) do
+		if plant:IsA("Model") and plant.Name == selected then
+			local success, err = pcall(function()
+				-- Pick up
+				trowelRemote:InvokeServer("Pickup", trowel, plant)
+				task.wait(0.2)
+
+				-- Place at saved position
+				trowelRemote:InvokeServer("Place", trowel, plant, getgenv().savedPosition)
+				task.wait(0.1)
+			end)
+
+			if not success then
+				warn("❌ Error moving plant:", plant.Name, err)
+			end
+		end
+	end
+end
 
 
 return u

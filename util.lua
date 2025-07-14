@@ -1,5 +1,6 @@
 
 local u = {}
+getgenv().gag = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/gag", true))()
     local myFarm
     for i, farm in ipairs(workspace.Farm:GetChildren()) do
         local owner = farm:WaitForChild("Important")
@@ -79,7 +80,7 @@ local u = {}
 
     function u.getFruitCount()
         local count = 0
-        for _, v in pairs(backpack:GetChildren()) do
+        for _, v in pairs(gag.backpack:GetChildren()) do
             if v:FindFirstChild("Weight") and v:FindFirstChild("Variant") then
                 count = count + 1
             end
@@ -88,13 +89,13 @@ local u = {}
     end
 
     function u.removeHighlight()
-        if currentHighlight then
-            currentHighlight:Destroy()
-            currentHighlight = nil
+        if gag.currentHighlight then
+            gag.currentHighlight:Destroy()
+            gag.currentHighlight = nil
         end
-        if currentBillboard then
-            currentBillboard:Destroy()
-            currentBillboard = nil
+        if gag.currentBillboard then
+            gag.currentBillboard:Destroy()
+            gag.currentBillboard = nil
         end
     end
 
@@ -108,14 +109,14 @@ local u = {}
         local weight = plant:FindFirstChild("Weight")
         if not weight then return 0 end
 
-        local baseData = ItemModule.Return_Data(itemName)
+        local baseData = gag.ItemModule.Return_Data(itemName)
         if not baseData or #baseData < 3 then
             warn("Invalid ItemData for:", itemName)
             return 0
         end
 
-        local variantMultiplier = ItemModule.Return_Multiplier(variant.Value)
-        local valueMulti = MutationHandler:CalcValueMulti(plant)
+        local variantMultiplier = gag.ItemModule.Return_Multiplier(variant.Value)
+        local valueMulti = gag.MutationHandler:CalcValueMulti(plant)
         local clamp = math.clamp(weight.Value / baseData[2], 0.95, 1e8)
 
         return math.round(baseData[3] * valueMulti * variantMultiplier * (clamp * clamp))
@@ -127,23 +128,23 @@ local u = {}
             local important = f:FindFirstChild("Important")
             local data = important and important:FindFirstChild("Data")
             local owner = data and data:FindFirstChild("Owner")
-            if owner and owner.Value == player.Name then
+            if owner and owner.Value == gag.player.Name then
                 farm = f
                 break
             end
         end
         if not farm then
-            Library:Notify("No owned farm found.")
-            removeHighlight()
-            lastBiggest = nil
+            gag.Library:Notify("No owned farm found.")
+            gag.removeHighlight()
+            gag.lastBiggest = nil
             return
         end
 
         local plants = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
         if not plants then
-            Library:Notify("No Plants_Physical found.")
-            removeHighlight()
-            lastBiggest = nil
+            gag.Library:Notify("No Plants_Physical found.")
+            gag.removeHighlight()
+            gag.lastBiggest = nil
             return
         end
 
@@ -168,9 +169,9 @@ local u = {}
         end
 
 
-        if biggest ~= lastBiggest then
-            removeHighlight()
-            lastBiggest = biggest
+        if biggest ~= gag.lastBiggest then
+            gag.removeHighlight()
+            gag.lastBiggest = biggest
             if biggest and biggest:IsA("Model") then
                 
                 local highlight = Instance.new("Highlight")
@@ -178,7 +179,7 @@ local u = {}
                 highlight.OutlineTransparency = 0
                 highlight.Adornee = biggest
                 highlight.Parent = biggest
-                currentHighlight = highlight
+                gag.currentHighlight = highlight
 
                 -- Disconnect old rainbow connection if it exists
                 if rainbowConnection then
@@ -219,28 +220,28 @@ local u = {}
                     label.Text = string.format(
                         "<font color='rgb(255,255,255)'>Weight: %.2fkg</font>\n<font color='rgb(255,200,0)'>Value: %s ¢</font>",
                         maxWeight,
-                        FormatWithCommas(value)
+                        gag.FormatWithCommas(value)
                     )
                     label.Parent = bb
-                    currentBillboard = bb
+                    gag.currentBillboard = bb
                 end
             end
         end
     end
 
     local function savePosition()
-        local hrp = character:FindFirstChild("HumanoidRootPart")
+        local hrp = gag.character:FindFirstChild("HumanoidRootPart")
         if hrp then
-            savedPosition = hrp.CFrame
-            Library:Notify("🌍 Position saved!")
+            gag.savedPosition = hrp.CFrame
+            gag.Library:Notify("🌍 Position saved!")
         else
-            Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
+            gag.Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
         end
     end
 
     function u.sellInventory()
-        ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
-        Library:Notify("Inventory sold!")
+        gag.ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
+        gag.Library:Notify("Inventory sold!")
     end
 
     function u.cleanPlantName(name)
@@ -252,7 +253,7 @@ local u = {}
     function u.allPlants()
         local seeds = { "All" } 
 
-        for _, data in pairs(seedData) do
+        for _, data in pairs(gag.seedData) do
             local cleanedName = cleanPlantName(data.SeedName)
             if not table.find(seeds, cleanedName) then
                 table.insert(seeds, cleanedName)
@@ -266,7 +267,7 @@ local u = {}
 
     function u.teleportSellReturn()
         savePosition()
-        local hrp = character:FindFirstChild("HumanoidRootPart")
+        local hrp = gag.character:FindFirstChild("HumanoidRootPart")
         local cFrame = myFarm.Spawn_Point.CFrame
         if not hrp then return end
         hrp.CFrame = CFrame.new(86.57965850830078, 2.999999761581421, 0.4267919063568115)
@@ -284,7 +285,7 @@ local u = {}
     end
 
     function u.getShopSeeds()
-        local seedShopGui = playerGui:WaitForChild("Seed_Shop")
+        local seedShopGui = gag.playerGui:WaitForChild("Seed_Shop")
         local seedsFrame = seedShopGui:WaitForChild("Frame"):WaitForChild("ScrollingFrame")
 
         local seedList = {}
@@ -309,7 +310,7 @@ local u = {}
     end
 
     function u.getMerchantShop()
-        local merchantTbl = require(ReplicatedStorage.Data.TravelingMerchant.TravelingMerchantData)
+        local merchantTbl = require(gag.ReplicatedStorage.Data.TravelingMerchant.TravelingMerchantData)
 
         local result = { "All" }
         local seen   = {}
@@ -340,7 +341,7 @@ local u = {}
     end
 
     function u.getGearShop()
-        local gearShopGui = playerGui:WaitForChild("Gear_Shop")
+        local gearShopGui = gag.playerGui:WaitForChild("Gear_Shop")
         local gearsFrame = gearShopGui:WaitForChild("Frame"):WaitForChild("ScrollingFrame")
 
         local gearList = {}

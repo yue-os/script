@@ -38,10 +38,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local character = player.Character or player.CharacterAdded:Wait()
 
+
 -- getgenv().gag = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/gag", true))()
 
 -- Map myFarm
-local myFarm
+u.myFarm
 for i, farm in ipairs(workspace.Farm:GetChildren()) do
 	local owner = farm:WaitForChild("Important"):WaitForChild("Data"):FindFirstChild("Owner")
 	if owner and tostring(owner.Value) == tostring(player) then
@@ -460,5 +461,75 @@ btn.MouseButton1Click:Connect(function()
         hrp.CFrame = CFrame.new(-285.41, 3.00, -13.98)
     end
 end)
+
+function u.harvestFilter(item, minW, maxW)
+    if not item then return false end
+    local weightObj = item:FindFirstChild("Weight")
+    if not weightObj then return false end
+    local weight = tonumber(weightObj.Value)
+    if not weight then return false end
+
+    local baseName = getBaseName(item.Name)
+
+    if #getgenv().selectedPlants == 0 then
+        return weight >= minW and weight <= maxW
+    end
+
+    return table.find(getgenv().selectedPlants, baseName) and weight >= minW and weight <= maxW
+end
+
+
+function u.getTrowel()
+	for _, tool in ipairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name:match("^Trowel") then
+			return tool
+		end
+	end
+end
+local plantFolder = myFarm:FindFirstChild("Important") and myFarm.Important:FindFirstChild("Plants_Physical")
+function u.moveSelectedPlantType()
+	if not savedPosition then
+		Library:Notify("⚠️ Please save a position first!")
+		return
+	end
+
+	local trowel = getTrowel()
+	if not trowel then
+		Library:Notify("🛠️ Trowel not found in backpack.")
+		return
+	end
+
+	local selected = getgenv().selectedPlantss[1]
+	if not selected then
+		Library:Notify("🔍 No plant selected from dropdown.")
+		return
+	end
+
+	local trowelRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TrowelRemote")
+	
+	if not plantFolder then
+		warn("❌ Could not find Plants_Physical.")
+		return
+	end
+
+	for _, plant in ipairs(plantFolder:GetChildren()) do
+		if plant:IsA("Model") and plant.Name == selected then
+			local success, err = pcall(function()
+				-- Pick up
+				trowelRemote:InvokeServer("Pickup", trowel, plant)
+				task.wait(0.2)
+
+				-- Place at saved position
+				trowelRemote:InvokeServer("Place", trowel, plant, savedPosition)
+				task.wait(0.1)
+			end)
+
+			if not success then
+				warn("❌ Error moving plant:", plant.Name, err)
+			end
+		end
+	end
+end
+
 
 return u

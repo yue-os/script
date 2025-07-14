@@ -278,7 +278,6 @@ function u.savePosition()
     else
         getgenv().Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
     end
-    return getgenv().savedPosition
 end
 
 function u.sellInventory()
@@ -493,12 +492,12 @@ function u.getTrowel()
 end
 local plantFolder = u.myFarm():FindFirstChild("Important") and u.myFarm().Important:FindFirstChild("Plants_Physical")
 function u.moveSelectedPlantType()
-	if not savedPosition then
+	if not getgenv().savedPosition then
 		getgenv().Library:Notify("⚠️ Please save a position first!")
 		return
 	end
 
-	local trowel = getTrowel()
+	local trowel = u.getTrowel()
 	if not trowel then
 		getgenv().Library:Notify("🛠️ Trowel not found in backpack.")
 		return

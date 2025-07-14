@@ -473,7 +473,7 @@ function u.harvestFilter(item, minW, maxW)
     local weight = tonumber(weightObj.Value)
     if not weight then return false end
 
-    local baseName = getBaseName(item.Name)
+    local baseName = u.getBaseName(item.Name)
 
     if #getgenv().selectedPlants == 0 then
         return weight >= minW and weight <= maxW

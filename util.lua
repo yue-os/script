@@ -211,7 +211,7 @@ function u.highlightBiggestFruit()
 
 
     if biggest ~= lastBiggest then
-        removeHighlight()
+        u.removeHighlight()
         lastBiggest = biggest
         if biggest and biggest:IsA("Model") then
             
@@ -240,7 +240,7 @@ function u.highlightBiggestFruit()
 
             local head = biggest:FindFirstChildWhichIsA("BasePart")
             if head then
-                local value = CalculatePlantValue(biggest)
+                local value = u.CalculatePlantValue(biggest)
 
                 local bb = Instance.new("BillboardGui")
                 bb.Size = UDim2.new(0, 160, 0, 60)

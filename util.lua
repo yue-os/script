@@ -12,7 +12,7 @@ local autoSell = false
 local highlightToggle = false
 local currentHighlight = nil
 local currentBillboard = nil
-local lastBiggest = nil
+-- local lastBiggest = nil
 local noclipEnabled = false
 local speedwalkEnabled = false
 local speedValue = 16
@@ -177,7 +177,7 @@ function u.highlightBiggestFruit()
     if not farm then
         getgenv().Library:Notify("No owned farm found.")
         u.removeHighlight()
-        lastBiggest = nil
+        getgenv().lastBiggest = nil
         return
     end
 
@@ -185,7 +185,7 @@ function u.highlightBiggestFruit()
     if not plants then
         getgenv().Library:Notify("No Plants_Physical found.")
         u.removeHighlight()
-        lastBiggest = nil
+        getgenv().lastBiggest = nil
         return
     end
 
@@ -210,9 +210,9 @@ function u.highlightBiggestFruit()
     end
 
 
-    if biggest ~= lastBiggest then
+    if biggest ~= getgenv().lastBiggest then
         u.removeHighlight()
-        lastBiggest = biggest
+        getgenv().lastBiggest = biggest
         if biggest and biggest:IsA("Model") then
             
             local highlight = Instance.new("Highlight")

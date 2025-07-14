@@ -273,7 +273,7 @@ end
 local function savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if hrp then
-        savedPosition = hrp.CFrame
+        getgenv().savedPosition = hrp.CFrame
         getgenv().Library:Notify("🌍 Position saved!")
     else
         getgenv().Library:Notify("❌ Could not save position (HumanoidRootPart missing).")

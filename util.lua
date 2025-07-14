@@ -59,8 +59,8 @@ getgenv().gag = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-o
     }
 
     u.item_codes = {}
-    for k, v in pairs(item_types) do
-        item_codes[v] = k
+    for k, v in pairs(gag.item_types) do
+        gag.item_codes[v] = k
     end
 
 

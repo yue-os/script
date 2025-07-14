@@ -551,7 +551,7 @@ end
 
 local autoPlaceEggs = getgenv().autoPlaceEggs or false
 local place_egg_method = getgenv().place_egg_method
-local selected_position_egg = getgenv().selected_position_egg
+getgenv().selected_position_egg = player.Character:GetPivot().Position
 local EggRE          = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("PetEggService")        -- "CreateEgg" remote
 local shovelName     = "Shovel [Destroy Plants]"                          -- only needed for equip helper
 local auto_place_eggs, placingEggs = false, false
@@ -560,7 +560,7 @@ local plant_locations = u.myFarm().Important.Plant_Locations
 -- persistent place-eggs loop
 task.spawn(function()
   while not getgenv().Library.Unloaded do
-    if autoPlaceEggs then
+    if getgenv().autoPlaceEggs then
       ----------------------------------------------------------
       -- any pre-checks (method selected, position saved, eggs chosen)
       ----------------------------------------------------------
@@ -599,7 +599,7 @@ task.spawn(function()
 				elseif place_egg_method == "Player Position" then
 					pos = player.Character:GetPivot().Position
 				else
-					pos = selected_position_egg
+					pos = getgenv().selected_position_egg
 				end
 				if not pos then break end
 

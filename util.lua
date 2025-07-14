@@ -278,6 +278,7 @@ function u.savePosition()
     else
         getgenv().Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
     end
+    return getgenv().savedPosition
 end
 
 function u.sellInventory()

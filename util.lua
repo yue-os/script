@@ -17,7 +17,7 @@ local noclipEnabled = false
 local speedwalkEnabled = false
 local speedValue = 16
 local noclipConn, speedConn
--- local savedPosition = nil
+local savedPosition = savedPosition
 local backpack = player:WaitForChild("Backpack")
 local character = player.Character or player.CharacterAdded:Wait()
 local UserInputService = game:GetService("UserInputService")
@@ -273,7 +273,7 @@ end
 function u.savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if hrp then
-        getgenv().savedPosition = hrp.CFrame
+        savedPosition = hrp.CFrame
         getgenv().Library:Notify("🌍 Position saved!")
     else
         getgenv().Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
@@ -493,7 +493,7 @@ end
 
 local plantFolder = u.myFarm():FindFirstChild("Important") and u.myFarm().Important:FindFirstChild("Plants_Physical")
 function u.moveSelectedPlantType()
-	if not getgenv().savedPosition then
+	if not savedPosition then
 		getgenv().Library:Notify("⚠️ Please save a position first!")
 		return
 	end
@@ -525,7 +525,7 @@ function u.moveSelectedPlantType()
 				task.wait(0.2)
 
 				-- Place at saved position
-				trowelRemote:InvokeServer("Place", trowel, plant, getgenv().savedPosition)
+				trowelRemote:InvokeServer("Place", trowel, plant, savedPosition)
 				task.wait(0.1)
 			end)
 

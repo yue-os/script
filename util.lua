@@ -37,6 +37,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local character = player.Character or player.CharacterAdded:Wait()
+-- local getgenv().Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/getgenv().Library.lua"))()
 
 
 -- getgenv().gag = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/gag", true))()
@@ -174,16 +175,16 @@ function u.highlightBiggestFruit()
         end
     end
     if not farm then
-        Library:Notify("No owned farm found.")
-        removeHighlight()
+        getgenv().Library:Notify("No owned farm found.")
+        u.removeHighlight()
         lastBiggest = nil
         return
     end
 
     local plants = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
     if not plants then
-        Library:Notify("No Plants_Physical found.")
-        removeHighlight()
+        getgenv().Library:Notify("No Plants_Physical found.")
+        u.removeHighlight()
         lastBiggest = nil
         return
     end
@@ -273,15 +274,15 @@ local function savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if hrp then
         savedPosition = hrp.CFrame
-        Library:Notify("🌍 Position saved!")
+        getgenv().Library:Notify("🌍 Position saved!")
     else
-        Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
+        getgenv().Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
     end
 end
 
 function u.sellInventory()
     ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
-    Library:Notify("Inventory sold!")
+    getgenv().Library:Notify("Inventory sold!")
 end
 
 function u.cleanPlantName(name)
@@ -492,19 +493,19 @@ end
 local plantFolder = u.myFarm():FindFirstChild("Important") and u.myFarm().Important:FindFirstChild("Plants_Physical")
 function u.moveSelectedPlantType()
 	if not savedPosition then
-		Library:Notify("⚠️ Please save a position first!")
+		getgenv().Library:Notify("⚠️ Please save a position first!")
 		return
 	end
 
 	local trowel = getTrowel()
 	if not trowel then
-		Library:Notify("🛠️ Trowel not found in backpack.")
+		getgenv().Library:Notify("🛠️ Trowel not found in backpack.")
 		return
 	end
 
 	local selected = getgenv().selectedPlantss[1]
 	if not selected then
-		Library:Notify("🔍 No plant selected from dropdown.")
+		getgenv().Library:Notify("🔍 No plant selected from dropdown.")
 		return
 	end
 

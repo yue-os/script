@@ -41,15 +41,18 @@ local character = player.Character or player.CharacterAdded:Wait()
 
 -- getgenv().gag = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/gag", true))()
 
--- Map myFarm
-u.myFarm
-for i, farm in ipairs(workspace.Farm:GetChildren()) do
-	local owner = farm:WaitForChild("Important"):WaitForChild("Data"):FindFirstChild("Owner")
-	if owner and tostring(owner.Value) == tostring(player) then
-		myFarm = farm
-		break
+function u.myFarm()
+	local player = game:GetService("Players").LocalPlayer
+	for _, farm in ipairs(workspace:WaitForChild("Farm"):GetChildren()) do
+		local owner = farm:WaitForChild("Important"):WaitForChild("Data"):FindFirstChild("Owner")
+		if owner and tostring(owner.Value) == tostring(player) then
+			return farm
+		end
 	end
+	return nil
 end
+
+
 
 -- ========== BASIC UTILS ==========
 function u.getBaseName(itemName)

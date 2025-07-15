@@ -1538,49 +1538,29 @@ do
 	local function fetchInput(req)
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
 			if not tool:IsA("Tool") or baseName(tool.Name) ~= req.ItemData.ItemName then continue end
-			local attrTypeKey = inventory_enums["ITEM_TYPE"]
-			local attrNameKey = inventory_enums["ItemName"]
-			local attrUUIDKey = inventory_enums["ITEM_UUID"]
 
-			local attrItemType = tool:GetAttribute("b")
+			local attrItemType = tool:GetAttribute("b") -- may be nil
 			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or baseName(tool.Name)
 
-			-- Safety checks
-			if not attrItemType then
-				warn("⚠️ Missing ITEM_TYPE attribute for tool:", baseName(tool.Name))
-				continue
-			-- else
-			-- 	warn("Type: ", attrItemType)
-			end
-			if not attrItemName then
-				warn("⚠️ Missing ItemName attribute for tool:", baseName(tool.Name))
-				continue
-			-- else
-			-- 	warn("Name: ", attrItemName)
-			end
+			local decodedType = item_codes[attrItemType] or attrItemType -- fallback if mapping fails
 
-			local decodedType = item_codes[attrItemType]
-			if not decodedType then
-				warn("⚠️ Unknown attrItemType:", attrItemType, "from tool:", tool.Name)
-				continue
-			end
-			print("🔎 Checking Tool:", tool.Name)
-			print("  ItemName:", attrItemName)
-			print("  DecodedType:", decodedType)
-			print("  Expected Name:", req.ItemData.ItemName)
-			print("  Expected Type:", req.ItemType)
-			-- Matching check
-			if (decodedType == req.ItemType or nil) and attrItemName == req.ItemData.ItemName then
-				-- print("✅ MATCHED:", decodedType, "|", attrItemName)
+			local typeMatch = (decodedType == req.ItemType or not req.ItemType)
+			local nameMatch = (attrItemName == req.ItemData.ItemName)
+
+			print(string.format("🔍 Tool=%s | ItemType=%s | Name=%s | ExpectedType=%s | ExpectedName=%s",
+				tool.Name, tostring(decodedType), tostring(attrItemName), tostring(req.ItemType), tostring(req.ItemData.ItemName)))
+
+			if typeMatch and nameMatch then
 				tool.Parent = player.Character
 				equipTool(tool)
-				return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
+				return tool:GetAttribute("c") or tool:GetAttribute("PET_UUID") or tool:GetAttribute("UUID")
 			end
 		end
 
 		warn("❌ No match for → Type:", req.ItemType, "Name:", req.ItemData.ItemName)
 		return nil
 	end
+
 
 	local function modelFor(machineType)
 		if machineType == "GearEventWorkbench" then

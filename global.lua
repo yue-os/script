@@ -32,4 +32,15 @@ function u.keysOf(dict)
     return list
 end
 
+local backpack = game.Players.LocalPlayer:WaitForChild("Backpack")
+function u.getFruitCount()
+    local count = 0
+    for _, v in pairs(backpack:GetChildren()) do
+        if v:FindFirstChild("Weight") and v:FindFirstChild("Variant") then
+            count = count + 1
+        end
+    end
+    return count
+end
+
 return u

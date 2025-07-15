@@ -2520,7 +2520,6 @@ seedShop:AddDropdown("seedpack_dropdown", {
 	end
 })
 
--- Toggle
 seedShop:AddToggle("auto_seed_toggle", {
 	Text = "Auto Open Seed Packs",
 	Default = false,
@@ -2529,7 +2528,7 @@ seedShop:AddToggle("auto_seed_toggle", {
 
 		if not state then
 			print("🛑 Auto Open Disabled")
-			busy = false -- ← force reset
+			busy = false -- force-stop any stuck loop
 			return
 		end
 
@@ -2537,26 +2536,34 @@ seedShop:AddToggle("auto_seed_toggle", {
 
 		task.spawn(function()
 			while autoOpen do
-				if not busy and #selectedPacks > 0 then
-					for _, packName in ipairs(selectedPacks) do
-						if not autoOpen then break end
-						print("🎯 Trying to open:", packName)
-						busy = true
+				if #selectedPacks == 0 then
+					print("⚠️ No packs selected.")
+					break
+				end
 
-						pcall(function()
-							Remotes.SeedPack.Open.send(packName)
-						end)
+				for _, packName in ipairs(selectedPacks) do
+					if not autoOpen then break end
+					if busy then continue end
 
-						-- Don't hang here if autoOpen is turned off
-						while busy and autoOpen do task.wait(0.2) end
+					busy = true
+					print("🎯 Sending pack:", packName)
+
+					pcall(function()
+						Remotes.SeedPack.Open.send(packName)
+					end)
+
+					-- Wait until server confirms spin is done or we toggle off
+					while busy and autoOpen do
+						task.wait(0.1)
 					end
 				end
-				task.wait(1)
+
+				task.wait(0.5)
 			end
 		end)
 	end
-
 })
+
 
 ThemeManager:SetLibrary(Library)
 SaveManager:SetLibrary(Library)

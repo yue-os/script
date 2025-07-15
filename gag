@@ -1866,6 +1866,7 @@ task.spawn(function()
 	end
 end)
 
+
 local petRegistry = require(game:GetService("ReplicatedStorage"):WaitForChild("Data"):WaitForChild("PetRegistry"):WaitForChild("PetList"))
 
 local petlist = {}
@@ -1874,19 +1875,19 @@ for petName, _ in pairs(petRegistry) do
 end
 table.sort(petlist)
 
-getgenv().selectedpets = {}
+local selectedpets = {}
 
 local function getSelectedNames()
     local names = {}
-    if typeof(getgenv().selectedpets) == "table" then
-        if #getgenv().selectedpets > 0 then
+    if typeof(selectedpets) == "table" then
+        if #selectedpets > 0 then
             
-            for _, name in ipairs(getgenv().selectedpets) do
+            for _, name in ipairs(selectedpets) do
                 table.insert(names, name)
             end
         else
             
-            for name, val in pairs(getgenv().selectedpets) do
+            for name, val in pairs(selectedpets) do
                 if val then table.insert(names, name) end
             end
         end
@@ -1957,14 +1958,16 @@ dino:AddToggle("autodnapets",{
         -- if your UI lets them change the list at runtime,  
         -- just rebuild wanted-set inside *that* callback instead.
         local wanted = toSet(getSelectedNames())
-
+		local player = game:GetService("Players").LocalPlayer
+		local character = player.Character
+		local backpack = player.Backpack
         task.spawn(function()
             while autoDNA and not Library.Unloaded do
                 -----------------------------------------------------
                 -- only act while machine is idle
                 -----------------------------------------------------
                 if not machineBusy() then
-                    for _,tool in ipairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
+                    for _,tool in ipairs(backpack:GetChildren()) do
                         if  tool:IsA("Tool")
                         and tool:GetAttribute("ItemType")=="Pet"
                         and wanted[ base(tool.Name) ]

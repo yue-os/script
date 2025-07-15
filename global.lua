@@ -17,4 +17,19 @@ function u.isSprinkler(toolName)
     return u.getBaseName(toolName):lower():find("sprinkler") ~= nil
 end
 
+
+function u.keysOf(dict)
+    local list = {}
+    if type(dict) ~= "table" then
+        warn("util.keysOf: Expected table, got " .. typeof(dict))
+        return list
+    end
+    for k, v in pairs(dict) do
+        if v then
+            table.insert(list, k)
+        end
+    end
+    return list
+end
+
 return u

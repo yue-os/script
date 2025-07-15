@@ -11,4 +11,9 @@ function u.getBaseName(name)
     return name:match("^%s*(.-)%s*$")
 end
 
+function u.isSeed(toolName)
+    local base = u.getBaseName(toolName)
+    return base:lower():find("seed") ~= nil
+end
+
 return u

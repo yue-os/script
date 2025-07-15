@@ -1311,7 +1311,7 @@ do
 
     local buffer   = buffer.fromstring("\1\1\0\1")
     local PetsRE   = game:GetService("ReplicatedStorage").GameEvents.PetsService
-    local farm     = util.myFarm
+    local farm     = util.myFarm()
 
     local STALL_TIME = 5       -- seconds with 0 progress → abandon quest
 
@@ -1579,6 +1579,8 @@ do
 			return workspace.CraftingTables.EventCraftingWorkBench
 		elseif machineType == "DinoEventWorkbench" then
 			return workspace.DinoEvent.DinoCraftingTable
+		elseif machineType == "SeedEventWorkbench" then
+			return workspace.CraftingTables.SeedEventCraftingWorkBench
 		end
 	end
 
@@ -1666,7 +1668,7 @@ do
                         end
                     end
                 end
-                task.wait(3)
+                task.wait(0.1)
             end
         end)
     end

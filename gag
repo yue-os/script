@@ -2471,18 +2471,22 @@ task.spawn(function()
 end)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
 local Remotes = require(ReplicatedStorage.Modules.Remotes)
 local SeedPackData = require(ReplicatedStorage.Data.SeedPackData)
 
+local localPlayer = Players.LocalPlayer
+local selectedPacks = {}
+local autoOpen = false
+local busy = false
+
+-- List available packs
 print("🧪 Valid seed pack names:")
 for k in pairs(SeedPackData.Packs) do
 	print(" -", k)
 end
 
-local selectedPacks = {}
-local autoOpen = false
-local busy = false
-
+-- Build pack list
 local function getPackNames()
 	local names = {}
 	for k in pairs(SeedPackData.Packs) do
@@ -2492,26 +2496,31 @@ local function getPackNames()
 	return names
 end
 
+-- Listen for result
 Remotes.SeedPack.Result.listen(function(data)
 	busy = false
+	print("✅ Opened:", data.seedPackType)
 	Remotes.SeedPack.SpinFinished.send()
 end)
 
+-- Dropdown
 seedShop:AddDropdown("seedpack_dropdown", {
 	Text = "Select Seed Packs",
 	Values = getPackNames(),
 	Multi = true,
 	Default = {},
 	Callback = function(selection)
-		if type(selection) == "table" and #selection > 0 then
+		if typeof(selection) == "table" and #selection > 0 then
 			selectedPacks = selection
 			print("📦 Selected Packs:", table.concat(selection, ", "))
 		else
 			selectedPacks = {}
+			print("⚠️ No seed packs selected.")
 		end
 	end
 })
 
+-- Toggle
 seedShop:AddToggle("auto_seed_toggle", {
 	Text = "Auto Open Seed Packs",
 	Default = false,
@@ -2519,14 +2528,19 @@ seedShop:AddToggle("auto_seed_toggle", {
 		autoOpen = state
 		if not state then return end
 
+		print("🚀 Auto Open Enabled")
+
 		task.spawn(function()
 			while autoOpen do
 				if not busy and #selectedPacks > 0 then
-					for _, pack in ipairs(selectedPacks) do
+					for _, packName in ipairs(selectedPacks) do
 						if not autoOpen then break end
+						print("🎯 Trying to open:", packName)
 						busy = true
-						Remotes.SeedPack.Open.send(pack)
-						repeat task.wait(0.1) until not busy or not autoOpen
+						pcall(function()
+							Remotes.SeedPack.Open.send(packName)
+						end)
+						repeat task.wait(0.2) until not busy or not autoOpen
 					end
 				end
 				task.wait(1)

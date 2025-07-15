@@ -17,9 +17,9 @@ removeGui()
 getgenv().Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/Library.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/SaveManager.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/ThemeManager.lua"))()
-local Players, player, Player = game.Players.LocalPlayer
-local character = game.Players.LocalPlayer.Character
-local backpack = Players.Backpack
+local player = game.Players.LocalPlayer
+local character = player.Character
+local backpack = player.Backpack
 local setclipboard = setclipboard or function(text)
     if syn then
         syn.write_clipboard(text)
@@ -1297,7 +1297,7 @@ do
     end
     local function backPackCount()
         local n = 0
-        for _,t in ipairs(Players.LocalPlayer.Backpack:GetChildren()) do
+        for _,t in ipairs(player.LocalPlayer.Backpack:GetChildren()) do
             if t:FindFirstChild("Weight") and t:FindFirstChild("Variant") then n += 1 end
         end
         return n
@@ -1311,7 +1311,7 @@ do
         local t0 = os.clock()
 
         local function bagCnt() local n=0
-            for _,it in ipairs(Players.LocalPlayer.Backpack:GetChildren()) do
+            for _,it in ipairs(player.LocalPlayer.Backpack:GetChildren()) do
                 if it:FindFirstChild("Weight") and it:FindFirstChild("Variant") then n+=1 end
             end; return n
         end
@@ -1368,7 +1368,6 @@ do
         end
 
         planting = true
-        local player = Players.LocalPlayer
         local char   = player.Character or player.CharacterAdded:Wait()
         local bp     = player:WaitForChild("Backpack")
 
@@ -2175,7 +2174,7 @@ local function getClosestPlayer()
     local closest = nil
     local shortest = math.huge
     local myChar = player.Character or player.CharacterAdded:Wait()
-
+	local Players = game:GetService("Players")
     for _, other in ipairs(Players:GetPlayers()) do
         if other ~= player and other.Character then
             local dist = (myChar:GetPivot().Position - other.Character:GetPivot().Position).Magnitude

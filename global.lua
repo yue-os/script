@@ -1,14 +1,14 @@
 local u= {}
 
 function u.getBaseName(name)
-    -- First try matching explicit "Name [Tag]" pattern
-    local base = name:match("^(.-) %[[^%]]+%]$")
-    if base then
-        return base
-    else
-        return (name:gsub("%s*%b[]", ""):gsub("^%s*(.-)%s*$", "%1"))
-    end
-end
+    -- Remove all bracketed info like [X1], [Age 16], [2.78 KG]
+    name = name:gsub("%s*%b[]", "")
+    
+    -- Remove trailing inline quantity like " x7", " x5"
+    name = name:gsub("%s[xX]%d+$", "")
 
+    -- Final trim
+    return name:match("^%s*(.-)%s*$")
+end
 
 return u

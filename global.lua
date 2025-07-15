@@ -43,4 +43,17 @@ function u.getFruitCount()
     return count
 end
 
+
+function u.removeHighlight()
+    if getgenv().currentHighlight then
+        getgenv().currentHighlight:Destroy()
+        getgenv().currentHighlight = nil
+    end
+    if getgenv().currentBillboard then
+        getgenv().currentBillboard:Destroy()
+        getgenv().currentBillboard = nil
+    end
+end
+
+
 return u

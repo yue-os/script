@@ -81,4 +81,113 @@ function u.CalculatePlantValue(plant)
 	return math.round(baseData[3] * valueMulti * variantMultiplier * (clamp * clamp))
 end
 
+
+function u.highlightBiggestFruit()
+	-- local farm = nil
+	-- for _, f in ipairs(workspace.Farm:GetChildren()) do
+	-- 	local important = f:FindFirstChild("Important")
+	-- 	local data = important and important:FindFirstChild("Data")
+	-- 	local owner = data and data:FindFirstChild("Owner")
+	-- 	if owner and owner.Value == player.Name then
+	-- 		farm = f
+	-- 		break
+	-- 	end
+	-- end
+	if not getgenv().myFarm then
+		Library:Notify("No owned farm found.")
+		u.removeHighlight()
+		getgenv().lastBiggest = nil
+		return
+	end
+
+	local plants = getgenv().myFarm:FindFirstChild("Important") and getgenv().myFarm.Important:FindFirstChild("Plants_Physical")
+	if not plants then
+		Library:Notify("No Plants_Physical found.")
+		util.removeHighlight()
+		getgenv().lastBiggest = nil
+		return
+	end
+
+	local biggest, maxWeight = nil, -math.huge
+	for _, plant in ipairs(plants:GetChildren()) do
+        local fruitsFolder = plant:FindFirstChild("Fruits")
+        if fruitsFolder then
+            for _, fruit in ipairs(fruitsFolder:GetChildren()) do
+                local weightObj = fruit:FindFirstChild("Weight")
+                if weightObj and tonumber(weightObj.Value) and tonumber(weightObj.Value) > maxWeight then
+                    biggest = fruit
+                    maxWeight = tonumber(weightObj.Value)
+                end
+            end
+        else
+            local weightObj = plant:FindFirstChild("Weight")
+            if weightObj and tonumber(weightObj.Value) and tonumber(weightObj.Value) > maxWeight then
+                    biggest = plant
+                    maxWeight = tonumber(weightObj.Value)
+                end
+        end
+    end
+
+
+	if biggest ~= getgenv().lastBiggest then
+		u.removeHighlight()
+		getgenv().lastBiggest = biggest
+		if biggest and biggest:IsA("Model") then
+			
+			local highlight = Instance.new("Highlight")
+            highlight.FillTransparency = 0.3
+            highlight.OutlineTransparency = 0
+            highlight.Adornee = biggest
+            highlight.Parent = biggest
+            getgenv().currentHighlight = highlight
+
+            -- Disconnect old rainbow connection if it exists
+            if rainbowConnection then
+                rainbowConnection:Disconnect()
+            end
+
+            -- Start rainbow animation
+            rainbowConnection = getgenv().RunService.RenderStepped:Connect(function()
+                local hue = (tick() * 0.5) % 1 -- adjust speed here
+                local color = Color3.fromHSV(hue, 1, 1)
+                if getgenv().currentHighlight then
+                    getgenv().currentHighlight.FillColor = color
+                    getgenv().currentHighlight.OutlineColor = color:lerp(Color3.new(1, 1, 1), 0.2) -- make outline slightly brighter
+                end
+            end)
+
+
+			local head = biggest:FindFirstChildWhichIsA("BasePart")
+			if head then
+				local value = util.CalculatePlantValue(biggest)
+
+				local bb = Instance.new("BillboardGui")
+				bb.Size = UDim2.new(0, 160, 0, 60)
+				bb.AlwaysOnTop = true
+				bb.StudsOffset = Vector3.new(0, 3, 0)
+				bb.Adornee = head
+				bb.Parent = head
+
+				local label = Instance.new("TextLabel")
+				label.Size = UDim2.new(1, 0, 1, 0)
+                label.BackgroundTransparency = 1
+                label.TextColor3 = Color3.fromRGB(255, 255, 255) -- fallback
+                label.TextStrokeTransparency = 0.2
+                label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                label.TextScaled = true
+                label.Font = Enum.Font.FredokaOne
+                label.RichText = true
+                label.Text = string.format(
+                    "<font color='rgb(255,255,255)'>Weight: %.2fkg</font>\n<font color='rgb(255,200,0)'>Value: %s ¢</font>",
+                    maxWeight,
+                    getgenv().FormatWithCommas(value)
+                )
+				label.Parent = bb
+				getgenv().currentBillboard = bb
+			end
+		end
+	end
+end
+
+
 return u

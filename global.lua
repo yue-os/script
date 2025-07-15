@@ -16,4 +16,9 @@ function u.isSeed(toolName)
     return base:lower():find("seed") ~= nil
 end
 
+function u.isSprinkler(toolName)
+    local base = u.getBaseName(toolName)
+    return base:lower():find("sprinkler") ~= nil
+end
+
 return u

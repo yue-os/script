@@ -1539,9 +1539,9 @@ do
 		item_codes[v] = k
 	end
 	local function fetchInput(req)
-		print("🎯 Looking for input:")
-		print("   ItemType →", tostring(req.ItemType))
-		print("   ItemName →", tostring(req.ItemData and req.ItemData.ItemName))
+		-- print("🎯 Looking for input:")
+		-- print("   ItemType →", tostring(req.ItemType))
+		-- print("   ItemName →", tostring(req.ItemData and req.ItemData.ItemName))
 		local player = game:GetService("Players").LocalPlayer
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
 			if not tool:IsA("Tool") then continue end
@@ -1553,8 +1553,8 @@ do
 			local decodedType = item_codes[attrItemType] or "???"
 			local base = baseName(toolName)
 
-			print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",
-				toolName, tostring(attrItemType), decodedType, tostring(attrItemName), base))
+			-- print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",
+			-- 	toolName, tostring(attrItemType), decodedType, tostring(attrItemName), base))
 
 			-- Type/Name fallback logic
 			local matchesType = (not req.ItemType) or (decodedType == req.ItemType)

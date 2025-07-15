@@ -2526,7 +2526,12 @@ seedShop:AddToggle("auto_seed_toggle", {
 	Default = false,
 	Callback = function(state)
 		autoOpen = state
-		if not state then return end
+
+		if not state then
+			print("🛑 Auto Open Disabled")
+			busy = false -- ← force reset
+			return
+		end
 
 		print("🚀 Auto Open Enabled")
 
@@ -2537,16 +2542,20 @@ seedShop:AddToggle("auto_seed_toggle", {
 						if not autoOpen then break end
 						print("🎯 Trying to open:", packName)
 						busy = true
+
 						pcall(function()
 							Remotes.SeedPack.Open.send(packName)
 						end)
-						repeat task.wait(0.2) until not busy or not autoOpen
+
+						-- Don't hang here if autoOpen is turned off
+						while busy and autoOpen do task.wait(0.2) end
 					end
 				end
 				task.wait(1)
 			end
 		end)
 	end
+
 })
 
 ThemeManager:SetLibrary(Library)

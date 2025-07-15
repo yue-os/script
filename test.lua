@@ -2029,71 +2029,60 @@ do
 
 		crafting = false
 	end
-
+	
 	local stalledTasks = {}
     local function supervisor()
-		task.spawn(function()
-			while _G.autoDinoQuest and not Library.Unloaded do
-				for _, cont in pairs(DataService:GetData().QuestContainers or {}) do
-					local name = (cont.Name or cont.Container or cont.Type or ""):lower()
+        task.spawn(function()
+            while _G.autoDinoQuest and not Library.Unloaded do
+                for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
+                    local name = (cont.Name or cont.Container or cont.Type or ""):lower()
 					if name:find("dino") then
-						for _, q in ipairs(cont.Quests or {}) do
-							local prog, tgt = q.Progress or 0, goal(q)
-							if prog >= tgt then continue end
-
+                        for _,q in ipairs(cont.Quests or {}) do
+                            local prog, tgt = q.Progress or 0, goal(q)
+                            if prog >= tgt then continue end
 							local key = tostring(q.Type) .. "_" .. tostring(q.Arguments and q.Arguments[1])
 
 							if stalledTasks[key] and os.clock() - stalledTasks[key] < 10 then
 								-- Skip stalled quests for 10 seconds
 								continue
 							end
-
-							local arg1 = (q.Arguments or q.Args or {})[1]
-
-							if q.Type == "Harvest" then
-								task.spawn(function()
+                            local arg1 = (q.Arguments or q.Args or {})[1]
+                            if     q.Type == "Harvest"       then task.spawn(function()
+								local before = q.Progress or 0
+								harvestCrop, arg1
+								if (q.Progress or 0) == before then
+                                    stalledTasks[key] = os.clock()
+                                end
+							end)
+                            elseif q.Type == "Plant"         then task.spawn(function()
 									local before = q.Progress or 0
-									harvestCrop(arg1)
+									plantSeed, arg1
 									if (q.Progress or 0) == before then
 										stalledTasks[key] = os.clock()
-									end
-								end)
-							elseif q.Type == "Plant" then
-								task.spawn(function()
-									local before = q.Progress or 0
-									plantSeed(arg1)
-									if (q.Progress or 0) == before then
-										stalledTasks[key] = os.clock()
-									end
-								end)
-							elseif q.Type == "GrowPetToAge" then
-								task.spawn(function()
-									local before = q.Progress or 0
-									growPet(arg1)
-									if (q.Progress or 0) == before then
-										stalledTasks[key] = os.clock()
-									end
-								end)
-							elseif q.Type == "Craft" then
-								local itemName = (q.Arguments or q.Args or {})[2]
-								if itemName then
-									task.spawn(function()
-										local before = q.Progress or 0
-										craftItem(itemName)
-										if (q.Progress or 0) == before then
-											stalledTasks[key] = os.clock()
-										end
 									end)
+                            elseif q.Type == "GrowPetToAge"  then task.spawn(function()
+									local before = q.Progress or 0
+									growPet, arg1
+									if (q.Progress or 0) == before then
+										stalledTasks[key] = os.clock()
+									end)
+                            elseif q.Type == "Craft" then
+								local itemName = (q.Arguments or q.Args or {})[2]
+								if itemName then task.spawn(function()
+									local before = q.Progress or 0
+									craftItem, itemName
+										if (q.Progress or 0) == before then
+										stalledTasks[key] = os.clock()
+									end) 
 								end
-							end
-						end
-					end
-				end
-				task.wait(1)
-			end
-		end)
-	end
-
+                            end
+                        end
+                    end
+                end
+                task.wait(0.1)
+            end
+        end)
+    end
 
     _G.autoDinoQuest = false
     dino:AddToggle("auto_dino_quest", {

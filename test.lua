@@ -1,43 +1,49 @@
 
-for _, v in ipairs(game:GetService("CoreGui"):GetDescendants()) do
-    if v:IsA("ScreenGui") and v.Name == "Obsidian" then
-        Library.Unloaded = true
-        v:Destroy()
-		for _, v2 in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetDescendants()) do
-			if v2:isA("ScreenGui") and v2.Name == "GearTeleportGui" then
-				v2:Destroy()
+local function removeGui()
+	for _, v in ipairs(game:GetService("CoreGui"):GetDescendants()) do
+		if v:IsA("ScreenGui") and v.Name == "Obsidian" then
+			Library.Unloaded = true
+			v:Destroy()
+			for _, v2 in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetDescendants()) do
+				if v2:isA("ScreenGui") and v2.Name == "GearTeleportGui" then
+					v2:Destroy()
+				end
 			end
- 		end
-    end
+		end
+	end
 end
+removeGui()
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/Library.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/SaveManager.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/ThemeManager.lua"))()
-local Players = game.Players
 local player = game.Players.LocalPlayer
+local character = player.Character
+-- local backpack = player.Backpack
+local Players = game.Players
+-- local player = game.Players.LocalPlayer
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-getgenv().RunService = game:GetService("RunService")
+local RunService = game:GetService("RunService")
 local byte_net_reliable = ReplicatedStorage:WaitForChild("ByteNetReliable")
 local autoSubmit = false
 local fruitThreshold = 10
 local autoSell = false
 local highlightToggle = false
-getgenv().currentHighlight = nil
-getgenv().currentBillboard = nil
-getgenv().lastBiggest = nil
+local currentHighlight = nil
+local currentBillboard = nil
+-- local lastBiggest = nil
 local noclipEnabled = false
 local speedwalkEnabled = false
 local speedValue = 16
 local noclipConn, speedConn
-local savedPosition = nil
+local savedPosition = savedPosition
 local backpack = player:WaitForChild("Backpack")
 local character = player.Character or player.CharacterAdded:Wait()
 local UserInputService = game:GetService("UserInputService")
-getgenv().ItemModule = require(ReplicatedStorage:WaitForChild("Item_Module"))
-getgenv().MutationHandler = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("MutationHandler"))
-getgenv().FormatWithCommas = require(ReplicatedStorage.Modules:WaitForChild("CommaFormatNumber"))
+local ItemModule = require(ReplicatedStorage:WaitForChild("Item_Module"))
+local MutationHandler = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("MutationHandler"))
+local FormatWithCommas = require(ReplicatedStorage.Modules:WaitForChild("CommaFormatNumber"))
 local PetEggService = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("PetEggService")
 local giftingService = require(ReplicatedStorage.Modules.PetServices.PetGiftingService)
 local activePets = require(ReplicatedStorage.Modules.PetServices.ActivePetsService)
@@ -46,9 +52,11 @@ local PetEggs = petRegistry.PetEggs
 local MIN_DISTANCE = petRegistry.PetConfig.PET_GIFTING_CONFIG.MINIMUM_DISTANCE_FOR_GIFTING
 local seedData = require(ReplicatedStorage.Data.SeedData)
 local hum = character:FindFirstChildOfClass("Humanoid")
-
-getgenv().util = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/global.lua", true))()
-
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local character = player.Character or player.CharacterAdded:Wait()
 local setclipboard = setclipboard or function(text)
     if syn then
         syn.write_clipboard(text)
@@ -61,19 +69,8 @@ end
 
 setclipboard("https://discord.gg/WswepWXvr9")
 Library:Notify("Discord link copied to clipboard! Paste it in your browser to join.")
+getgenv().util = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/util.lua", true))()
 
-
-for i, farm in ipairs(workspace.Farm:GetChildren()) do
-    local owner = farm:WaitForChild("Important")
-                      :WaitForChild("Data")
-                      :FindFirstChild("Owner")
-    if owner and tostring(owner.Value) == tostring(player) then
-        getgenv().myFarm = farm
-        farmNumber = i
-        
-        break
-    end
-end
 
 local inventory_enums = {
     ["OWNER"]             = "a",
@@ -114,10 +111,6 @@ local item_types = {
     ["SprayBottle"]       = "s"
 }
 
-local item_codes = {}
-for k, v in pairs(item_types) do
-	item_codes[v] = k
-end
 
 local function savePosition()
 	local hrp = character:FindFirstChild("HumanoidRootPart")
@@ -128,16 +121,23 @@ local function savePosition()
 		Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
 	end
 end
+
 local function sellInventory()
     ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
     Library:Notify("Inventory sold!")
+end
+
+local function cleanPlantName(name)
+	name = name:gsub("%s*%b[]", "") -- remove anything in brackets
+	name = name:gsub("%s*Seed", "") -- remove trailing "Seed"
+	return name:match("^%s*(.-)%s*$") -- trim spaces
 end
 
 local function allPlants()
     local seeds = { "All" } 
 
     for _, data in pairs(seedData) do
-        local cleanedName = util.getBaseName(data.SeedName)
+        local cleanedName = cleanPlantName(data.SeedName)
         if not table.find(seeds, cleanedName) then
             table.insert(seeds, cleanedName)
         end
@@ -308,6 +308,12 @@ btn.MouseButton1Click:Connect(function()
 	end
 end)
 
+local item_codes = {}
+for k, v in pairs(item_types) do
+	item_codes[v] = k
+end
+
+
 task.wait(2)
 
 local window = Library:CreateWindow({
@@ -343,10 +349,11 @@ local antiAfkGroup = playerTab:AddRightGroupbox("Anti-AFK")
 local lPlayer = playerTab:AddLeftGroupbox("Player")
 local pet = petTab:AddLeftGroupbox("Pets")
 local hatch = petTab:AddRightGroupbox("Hatch")
+local merchantShop = shopTab:AddLeftGroupbox("Merchant Shop")
+local creditsGroup = creditsTab:AddLeftGroupbox("Discord")
 local setting = {
     ["UI Settings"] = window:AddTab("UI Settings", "settings")
 }
-
 group:AddInput("fruit_input", {
     Text = "Fruit Threshold",
     Default = "10",
@@ -366,7 +373,7 @@ group:AddToggle("auto_sell_toggle", {
             task.spawn(function()
                 while autoSell and not Library.Unloaded do
                     if util.getFruitCount() >= fruitThreshold then
-                        teleportSellReturn()
+                        util.teleportSellReturn()
                         task.wait(2)
                     end
                     task.wait(1)
@@ -386,7 +393,7 @@ group:AddToggle("highlight_biggest_toggle", {
         highlightToggle = state
         if highlightToggle then
             util.highlightBiggestFruit()
-            conn = RunService.RenderStepped:Connect(function()
+            conn = game:GetService("RunService").RenderStepped:Connect(function()
                 if highlightToggle then
                     util.highlightBiggestFruit()
                 end
@@ -471,8 +478,8 @@ lPlayer:AddToggle("speedwalk_toggle", {
     end
 })
 
-local seedList = getShopSeeds()
-local selectedSeeds = {}
+local seedList = util.getShopSeeds()
+getgenv().selectedSeeds = {}
 seedShop:AddDropdown("seed_dropdown", {
     Values = seedList,
     Multi = true,
@@ -484,17 +491,17 @@ seedShop:AddDropdown("seed_dropdown", {
 
         
         if table.find(rawSelected, "All") then
-            selectedSeeds = {}
+            getgenv().selectedSeeds = {}
             for _, name in ipairs(seedList) do
                 if name ~= "All" then
-                    table.insert(selectedSeeds, name)
+                    table.insert(getgenv().selectedSeeds, name)
                 end
             end
         else
-            selectedSeeds = rawSelected
+            getgenv().selectedSeeds = rawSelected
         end
 
-        Library:Notify("Selected seeds: " .. table.concat(selectedSeeds, ", "))
+        Library:Notify("Selected seeds: " .. table.concat(getgenv().selectedSeeds, ", "))
     end
 })
 
@@ -509,8 +516,8 @@ seedShop:AddToggle("auto_buy_selected_seeds", {
                 local event = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuySeedStock")
 
                 while autoBuySeeds and not Library.Unloaded do
-                    if #selectedSeeds > 0 then
-                        for _, seedName in ipairs(selectedSeeds) do
+                    if #getgenv().selectedSeeds > 0 then
+                        for _, seedName in ipairs(getgenv().selectedSeeds) do
                             event:FireServer(seedName)
                         end
                         -- Library:Notify("Bought " .. seedName)
@@ -525,16 +532,16 @@ seedShop:AddToggle("auto_buy_selected_seeds", {
     end
 })
 
-trowel:AddButton("Save Position", savePosition)
+
+trowel:AddButton("Save Position", util.savePosition)
 trowel:AddButton("Reset Saved Position", function()
-	savedPosition = nil
+	getgenv().savedPosition = nil
 	Library:Notify("Saved position has been reset. Please save a new one.")
 end)
 
-group:AddButton("Sell Inventory", teleportSellReturn)
+group:AddButton("Sell Inventory", util.teleportSellReturn)
 
-local egglist = getallegg()
-local selectedeggs = {}
+local egglist = util.getallegg()
 hatch:AddDropdown("egg_dropdown", {
     Text = "Eggs",
     Default = {},
@@ -545,54 +552,28 @@ hatch:AddDropdown("egg_dropdown", {
         local eggselected = util.keysOf(selected)
 
         if table.find(eggselected, "All") then
-            selectedeggs = {}
+            getgenv().selectedeggs = {}
             for _, name in ipairs(egglist) do
                 if name ~= "All" then
-                    table.insert(selectedeggs, name)
+                    table.insert(getgenv().selectedeggs, name)
                 end
             end
         else
-            selectedeggs = eggselected
+            getgenv().selectedeggs = eggselected
         end
 
-        Library:Notify("Selected eggs: " .. table.concat(selectedeggs, ", "))
+        Library:Notify("Selected eggs: " .. table.concat(getgenv().selectedeggs, ", "))
     end
 })
-
-local function hatchSelectedEggs()
-    for _, egg in ipairs(workspace:GetDescendants()) do
-        if egg:IsA("Model") and egg:GetAttribute("OWNER") == player.Name and egg:GetAttribute("READY") then
-            local eggName = egg:GetAttribute("EggName")
-            if eggName and table.find(selectedeggs, eggName) then
-                PetEggService:FireServer("HatchPet", egg)
-                task.wait(0.1)
-            end
-        end
-    end
-end
-
 
 function get_tool()
     return player.Character:FindFirstChildOfClass("Tool")
 end
 
-local place_egg_method = ""
-local object_physical = getgenv().myFarm.Important:FindFirstChild("Objects_Physical")
-local plant_locations = getgenv().myFarm.Important.Plant_Locations
-
-local placingEggs = false
-
--- local minToPlace = 3
--- hatch:AddInput("amountoplace", {
---     Text = "Your max egg slot available",
---     Placeholder = "Default is 3",
---     Callback = function(value)
---         minToPlace = tonumber(value)
---     end
--- })
-------------------------------------------------------------------
---  🐣  AUTO-PLACE EGGS
-------------------------------------------------------------------
+local myFarm = util.myFarm()
+getgenv().place_egg_method = ""
+local object_physical = myFarm.Important:FindFirstChild("Objects_Physical")
+local plant_locations = myFarm.Important.Plant_Locations
 local EggRE          = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("PetEggService")        -- "CreateEgg" remote
 local shovelName     = "Shovel [Destroy Plants]"                          -- only needed for equip helper
 local auto_place_eggs, placingEggs = false, false
@@ -640,14 +621,56 @@ local function nextRandomPos()
 end
 
 local autoPlaceEggs = false
-
-
-
 hatch:AddToggle("auto_place_eggs", {
   Text    = "Auto Place Eggs",
   Default = false,
   Callback = function(val)
-    autoPlaceEggs = val
+	autoPlaceEggs = val
+  end
+})
+
+local setPositionButton -- define ahead so we can reuse
+hatch:AddDropdown('place_egg_method', {
+    Values = { 'Player Position', 'Selected Position', 'Random Place Position' },
+    Default = place_egg_method,
+    Multi = false,
+    Text = 'Select Auto Place Egg Method:',
+    Tooltip = 'Auto places eggs with selected method',
+    Callback = function(Value)
+        getgenv().place_egg_method = Value
+
+        if setPositionButton then
+            setPositionButton:SetVisible(Value == "Selected Position")
+        end
+    end
+})
+
+setPositionButton = hatch:AddButton({
+    Text = 'Set Position',
+    Func = function()
+        if game.Players.LocalPlayer.Character then
+            getgenv().selected_position_egg = game.Players.LocalPlayer.Character:GetPivot().Position
+            Library:Notify("Set player position!")
+        else
+            Library:Notify("Character not found!", 3)
+        end
+    end,
+    DoubleClick = false,
+    Tooltip = 'Sets player position to use for auto place eggs'
+})
+
+-- Hide initially if default is not "Selected Position"
+if place_egg_method ~= "Selected Position" then
+    setPositionButton:SetVisible(false)
+end
+
+local autoHatch = false
+
+hatch:AddToggle("autohatchtoggle", {
+  Text    = "Auto Hatch",
+  Default = false,
+  Callback = function(state)
+    autoHatch = state
   end
 })
 
@@ -718,68 +741,21 @@ task.spawn(function()
     task.wait( autoPlaceEggs and 0.5 or 1 )
   end
 end)
-
-
-local setPositionButton -- define ahead so we can reuse
-hatch:AddDropdown('place_egg_method', {
-    Values = { 'Player Position', 'Selected Position', 'Random Place Position' },
-    Default = place_egg_method,
-    Multi = false,
-    Text = 'Select Auto Place Egg Method:',
-    Tooltip = 'Auto places eggs with selected method',
-    Callback = function(Value)
-        place_egg_method = Value
-
-        if setPositionButton then
-            setPositionButton:SetVisible(Value == "Selected Position")
-        end
-    end
-})
-
-setPositionButton = hatch:AddButton({
-    Text = 'Set Position',
-    Func = function()
-        if player.Character then
-            selected_position_egg = player.Character:GetPivot().Position
-            Library:Notify("Set player position!")
-        else
-            Library:Notify("Character not found!", 3)
-        end
-    end,
-    DoubleClick = false,
-    Tooltip = 'Sets player position to use for auto place eggs'
-})
-
--- Hide initially if default is not "Selected Position"
-if place_egg_method ~= "Selected Position" then
-    setPositionButton:SetVisible(false)
-end
-
-local autoHatch = false
-
-hatch:AddToggle("autohatchtoggle", {
-  Text    = "Auto Hatch",
-  Default = false,
-  Callback = function(state)
-    autoHatch = state
-  end
-})
-
 -- persistent hatch loop
 task.spawn(function()
   while not Library.Unloaded do
     if autoHatch then
-      hatchSelectedEggs()
+      util.hatchSelectedEggs()
     end
     task.wait(1)  -- run every second (tweak as you like)
   end
 end)
 
 local function setRecipe(itemName)
-    local interactionFolder = workspace:WaitForChild("Interaction")
-    local updateItems = interactionFolder:WaitForChild("UpdateItems")
-    local dinoEvent = updateItems:WaitForChild("DinoEvent")
-    local craftingTable = dinoEvent:WaitForChild("DinoCraftingTable")
+    -- local interactionFolder = workspace:WaitForChild("Interaction")
+    -- local updateItems = interactionFolder:WaitForChild("UpdateItems")
+    -- local dinoEvent = updateItems:WaitForChild("DinoEvent")
+    local craftingTable = workspace.DinoEvent.DinoCraftingTable
 
     local remote = game:GetService("ReplicatedStorage")
         :WaitForChild("GameEvents")
@@ -836,7 +812,7 @@ task.spawn(function()
     end
 end)
 
-local CraftingRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService")
+local CraftingRemote = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService")
 local craftingTable = workspace.DinoEvent.DinoCraftingTable
 
 -- 🧬 Dino Recipe to Slot Map
@@ -929,10 +905,7 @@ dino:AddToggle("autosubmit_dino", {
 })
 
 local function findTableTopLabel()
-	local craftingTable = workspace:WaitForChild("Interaction")
-		:WaitForChild("UpdateItems")
-		:WaitForChild("DinoEvent")
-		:WaitForChild("DinoCraftingTable")
+	local craftingTable = workspace.DinoEvent.DinoCraftingTable
 
 	for _, descendant in ipairs(craftingTable:GetDescendants()) do
 		if descendant:IsA("TextLabel") and descendant.Name == "TextLabel" then
@@ -964,7 +937,7 @@ dino:AddToggle("auto_craft", {
     Default = false,
     Callback = function(state)
         autoSubmit = state
-        local craftingTable = workspace:WaitForChild("Interaction"):WaitForChild("UpdateItems"):WaitForChild("DinoEvent"):WaitForChild("DinoCraftingTable")
+        local craftingTable = workspace.DinoEvent.DinoCraftingTable
         if autoSubmit then
             game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService"):FireServer("Craft", craftingTable, "DinoEventWorkbench")
         end
@@ -995,11 +968,7 @@ task.spawn(function()
     end
 end)
 
-
-
-
-local merchantShop = shopTab:AddLeftGroupbox("Merchant Shop")
-local merchlist = getMerchantShop()
+local merchlist = util.getMerchantShop()
 local selectedMerchantItem = {}
 merchantShop:AddDropdown("merch_dropdown", {
     Values = merchlist,
@@ -1069,7 +1038,7 @@ merchantShop:AddToggle("auto_buy_selected_merch", {
     end
 })
 
-local gearList = getGearShop()
+local gearList = util.getGearShop()
 local selectedGears = {}
 gearShop:AddDropdown("gear_dropdown", {
     Values = gearList,
@@ -1221,7 +1190,7 @@ petGroup:AddToggle("auto_buy_egg", {
 							local eggName = data.EggName
 							-- print("🐣 Buying:", eggName)
 							pcall(function()
-								ReplicatedStorage.GameEvents:WaitForChild("BuyPetEgg"):FireServer(eggName)
+								game:GetService("ReplicatedStorage").GameEvents:WaitForChild("BuyPetEgg"):FireServer(eggName)
 							end)
 							task.wait(0.5)
 						end
@@ -1230,7 +1199,7 @@ petGroup:AddToggle("auto_buy_egg", {
 						for _, eggName in ipairs(targets) do
 							-- print("🐣 Buying:", eggName)
 							pcall(function()
-								ReplicatedStorage.GameEvents:WaitForChild("BuyPetEgg"):FireServer(eggName)
+								game:GetService("ReplicatedStorage").GameEvents:WaitForChild("BuyPetEgg"):FireServer(eggName)
 							end)
 							task.wait(0.5)
 						end
@@ -1264,7 +1233,7 @@ local dinoUi = dino:AddToggle("dino_quest_toggle", {
     Default = false,
     Callback = function(state)
         cosmeticToggle = state
-        local ui = player.PlayerGui:FindFirstChild("DinoQuests_UI")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("DinoQuests_UI")
         if ui then
             ui.Enabled = not ui.Enabled
             -- Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
@@ -1278,7 +1247,7 @@ cosmeticUI:AddKeyPicker("cosmetic_keybind", {
     Mode = "Toggle",
     Callback = function(state)
         cosmeticPicker = state
-        local ui = player.PlayerGui:FindFirstChild("CosmeticShop_UI")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("CosmeticShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
             Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
@@ -1290,7 +1259,7 @@ local gearShop = rShop:AddToggle("gear_toggle", {
     Text = "Gear Shop",
     Default = false,
     Callback = function(state)
-        local ui = player.PlayerGui:FindFirstChild("Gear_Shop")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Gear_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
             Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
@@ -1303,7 +1272,7 @@ gearShop:AddKeyPicker("gear_keybind", {
     Default = "G",
     Mode = "Toggle",
     Callback = function(state)
-        local ui = player.PlayerGui:FindFirstChild("Gear_Shop")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Gear_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
             Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
@@ -1315,7 +1284,7 @@ local seedUI = rShop:AddToggle("seed_toggle", {
     Text = "Seed Shop",
     Default = false,
     Callback = function(state)
-        local ui = player.PlayerGui:FindFirstChild("Seed_Shop")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Seed_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
             Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
@@ -1328,19 +1297,18 @@ seedUI:AddKeyPicker("seed_keybind", {
     Default = "T",
     Mode = "Toggle",
     Callback = function(state)
-        local ui = player.PlayerGui:FindFirstChild("Seed_Shop")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Seed_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
             Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
-
 local harvestShop = rShop:AddToggle("harvestshop_toggle", {
     Text = "Harvest Shop",
     Default = false,
     Callback = function(state)
-        local ui = player.PlayerGui:FindFirstChild("EventShop_UI")
+        local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("EventShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
             Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
@@ -1369,7 +1337,7 @@ rShop:AddButton("Daily Quest", function()
     end
 end)
 
-player.Idled:Connect(function()
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
     game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -1378,9 +1346,8 @@ end)
 local minWeight, maxWeight = 0, 9999
 local harvestFruitNames = {}
 
-
-local selectedPlants = {} -- assume table for Multi=true dropdown
-local allPlant = allPlants()
+getgenv().selectedPlants = {} -- assume table for Multi=true dropdown
+local allPlant = util.allPlants()
 -- Dropdown handler
 group2:AddDropdown("plant_dropdown", {
 	Text = "Plant List",
@@ -1389,7 +1356,7 @@ group2:AddDropdown("plant_dropdown", {
 	Multi = true,
 	Searchable = true,
 	Callback = function(values)
-		selectedPlants = util.keysOf(values)
+		getgenv().selectedPlants = util.keysOf(values)
 	end
 })
 
@@ -1427,22 +1394,6 @@ group2:AddInput("max_weight_input", {
     end
 })
 
-local function harvestFilter(item, minW, maxW)
-    if not item then return false end
-    local weightObj = item:FindFirstChild("Weight")
-    if not weightObj then return false end
-    local weight = tonumber(weightObj.Value)
-    if not weight then return false end
-
-    local baseName = util.getBaseName(item.Name)
-
-    if #selectedPlants == 0 then
-        return weight >= minW and weight <= maxW
-    end
-
-    return table.find(selectedPlants, baseName) and weight >= minW and weight <= maxW
-end
-
 
 local autoCollect = false
 group2:AddToggle("auto_collect_toggle", {
@@ -1457,16 +1408,16 @@ group2:AddToggle("auto_collect_toggle", {
                     
                     local buffer = buffer.fromstring("\1\1\0\1")
 
-                    for _, v in next, getgenv().myFarm.Important.Plants_Physical:GetChildren() do
+                    for _, v in next, myFarm.Important.Plants_Physical:GetChildren() do
                         
-                        if harvestFilter(v, minWeight, maxWeight) then
-                            byte_net_reliable:FireServer(buffer, { v })
+                        if util.harvestFilter(v, minWeight, maxWeight) then
+                            game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer, { v })
                         end
                         if v:FindFirstChild("Fruits", true) then
                             if not autoCollect then break end
                             for _, i in next, v.Fruits:GetChildren() do
-                                if harvestFilter(i, minWeight, maxWeight) then
-                                    byte_net_reliable:FireServer(buffer, { i })
+                                if util.harvestFilter(i, minWeight, maxWeight) then
+                                    game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer, { i })
                                 end
                             end
                             task.wait(0.2)
@@ -1507,7 +1458,7 @@ lPlayer:AddToggle("infinite_jump_toggle", {
     end
 })
 
-UserInputService.JumpRequest:Connect(function()
+game:GetService("UserInputService").JumpRequest:Connect(function()
     if infiniteJump then
         local character = player.Character
         local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -1517,7 +1468,6 @@ UserInputService.JumpRequest:Connect(function()
     end
 end)
 
-local creditsGroup = creditsTab:AddLeftGroupbox("Discord")
 -- local seedPack = creditsTab:AddRightGroupbox("Seed Pack")
 creditsGroup:AddButton({
     Text = "Join Discord Server",
@@ -1537,7 +1487,7 @@ creditsGroup:AddButton({
 
 local function allSeed()
     local seeds = { "All" } 
-    for _, data in pairs(seedData) do
+    for _, data in pairs(require(game:GetService("ReplicatedStorage").Data.SeedData)) do
         table.insert(seeds, data.SeedName)
         table.sort(seeds)
     end
@@ -1572,6 +1522,46 @@ plant:AddDropdown("seed_dropdown", {
     end
 })
 
+local plantMode = "Random Position"
+getgenv().plantPos = nil
+local sPos
+getgenv().plantMode = ""
+plant:AddDropdown("plant_placement_mode", {
+    Text = "Plant Mode",
+    Values = { "Random Position", "Selected Position" },
+    Default = "Random Position",
+    Callback = function(selected)
+        getgenv().plantMode = selected
+        Library:Notify("🌱 Plant mode set to: " .. selected)
+
+		if sPos then
+			sPos:SetVisible(selected == "Selected Position")
+		end
+    end
+})
+
+sPos = plant:AddButton({
+	Text = "Set Position", 
+	Func = function()
+		local char = game.Players.LocalPlayer.Character
+		local hrp = char and char:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			getgenv().plantPos = hrp.Position
+			Library:Notify(("[AutoPlant] Saved at (%.1f, %.1f, %.1f)"):format(
+				getgenv().plantPos.X, getgenv().plantPos.Y, getgenv().plantPos.Z
+			))
+		else
+			Library:Notify("[AutoPlant] ❌ Couldn’t find HumanoidRootPart!", 3)
+		end
+	end,
+	DoubleClick = false,
+    Tooltip = 'Sets player position to use for auto plant'
+})
+
+if getgenv().plantMode ~= "Selected Position" then
+    sPos:SetVisible(false)
+end
+
 local autoPlant = false
 local seedIndex = 1
 plant:AddToggle("auto_plant_toggle", {
@@ -1590,7 +1580,8 @@ plant:AddToggle("auto_plant_toggle", {
             Library:Notify("Auto Plant enabled!")
             task.spawn(function()
                 while autoPlant and not Library.Unloaded do
-                    local hrp = character:FindFirstChild("HumanoidRootPart")
+					local character = game.Players.LocalPlayer.Character
+                    local hrp = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
                     if hrp and #selectedSeeds > 0 then
                         local fullSeedName = selectedSeeds[seedIndex]
@@ -1601,7 +1592,7 @@ plant:AddToggle("auto_plant_toggle", {
 
                         
                         local function findSeedTool(name)
-                            for _, container in ipairs({backpack, character}) do
+                            for _, container in ipairs({game.Players.LocalPlayer:WaitForChild("Backpack"), game.Players.LocalPlayer.Character}) do
                                 for _, item in ipairs(container:GetChildren()) do
                                     if item:IsA("Tool") and item.Name:match("^" .. name) then
                                         return item
@@ -1621,16 +1612,18 @@ plant:AddToggle("auto_plant_toggle", {
                         
                         if findSeedTool(fullSeedName) then
                             local cropName = fullSeedName:gsub(" Seed", "")
-                            local pos = hrp.Position
-                            local args = {
-                                vector.create(pos.X, pos.Y, pos.Z),
-                                cropName
-                            }
+                            local pos = util.getNextPlantPosition()
+							if pos then
+								local args = {
+									vector.create(pos.X, pos.Y, pos.Z),
+									cropName
+								}
 
-                            game:GetService("ReplicatedStorage")
-                                :WaitForChild("GameEvents")
-                                :WaitForChild("Plant_RE")
-                                :FireServer(unpack(args))
+								game:GetService("ReplicatedStorage")
+									:WaitForChild("GameEvents")
+									:WaitForChild("Plant_RE")
+									:FireServer(unpack(args))
+							end
                         end
                     end
 
@@ -1644,7 +1637,6 @@ plant:AddToggle("auto_plant_toggle", {
     end
 })
 
-
 local function equip_tool_reliable(tool)
     for _ = 1, 15 do
         local char = player.Character or player.CharacterAdded:Wait()
@@ -1653,8 +1645,6 @@ local function equip_tool_reliable(tool)
             return true
         end
         hum:EquipTool(tool)
-		-- task.wait(1)
-		-- hum:UnequipTools(tool)
         task.wait(0.1)
     end
     return false
@@ -1668,7 +1658,7 @@ do
     local PetsRE   = game:GetService("ReplicatedStorage").GameEvents.PetsService
     
 
-    local STALL_TIME = 3       -- seconds with 0 progress → abandon quest
+    local STALL_TIME = 5       -- seconds with 0 progress → abandon quest
 
     -------------------------------------------------------------- tiny helpers
     local function goal(q)
@@ -1681,9 +1671,9 @@ do
 			local name = (cont.Name or cont.Container or cont.Type or ""):lower()
 			if name:find("dino") then
 				for _, q in ipairs(cont.Quests or {}) do
-					-- local args = q.Arguments or q.Args or {}
+					local args = q.Arguments or q.Args or {}
 					-- print(string.format("➡️ Quest Type: %s | Target: %s | Args[1]: %s", tostring(q.Type), tostring(q.Target), tostring(args[1]))) -- matches "dino", "dinofrequent", etc.
-					if q.Type == kind and (q.Arguments or q.Args or {})[1] == key then
+					if q.Type == kind and (args[1] == key or args[2] == key) then
 						return q.Progress or 0, goal(q)
 					end
 				end
@@ -1718,7 +1708,7 @@ do
             if not _G.autoDinoQuest then break end
 
             -- one sweep
-            local pf = getgenv().myFarm and getgenv().myFarm:FindFirstChild("Important") and getgenv().myFarm.Important:FindFirstChild("Plants_Physical")
+            local pf = myFarm and myFarm:FindFirstChild("Important") and myFarm.Important:FindFirstChild("Plants_Physical")
             if pf then
                 for _,pl in ipairs(pf:GetChildren()) do
                     if (pl.Name:match("^(.-) %[[^%]]+%]$") or pl.Name)==crop then
@@ -1787,7 +1777,7 @@ do
 
             if not tool then
                 if not warnedMissing then
-                    -- Library:Notify("[AutoPlant] Missing \"" .. seed .. " Seed\" – equip / buy more to continue.", 4)
+                    Library:Notify("[AutoPlant] Missing \"" .. seed .. " Seed\" – equip / buy more to continue.", 4)
                     warnedMissing = true
                 end
             else
@@ -1889,33 +1879,77 @@ do
 	end
 
 	local ReversedItemTypeEnums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
+	local inventory_enums = {
+		["OWNER"] = "a",
+		["ITEM_TYPE"] = "b",
+		["ITEM_UUID"] = "c",
+		["Favorite"] = "d",
+		["Uses"] = "e",
+		["ItemName"] = "f",
+		["Rarity"] = "g",
+		["EggName"] = "h",
+		["CrateType"] = "i",
+		["PotType"] = "j",
+		["LinkedPlayerID"] = "k",
+		["SprayType"] = "l",
+		["SprayMutationName"] = "m",
+		["Type"] = "n"
+	}
+	function equipTool(tool)
+		local char     = player.Character or player.CharacterAdded:Wait()
+		local humanoid = char:FindFirstChildOfClass("Humanoid")
+		if not humanoid or not tool then return false end
 
+		-- already holding?
+		if char:FindFirstChild(tool.Name) == tool then return true end
+
+		humanoid:UnequipTools()
+		humanoid:EquipTool(tool)
+
+		-- wait up to ½ s for server replication
+		for i = 1, 10 do
+			if char:FindFirstChild(tool.Name) then return true end
+			task.wait(0.05)
+		end
+		return false
+	end
+	local item_codes = {}
+	for k, v in pairs(util.item_types) do
+		item_codes[v] = k
+	end
 	local function fetchInput(req)
-		local want_type = req.ItemType
-		local want_name = req.ItemData.ItemName
+		-- print("🎯 Looking for input:")
+		-- print("   ItemType →", tostring(req.ItemType))
+		-- print("   ItemName →", tostring(req.ItemData and req.ItemData.ItemName))
+		local player = game:GetService("Players").LocalPlayer
+		for _, tool in ipairs(player.Backpack:GetChildren()) do
+			if not tool:IsA("Tool") then continue end
 
-		for _, tool in ipairs(backpack:GetChildren()) do
-			local base_name = util.getBaseName(tool.Name)
-			local raw_type = tool:GetAttribute(inv_enums.ITEM_TYPE) or tool:GetAttribute("b")
-			local reverse_type = reverseEnum[raw_type]
+			local toolName = baseName(tool.Name)
+			local attrItemType = tool:GetAttribute("b")
+			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or toolName
+			local attrUUIDKey = inventory_enums["ITEM_UUID"]
+			local decodedType = item_codes[attrItemType] or "???"
+			local base = baseName(toolName)
 
-			local attr_name = tool:GetAttribute("ItemName") or tool:GetAttribute(inv_enums.ItemName) or tool:GetAttribute("l")
+			-- print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",
+			-- 	toolName, tostring(attrItemType), decodedType, tostring(attrItemName), base))
 
-			-- DEBUG
-			-- print(string.format("🧪 Checking tool: %s | base: %s | attr_name: %s | type: %s", tool.Name, base_name, tostring(attr_name), tostring(reverse_type)))
+			-- Type/Name fallback logic
+			local matchesType = (not req.ItemType) or (decodedType == req.ItemType)
+			local matchesName = attrItemName and req.ItemData and string.lower(attrItemName) == string.lower(req.ItemData.ItemName)
 
-			if base_name == want_name and reverse_type == want_type then
-				if equip_tool_reliable(tool) then
-					return tool:GetAttribute("UUID") or tool:GetAttribute("c")
-				else
-					warn("⚠️ Failed to equip tool:", tool.Name)
-				end
+			if matchesType and matchesName then
+				tool.Parent = player.Character
+				equipTool(tool)
+				return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
 			end
 		end
 
-		warn("❌ Couldn't find tool for:", want_name, want_type)
+		warn("❌ No match for → Type:", req.ItemType, "Name:", req.ItemData.ItemName)
 		return nil
 	end
+
 
 	local function modelFor(machineType)
 		if machineType == "GearEventWorkbench" then
@@ -1964,6 +1998,7 @@ do
 						missing = true
 						break
 					end
+					task.wait(1)
 					craftingRemote:FireServer(
 						"InputItem",
 						bench, machineType, slot,
@@ -1995,7 +2030,8 @@ do
         task.spawn(function()
             while _G.autoDinoQuest and not Library.Unloaded do
                 for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
-                    if (cont.Name or cont.Container or cont.Type or ""):lower() == "dino" then
+                    local name = (cont.Name or cont.Container or cont.Type or ""):lower()
+					if name:find("dino") then
                         for _,q in ipairs(cont.Quests or {}) do
                             local prog, tgt = q.Progress or 0, goal(q)
                             if prog >= tgt then continue end
@@ -2028,7 +2064,6 @@ do
         end
     })
 end
-
 
 dino:AddToggle("auto_claimq", {
 	Text = "Auto Claim Quest",
@@ -2073,8 +2108,8 @@ local function isSelected(name)
 end
 
 
-local reclaimRemote = ReplicatedStorage.GameEvents:WaitForChild("ReclaimerService_RE")
-local plantsFolder = getgenv().myFarm:FindFirstChild("Important"):FindFirstChild("Plants_Physical")
+local reclaimRemote = game:GetService("ReplicatedStorage").GameEvents:WaitForChild("ReclaimerService_RE")
+local plantsFolder = util.myFarm():FindFirstChild("Important"):FindFirstChild("Plants_Physical")
 plant:AddToggle("auto_reclaim", {
 	Text = "Auto Reclaim",
 	Default = false,
@@ -2092,7 +2127,7 @@ plant:AddToggle("auto_reclaim", {
 						if not autoReclaim then break end
 						if not plant:IsA("Model") then continue end
 
-						local baseName = util.getBaseName(plant.Name)
+						local baseName = util.cleanPlantName(plant.Name)
 						if not isSelected(baseName) then continue end
 
 						reclaimRemote:FireServer("TryReclaim", plant)
@@ -2108,13 +2143,12 @@ plant:AddToggle("auto_reclaim", {
 	end
 })
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RemoveItemRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Remove_Item")
+local RemoveItemRemote = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Remove_Item")
 
 local shovelActive = false
 local autoShovelToggle
 
-local plantsFolder = getgenv().myFarm:WaitForChild("Important"):WaitForChild("Plants_Physical")
+local plantsFolder = myFarm:WaitForChild("Important"):WaitForChild("Plants_Physical")
 
 local maxFruitWeight = math.huge
 
@@ -2184,7 +2218,7 @@ plant:AddToggle("auto_shovel_toggle", {
                 for _, plant in ipairs(plantsFolder:GetChildren()) do
                     if not autoRemove then break end
 
-                    local base = util.getBaseName(plant.Name)
+                    local base = util.cleanPlantName(plant.Name)
                     if not (table.find(selectedFruits,"All") or table.find(selectedFruits,base)) then
                         continue
                     end
@@ -2232,25 +2266,26 @@ task.spawn(function()
 	while not Library.Unloaded do
 		if autoRemove then
 			task.wait(0.4)
-			if not player.Character or not player.Character:FindFirstChild("Shovel [Destroy Plants]") then continue end
+			if not game.Players.LocalPlayer.Character or not game.Players.LocalPlayer.Character:FindFirstChild("Shovel [Destroy Plants]") then continue end
 
-			local farm = getgenv().myFarm
+			local farm = myFarm
 			local plantFolder = farm and farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
 			if not plantFolder then continue end
 
 			for _, model in ipairs(plantFolder:GetChildren()) do
 				if model:IsA("Model") and isSelectedFruit(model.Name) then
                 -- print(isSelectedFruit(model.Name))
-					ReplicatedStorage.GameEvents:WaitForChild("Remove_Item"):FireServer("Part", model)
+					game:GetService("ReplicatedStorage").GameEvents:WaitForChild("Remove_Item"):FireServer("Part", model)
 				end
 			end
 		else
-			RunService.RenderStepped:Wait()
+			game:GetService("RunService").RenderStepped:Wait()
 		end
 	end
 end)
 
-local petRegistry = require(ReplicatedStorage:WaitForChild("Data"):WaitForChild("PetRegistry"):WaitForChild("PetList"))
+
+local petRegistry = require(game:GetService("ReplicatedStorage"):WaitForChild("Data"):WaitForChild("PetRegistry"):WaitForChild("PetList"))
 
 local petlist = {}
 for petName, _ in pairs(petRegistry) do
@@ -2341,12 +2376,21 @@ dino:AddToggle("autodnapets",{
         -- if your UI lets them change the list at runtime,  
         -- just rebuild wanted-set inside *that* callback instead.
         local wanted = toSet(getSelectedNames())
-
+		local player = game:GetService("Players").LocalPlayer
+		local character = player.Character
+		local backpack = player.Backpack
         task.spawn(function()
             while autoDNA and not Library.Unloaded do
                 -----------------------------------------------------
                 -- only act while machine is idle
                 -----------------------------------------------------
+				local label = workspace.DinoEvent.BenchRewardPart.BenchPart.BillboardPart.BillboardGui.DnaMachineLabel
+				if label and label.Text == "READY" then 
+					game:GetService("ReplicatedStorage")
+                    .GameEvents
+                    .DinoMachineService_RE
+                    :FireServer("ClaimReward")
+				end
                 if not machineBusy() then
                     for _,tool in ipairs(backpack:GetChildren()) do
                         if  tool:IsA("Tool")
@@ -2396,7 +2440,7 @@ task.spawn(function()
 
             if label and label.Text == "READY" then
                 -- one-liner remote
-                ReplicatedStorage
+                game:GetService("ReplicatedStorage")
                     .GameEvents
                     .DinoMachineService_RE
                     :FireServer("ClaimReward")
@@ -2488,7 +2532,7 @@ pet:AddToggle("togglesellpet", {
 
         if autosellpets then
             task.spawn(function()
-                local sellRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
+                local sellRemote = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
 
                 while autosellpets and not Library.Unloaded do
                     for _, selectedName in ipairs(getSelectedNamess()) do
@@ -2534,9 +2578,9 @@ pet:AddToggle("togglesellpet", {
 })
 
 
-local giftEvent = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("GiftPet")
-local acceptGiftRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("AcceptPetGift")
-local giftNotification = player:WaitForChild("PlayerGui"):FindFirstChild("Gift_Notification")
+local giftEvent = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("GiftPet")
+local acceptGiftRemote = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("AcceptPetGift")
+local giftNotification = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("Gift_Notification")
 
 pet:AddToggle("autoacceptpet", {
     Text = "Auto Accept Pet",
@@ -2556,7 +2600,7 @@ local function getClosestPlayer()
     local closest = nil
     local shortest = math.huge
     local myChar = player.Character or player.CharacterAdded:Wait()
-
+	local Players = game:GetService("Players")
     for _, other in ipairs(Players:GetPlayers()) do
         if other ~= player and other.Character then
             local dist = (myChar:GetPivot().Position - other.Character:GetPivot().Position).Magnitude
@@ -2634,8 +2678,8 @@ pet:AddToggle("autogiftpets", {
 
 local plantsList
 local function getPlants()
-    if not getgenv().myFarm then return {} end
-    local plantsFolder = getgenv().myFarm:FindFirstChild("Important"):FindFirstChild("Plants_Physical")
+    if not myFarm then return {} end
+    local plantsFolder = myFarm:FindFirstChild("Important"):FindFirstChild("Plants_Physical")
     local uniqueNames = {}
     plantsList = {}
 
@@ -2653,7 +2697,7 @@ local function getPlants()
     return plantsList
 end
 
-local selectedPlantss = {}
+getgenv().selectedPlantss = {}
 local plantsList = getPlants()
 trowel:AddDropdown("current_plant_dropdown", {
     Text = "Owned Plants",
@@ -2662,92 +2706,37 @@ trowel:AddDropdown("current_plant_dropdown", {
     Searchable = true,
     Values = plantsList,
     Callback = function(selected)
-        selectedPlantss = {}
+        getgenv().selectedPlantss = {}
 
         if typeof(selected) == "table" then
             for k, v in pairs(selected) do
                 if v then
-                    table.insert(selectedPlantss, k)
+                    table.insert(getgenv().selectedPlantss, k)
                 end
             end
         else
-            table.insert(selectedPlantss, selected)
+            table.insert(getgenv().selectedPlantss, selected)
         end
 	end
 })
-
-local function getTrowel()
-	for _, tool in ipairs(player.Backpack:GetChildren()) do
-		if tool:IsA("Tool") and tool.Name:match("^Trowel") then
-			return tool
-		end
-	end
-end
-
-local function moveSelectedPlantType()
-	if not savedPosition then
-		Library:Notify("⚠️ Please save a position first!")
-		return
-	end
-
-	local trowel = getTrowel()
-	if not trowel then
-		Library:Notify("🛠️ Trowel not found in backpack.")
-		return
-	end
-
-	local selected = selectedPlantss[1]
-	if not selected then
-		Library:Notify("🔍 No plant selected from dropdown.")
-		return
-	end
-
-	local trowelRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TrowelRemote")
-	
-	if not plantFolder then
-		warn("❌ Could not find Plants_Physical.")
-		return
-	end
-
-	for _, plant in ipairs(plantFolder:GetChildren()) do
-		if plant:IsA("Model") and plant.Name == selected then
-			local success, err = pcall(function()
-				-- Pick up
-				trowelRemote:InvokeServer("Pickup", trowel, plant)
-				task.wait(0.2)
-
-				-- Place at saved position
-				trowelRemote:InvokeServer("Place", trowel, plant, savedPosition)
-				task.wait(0.1)
-			end)
-
-			if not success then
-				warn("❌ Error moving plant:", plant.Name, err)
-			end
-		end
-	end
-end
 
 trowel:AddToggle("remote_trowel", {
     Text = "Move",
     Default = false,
     Callback = function(state)
-        moveSelectedPlantType()
+        util.moveSelectedPlantType()
     end
 })
 
--- services & modules
 local replicated_storage = game:GetService("ReplicatedStorage")
 local players            = game:GetService("Players")
 
 local registry           = require(replicated_storage.Data.CraftingData.CraftingRecipeRegistry)
 local crafting_remote    = replicated_storage.GameEvents.CraftingGlobalObjectService
 
--- player & inventory
 local player   = players.LocalPlayer
 local backpack = player:WaitForChild("Backpack")
 
--- flattened recipe lookup
 local recipes_by_name = registry.ItemRecipes               -- { [itemName] = recipeData, ... }
 -- UI state
 local selected_recipe, selected_machine_type, auto_craft_enabled = nil, nil, false
@@ -2770,8 +2759,7 @@ craft:AddDropdown("craft_dropdown", {
     Callback   = function(recipe_name)
         selected_recipe        = recipe_name
         selected_machine_type  = recipes_by_name[recipe_name].MachineTypes[1]
-		print(selected_machine_type)
-        -- print("🍳 Selected:", recipe_name, "→", selected_machine_type)
+        print("🍳 Selected:", recipe_name, "→", selected_machine_type)
     end
 })
 
@@ -2783,26 +2771,32 @@ craft:AddToggle("auto_craft_toggle", {
     end
 })
 
---─────────────────────────────────────────────────
--- strip “[…]” metadata AND any trailing “ xN” count
---─────────────────────────────────────────────────
--- local function get_base_name(item_name)
---     -- 1) drop “[…]”
---     local base = item_name:match("^(.-) %[[^%]]+%]$") or item_name
---     -- 2) drop “ x6”, “ X10”, etc.
---     base = base:gsub("%s*[xX]%d+$", "")
---     return base
--- end
-
+local function equip_tool_reliable(tool)
+    for _ = 1, 15 do
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hum  = char:FindFirstChildOfClass("Humanoid")
+        if tool.Parent == char then
+            return true
+        end
+        hum:EquipTool(tool)
+		-- task.wait(1)
+		-- hum:UnequipTools(tool)
+        task.wait(0.1)
+    end
+    return false
+end
 local inv_enums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.InventoryServiceEnums)
 local reverseEnum = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
 
 local function uuid_for_input(input_req)
 	local want_type = input_req.ItemType
 	local want_name = input_req.ItemData.ItemName
-
+	-- print("Required Type: ",want_type)
+	-- print("Required Name:", want_name)
+	-- print("Want name: %s | Want type %s", want_name, want_type)
 	for _, tool in ipairs(backpack:GetChildren()) do
 		local base_name = util.getBaseName(tool.Name)
+		-- print("Basename:",base_name)
 		local raw_type = tool:GetAttribute(inv_enums.ITEM_TYPE) or tool:GetAttribute("b")
 		local reverse_type = reverseEnum[raw_type]
 
@@ -2810,9 +2804,10 @@ local function uuid_for_input(input_req)
 
 		-- DEBUG
 		-- print(string.format("🧪 Checking tool: %s | base: %s | attr_name: %s | type: %s", tool.Name, base_name, tostring(attr_name), tostring(reverse_type)))
-
-		if base_name == want_name and reverse_type == want_type then
+		
+		if tostring(attr_name) == tostring(want_name) and tostring(want_type) == tostring(reverse_type) then
 			if equip_tool_reliable(tool) then
+				task.wait(0.5)
 				return tool:GetAttribute("UUID") or tool:GetAttribute("c")
 			else
 				warn("⚠️ Failed to equip tool:", tool.Name)
@@ -2848,6 +2843,7 @@ task.spawn(function()
                 task.wait(2)
                 continue
             end
+			-- print("hehe")
 
             -- global pause: any machine busy?
             local anyBusy = false
@@ -2880,19 +2876,20 @@ task.spawn(function()
                         local missing = false
                         for slot, input_req in ipairs(recipes_by_name[selected_recipe].Inputs or {}) do
                             local uuid = uuid_for_input(input_req)
-                            -- if not uuid then
-                            --     Library:Notify(("❌ Missing %s"):format(input_req.ItemData.ItemName), 3)
-                            --     task.wait(5)
-                            --     missing = true
-                            --     break
-                            -- end
+                            if not uuid then
+                                Library:Notify(("❌ Missing %s"):format(input_req.ItemData.ItemName), 3)
+                                task.wait(5)
+                                missing = true
+                                break
+                            end
                             crafting_remote:FireServer(
                                 "InputItem",
                                 machine, selected_machine_type, slot,
                                 { ItemType = input_req.ItemType, ItemData = { UUID = tostring(uuid) } }
                             )
                             task.wait(0.1)
-							game:GetService("Players").LocalPlayer.Character.Humanoid:UnequipTools(tool)
+							-- print("inputted")
+							player.Character.Humanoid:UnequipTools()
                         end
 
                         -- craft & claim
@@ -2913,6 +2910,101 @@ task.spawn(function()
     end
 end)
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Remotes = require(ReplicatedStorage.Modules.Remotes)
+local SeedPackData = require(ReplicatedStorage.Data.SeedPackData)
+
+local localPlayer = Players.LocalPlayer
+local selectedPacks = {}
+local autoOpen = false
+local busy = false
+
+-- List available packs
+-- print("🧪 Valid seed pack names:")
+-- for k in pairs(SeedPackData.Packs) do
+-- 	print(" -", k)
+-- end
+
+-- Build pack list
+local function getPackNames()
+	local names = {}
+	for k in pairs(SeedPackData.Packs) do
+		table.insert(names, k)
+	end
+	table.sort(names)
+	return names
+end
+
+-- Listen for result
+Remotes.SeedPack.Result.listen(function(data)
+	busy = false
+	print("✅ Opened:", data.seedPackType)
+	Remotes.SeedPack.SpinFinished.send()
+end)
+
+-- Dropdown
+seedShop:AddDropdown("seedpack_dropdown", {
+	Text = "Select Seed Packs",
+	Values = getPackNames(),
+	Multi = true,
+	Default = {},
+	Callback = function(selection)
+		selectedPacks = util.keysOf(selection) -- converts dictionary to array
+		if #selectedPacks > 0 then
+			print("📦 Selected Packs:", table.concat(selectedPacks, ", "))
+		else
+			selectedPacks = {}
+			print("⚠️ No seed packs selected.")
+		end
+	end
+})
+
+seedShop:AddToggle("auto_seed_toggle", {
+	Text = "Auto Open Seed Packs",
+	Default = false,
+	Callback = function(state)
+		autoOpen = state
+
+		if not state then
+			print("🛑 Auto Open Disabled")
+			busy = false -- force-stop any stuck loop
+			return
+		end
+
+		print("🚀 Auto Open Enabled")
+
+		task.spawn(function()
+			while autoOpen do
+				if #selectedPacks == 0 then
+					print("⚠️ No packs selected.")
+					break
+				end
+
+				for _, packName in ipairs(selectedPacks) do
+					if not autoOpen then break end
+					if busy then continue end
+
+					busy = true
+					print("🎯 Sending pack:", packName)
+
+					pcall(function()
+						Remotes.SeedPack.Open.send(packName)
+					end)
+
+					-- Wait until server confirms spin is done or we toggle off
+					while busy and autoOpen do
+						task.wait(0.1)
+					end
+				end
+
+				task.wait(0.5)
+			end
+		end)
+	end
+})
+
+
 ThemeManager:SetLibrary(Library)
 SaveManager:SetLibrary(Library)
 
@@ -2930,4 +3022,3 @@ end
 
 SaveManager:LoadAutoloadConfig()
 SaveManager:AutoSave(1)
-

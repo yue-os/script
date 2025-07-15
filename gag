@@ -1534,26 +1534,36 @@ do
 	end
 
 	local ReversedItemTypeEnums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
-
+	
 	local function fetchInput(req)
+		print("🎯 Looking for input:")
+		print("   ItemType →", tostring(req.ItemType))
+		print("   ItemName →", tostring(req.ItemData and req.ItemData.ItemName))
+
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
-			if not tool:IsA("Tool") or baseName(tool.Name) ~= req.ItemData.ItemName then continue end
+			if not tool:IsA("Tool") then continue end
 
-			local attrItemType = tool:GetAttribute("b") -- may be nil
-			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or baseName(tool.Name)
+			local toolName = tool.Name
+			local attrItemType = tool:GetAttribute("b")
+			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or baseName(toolName)
 
-			local decodedType = item_codes[attrItemType] or attrItemType -- fallback if mapping fails
+			local decodedType = item_codes[attrItemType] or "???"
+			local base = baseName(toolName)
 
-			local typeMatch = (decodedType == req.ItemType or not req.ItemType)
-			local nameMatch = (attrItemName == req.ItemData.ItemName)
+			print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",
+				toolName, tostring(attrItemType), decodedType, tostring(attrItemName), base))
 
-			print(string.format("🔍 Tool=%s | ItemType=%s | Name=%s | ExpectedType=%s | ExpectedName=%s",
-				tool.Name, tostring(decodedType), tostring(attrItemName), tostring(req.ItemType), tostring(req.ItemData.ItemName)))
+			-- Type/Name fallback logic
+			local matchesType = (not req.ItemType) or (decodedType == req.ItemType)
+			local matchesName = attrItemName and req.ItemData and string.lower(attrItemName) == string.lower(req.ItemData.ItemName)
 
-			if typeMatch and nameMatch then
+			if matchesType and matchesName then
+				print("✅ MATCH FOUND:", base)
 				tool.Parent = player.Character
 				equipTool(tool)
-				return tool:GetAttribute("c") or tool:GetAttribute("PET_UUID") or tool:GetAttribute("UUID")
+
+				local attrUUIDKey = inventory_enums["ITEM_UUID"]
+				return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
 			end
 		end
 

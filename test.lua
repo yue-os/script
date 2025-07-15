@@ -1718,7 +1718,7 @@ do
             if not _G.autoDinoQuest then break end
 
             -- one sweep
-            local pf = myFarm and myFarm:FindFirstChild("Important") and myFarm.Important:FindFirstChild("Plants_Physical")
+            local pf = getgenv().myFarm and getgenv().myFarm:FindFirstChild("Important") and getgenv().myFarm.Important:FindFirstChild("Plants_Physical")
             if pf then
                 for _,pl in ipairs(pf:GetChildren()) do
                     if (pl.Name:match("^(.-) %[[^%]]+%]$") or pl.Name)==crop then

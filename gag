@@ -2,7 +2,7 @@
 local function removeGui()
 	for _, v in ipairs(game:GetService("CoreGui"):GetDescendants()) do
 		if v:IsA("ScreenGui") and v.Name == "Obsidian" then
-			getgenv().Library.Unloaded = true
+			Library.Unloaded = true
 			v:Destroy()
 			for _, v2 in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetDescendants()) do
 				if v2:isA("ScreenGui") and v2.Name == "GearTeleportGui" then
@@ -14,7 +14,7 @@ local function removeGui()
 end
 removeGui()
 
-getgenv().Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/Library.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/Library.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/SaveManager.lua"))()
 local ThemeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/ThemeManager.lua"))()
 local player = game.Players.LocalPlayer
@@ -73,7 +73,7 @@ getgenv().util = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-
 
 task.wait(2)
 
-local window = getgenv().Library:CreateWindow({
+local window = Library:CreateWindow({
     Title = "Y-Hub",
     Center = true,
     Icon = 128171209017859,
@@ -126,9 +126,9 @@ group:AddToggle("auto_sell_toggle", {
     Callback = function(state)
         autoSell = state
         if autoSell then
-            getgenv().Library:Notify("Auto TP & Sell enabled.")
+            Library:Notify("Auto TP & Sell enabled.")
             task.spawn(function()
-                while autoSell and not getgenv().Library.Unloaded do
+                while autoSell and not Library.Unloaded do
                     if util.getFruitCount() >= fruitThreshold then
                         util.teleportSellReturn()
                         task.wait(2)
@@ -137,7 +137,7 @@ group:AddToggle("auto_sell_toggle", {
                 end
             end)
         else
-            getgenv().Library:Notify("Auto TP & Sell disabled.")
+            Library:Notify("Auto TP & Sell disabled.")
         end
     end
 })
@@ -179,7 +179,7 @@ lPlayer:AddToggle("noclip_toggle", {
                     end
                 end
             end)
-            getgenv().Library:Notify("Noclip enabled.")
+            Library:Notify("Noclip enabled.")
         else
             if noclipConn then noclipConn:Disconnect() noclipConn = nil end
             local char = player.Character
@@ -190,7 +190,7 @@ lPlayer:AddToggle("noclip_toggle", {
                     end
                 end
             end
-            getgenv().Library:Notify("Noclip disabled.")
+            Library:Notify("Noclip disabled.")
         end
     end
 })
@@ -226,11 +226,11 @@ lPlayer:AddToggle("speedwalk_toggle", {
                     child.WalkSpeed = speedValue
                 end
             end)
-            getgenv().Library:Notify("Speedwalk enabled.")
+            Library:Notify("Speedwalk enabled.")
         else
             if hum then hum.WalkSpeed = 16 end
             if speedConn then speedConn:Disconnect() speedConn = nil end
-            getgenv().Library:Notify("Speedwalk disabled.")
+            Library:Notify("Speedwalk disabled.")
         end
     end
 })
@@ -258,7 +258,7 @@ seedShop:AddDropdown("seed_dropdown", {
             getgenv().selectedSeeds = rawSelected
         end
 
-        getgenv().Library:Notify("Selected seeds: " .. table.concat(getgenv().selectedSeeds, ", "))
+        Library:Notify("Selected seeds: " .. table.concat(getgenv().selectedSeeds, ", "))
     end
 })
 
@@ -268,23 +268,23 @@ seedShop:AddToggle("auto_buy_selected_seeds", {
     Callback = function(value)
         autoBuySeeds = value
         if autoBuySeeds then
-            getgenv().Library:Notify("Auto-buy enabled!")
+            Library:Notify("Auto-buy enabled!")
             task.spawn(function()
                 local event = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuySeedStock")
 
-                while autoBuySeeds and not getgenv().Library.Unloaded do
+                while autoBuySeeds and not Library.Unloaded do
                     if #getgenv().selectedSeeds > 0 then
                         for _, seedName in ipairs(getgenv().selectedSeeds) do
                             event:FireServer(seedName)
                         end
-                        -- getgenv().Library:Notify("Bought " .. seedName)
+                        -- Library:Notify("Bought " .. seedName)
                     end
                     task.wait(0.5)
                 end
-                getgenv().Library:Notify("Auto-buy disabled!")
+                Library:Notify("Auto-buy disabled!")
             end)
         else
-            getgenv().Library:Notify("Auto-buy disabled!")
+            Library:Notify("Auto-buy disabled!")
         end
     end
 })
@@ -319,7 +319,7 @@ hatch:AddDropdown("egg_dropdown", {
             getgenv().selectedeggs = eggselected
         end
 
-        getgenv().Library:Notify("Selected eggs: " .. table.concat(getgenv().selectedeggs, ", "))
+        Library:Notify("Selected eggs: " .. table.concat(getgenv().selectedeggs, ", "))
     end
 })
 
@@ -372,9 +372,9 @@ setPositionButton = hatch:AddButton({
     Func = function()
         if game.Players.LocalPlayer.Character then
             getgenv().selected_position_egg = game.Players.LocalPlayer.Character:GetPivot().Position
-            getgenv().Library:Notify("Set player position!")
+            Library:Notify("Set player position!")
         else
-            getgenv().Library:Notify("Character not found!", 3)
+            Library:Notify("Character not found!", 3)
         end
     end,
     DoubleClick = false,
@@ -398,7 +398,7 @@ hatch:AddToggle("autohatchtoggle", {
 
 -- persistent hatch loop
 task.spawn(function()
-  while not getgenv().Library.Unloaded do
+  while not Library.Unloaded do
     if autoHatch then
       util.hatchSelectedEggs()
     end
@@ -438,9 +438,9 @@ dino:AddDropdown("dino_dropdown", {
     Callback = function(selected)
         selectedRecipe = selected
         if selected then
-            getgenv().Library:Notify("Selected recipe: " .. selected)
+            Library:Notify("Selected recipe: " .. selected)
         else
-            getgenv().Library:Notify("No recipe selected.")
+            Library:Notify("No recipe selected.")
         end
     end
 })
@@ -457,7 +457,7 @@ dino:AddToggle("auto_craft_toggle", {
 
 -- Auto Craft Loop (Lightweight, safe)
 task.spawn(function()
-    while not getgenv().Library.Unloaded do
+    while not Library.Unloaded do
         if autoCraftEnabled and selectedRecipe and selectedRecipe ~= "All" then
             pcall(function()
                 setRecipe(selectedRecipe)
@@ -577,7 +577,7 @@ local function findTableTopLabel()
 end
 
 task.spawn(function()
-	while not getgenv().Library.Unloaded do
+	while not Library.Unloaded do
 		local timerLabel = findTableTopLabel()
         if autoSubmit then
             pcall(submitValidItems)
@@ -609,7 +609,7 @@ dino:AddToggle("claim_craft", {
 
 -- ▶️ Single background task that always runs
 task.spawn(function()
-    while not getgenv().Library.Unloaded do
+    while not Library.Unloaded do
         if auto_claim_craft then
             -- fire a Claim on your Dino bench every 5s
             CraftingRemote:FireServer(
@@ -646,7 +646,7 @@ merchantShop:AddDropdown("merch_dropdown", {
             selectedMerchantItem = merchselected
         end
 
-        getgenv().Library:Notify("Selected items: " .. table.concat(selectedMerchantItem, ", "))
+        Library:Notify("Selected items: " .. table.concat(selectedMerchantItem, ", "))
     end
 })
 
@@ -659,11 +659,11 @@ merchantShop:AddToggle("auto_buy_selected_merch", {
     Callback = function(value)
         autoBuyMerch = value
         if autoBuyMerch then
-            getgenv().Library:Notify("Auto-buy merch enabled!")
+            Library:Notify("Auto-buy merch enabled!")
             task.spawn(function()
                 local event = game:GetService("ReplicatedStorage").GameEvents:WaitForChild("BuyTravelingMerchantShopStock")
 
-                while autoBuyMerch and not getgenv().Library.Unloaded do
+                while autoBuyMerch and not Library.Unloaded do
                     if #selectedMerchantItem > 0 then
                         local toBuy = {}
 
@@ -685,10 +685,10 @@ merchantShop:AddToggle("auto_buy_selected_merch", {
                     end
                     task.wait(0.5)
                 end
-                getgenv().Library:Notify("Auto-buy merch disabled!")
+                Library:Notify("Auto-buy merch disabled!")
             end)
         else
-            getgenv().Library:Notify("Auto-buy merch disabled!")
+            Library:Notify("Auto-buy merch disabled!")
         end
     end
 })
@@ -716,7 +716,7 @@ gearShop:AddDropdown("gear_dropdown", {
             selectedGears = rawSelectedd
         end
 
-        getgenv().Library:Notify("Selected gears: " .. table.concat(selectedGears, ", "))
+        Library:Notify("Selected gears: " .. table.concat(selectedGears, ", "))
     end
 })
 
@@ -727,11 +727,11 @@ gearShop:AddToggle("auto_buy_selected_gears", {
     Callback = function(value)
         autoBuyGears = value
         if autoBuyGears then
-            getgenv().Library:Notify("Auto-buy gears enabled!")
+            Library:Notify("Auto-buy gears enabled!")
             task.spawn(function()
                 local event = game:GetService("ReplicatedStorage").GameEvents:WaitForChild("BuyGearStock")
 
-                while autoBuyGears and not getgenv().Library.Unloaded do
+                while autoBuyGears and not Library.Unloaded do
                     if #selectedGears > 0 then
                         local toBuy = {}
 
@@ -753,10 +753,10 @@ gearShop:AddToggle("auto_buy_selected_gears", {
                     end
                     task.wait(0.5)
                 end
-                getgenv().Library:Notify("Auto-buy gears disabled!")
+                Library:Notify("Auto-buy gears disabled!")
             end)
         else
-            getgenv().Library:Notify("Auto-buy gears disabled!")
+            Library:Notify("Auto-buy gears disabled!")
         end
     end
 })
@@ -769,9 +769,9 @@ gearShop:AddToggle("auto_buy_selected_gears", {
 --     Callback = function(val)
 --         autoBuyPetsToggle = val
 --         if val then
---             getgenv().Library:Notify("Auto buy all eggs enabled.")
+--             Library:Notify("Auto buy all eggs enabled.")
 --             task.spawn(function()
---                 while autoBuyPetsToggle and not getgenv().Library.Unloaded do
+--                 while autoBuyPetsToggle and not Library.Unloaded do
 --                     for i = 1, 3 do
 --                         for _, pet in ipairs({1, 2, 3}) do
 --                             ReplicatedStorage.GameEvents.BuyPetEgg:FireServer(pet)
@@ -782,7 +782,7 @@ gearShop:AddToggle("auto_buy_selected_gears", {
 --                 end
 --             end)
 --         else
---             getgenv().Library:Notify("Auto buy all eggs disabled.")
+--             Library:Notify("Auto buy all eggs disabled.")
 --         end
 --     end
 -- })
@@ -833,7 +833,7 @@ petGroup:AddToggle("auto_buy_egg", {
 		if autoBuyPets then
 			Library:Notify("🚀 Auto-buy enabled.")
 			task.spawn(function()
-				while autoBuyPets and not getgenv().Library.Unloaded do
+				while autoBuyPets and not Library.Unloaded do
 					local targets = selected_eggs
 					if not targets or #targets == 0 then
 						targets = {"All"} -- fallback if empty
@@ -878,7 +878,7 @@ local cosmeticUI = rShop:AddToggle("cosmetic_toggle", {
         local ui = player.PlayerGui:FindFirstChild("CosmeticShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -891,7 +891,7 @@ local dinoUi = dino:AddToggle("dino_quest_toggle", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("DinoQuests_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            -- getgenv().Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            -- Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -905,7 +905,7 @@ cosmeticUI:AddKeyPicker("cosmetic_keybind", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("CosmeticShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Cosmetic Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -917,7 +917,7 @@ local gearShop = rShop:AddToggle("gear_toggle", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Gear_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -930,7 +930,7 @@ gearShop:AddKeyPicker("gear_keybind", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Gear_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Gear Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -942,7 +942,7 @@ local seedUI = rShop:AddToggle("seed_toggle", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Seed_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -955,7 +955,7 @@ seedUI:AddKeyPicker("seed_keybind", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("Seed_Shop")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Seed Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -966,7 +966,7 @@ local harvestShop = rShop:AddToggle("harvestshop_toggle", {
         local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("EventShop_UI")
         if ui then
             ui.Enabled = not ui.Enabled
-            getgenv().Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+            Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
         end
     end
 })
@@ -978,7 +978,7 @@ local harvestShop = rShop:AddToggle("harvestshop_toggle", {
 --         local ui = player.PlayerGui:FindFirstChild("EventShop_UI")
 --         if ui then
 --             ui.Enabled = not ui.Enabled
---             getgenv().Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+--             Library:Notify("Harvest Shop UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
 --         end
 --     end
 -- })
@@ -988,7 +988,7 @@ rShop:AddButton("Daily Quest", function()
     local ui = player.PlayerGui:FindFirstChild("DailyQuests_UI")
     if ui then
         ui.Enabled = not ui.Enabled
-        getgenv().Library:Notify("Daily Quest UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
+        Library:Notify("Daily Quest UI: " .. (ui.Enabled and "Enabled" or "Disabled"))
     end
 end)
 
@@ -1027,7 +1027,7 @@ group2:AddDropdown("plant_dropdown", {
 --                 harvestFruitNames[fruit] = true
 --             end
 --         end
---         getgenv().Library:Notify("Harvest fruit filter set!")
+--         Library:Notify("Harvest fruit filter set!")
 --     end
 -- })
 
@@ -1036,7 +1036,7 @@ group2:AddInput("min_weight_input", {
     Default = "0",
     Callback = function(val)
         minWeight = tonumber(val) or 0
-        getgenv().Library:Notify("Min Weight set to: " .. tostring(minWeight))
+        Library:Notify("Min Weight set to: " .. tostring(minWeight))
     end
 })
 
@@ -1045,7 +1045,7 @@ group2:AddInput("max_weight_input", {
     Default = "9999",
     Callback = function(val)
         maxWeight = tonumber(val) or 9999
-        getgenv().Library:Notify("Max Weight set to: " .. tostring(maxWeight))
+        Library:Notify("Max Weight set to: " .. tostring(maxWeight))
     end
 })
 
@@ -1057,9 +1057,9 @@ group2:AddToggle("auto_collect_toggle", {
     Callback = function(state)
         autoCollect = state
         if autoCollect then
-            getgenv().Library:Notify("Auto Collect enabled!")
+            Library:Notify("Auto Collect enabled!")
             task.spawn(function()
-                while autoCollect and not getgenv().Library.Unloaded do
+                while autoCollect and not Library.Unloaded do
                     
                     local buffer = buffer.fromstring("\1\1\0\1")
 
@@ -1080,10 +1080,10 @@ group2:AddToggle("auto_collect_toggle", {
                     end
                     task.wait(2)
                 end
-                getgenv().Library:Notify("Auto Collect disabled!")
+                Library:Notify("Auto Collect disabled!")
             end)
         else
-            getgenv().Library:Notify("Auto Collect disabled!")
+            Library:Notify("Auto Collect disabled!")
         end
     end
 })
@@ -1128,7 +1128,7 @@ creditsGroup:AddButton({
     Text = "Join Discord Server",
     Func = function()
         setclipboard("https://discord.gg/WswepWXvr9")
-        getgenv().Library:Notify("Discord link copied! Paste in browser to join.")
+        Library:Notify("Discord link copied! Paste in browser to join.")
         pcall(function()
             if syn and syn.request then
                 syn.request({Url = "https://discord.gg/WswepWXvr9", Method = "GET"})
@@ -1173,7 +1173,7 @@ plant:AddDropdown("seed_dropdown", {
             selectedSeeds = rawSelected
         end
 
-        getgenv().Library:Notify("Selected seeds: " .. table.concat(selectedSeeds, ", "))
+        Library:Notify("Selected seeds: " .. table.concat(selectedSeeds, ", "))
     end
 })
 
@@ -1187,7 +1187,7 @@ plant:AddDropdown("plant_placement_mode", {
     Default = "Random Position",
     Callback = function(selected)
         getgenv().plantMode = selected
-        getgenv().Library:Notify("🌱 Plant mode set to: " .. selected)
+        Library:Notify("🌱 Plant mode set to: " .. selected)
 
 		if sPos then
 			sPos:SetVisible(selected == "Selected Position")
@@ -1227,14 +1227,14 @@ plant:AddToggle("auto_plant_toggle", {
         autoPlant = state
         if autoPlant then
             if #selectedSeeds == 0 then
-                getgenv().Library:Notify("No seeds selected!")
+                Library:Notify("No seeds selected!")
                 autoPlant = false
                 return
             end
 
-            getgenv().Library:Notify("Auto Plant enabled!")
+            Library:Notify("Auto Plant enabled!")
             task.spawn(function()
-                while autoPlant and not getgenv().Library.Unloaded do
+                while autoPlant and not Library.Unloaded do
 					local character = game.Players.LocalPlayer.Character
                     local hrp = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
@@ -1284,10 +1284,10 @@ plant:AddToggle("auto_plant_toggle", {
 
                     task.wait(0.1)
                 end
-                getgenv().Library:Notify("Auto Plant disabled!")
+                Library:Notify("Auto Plant disabled!")
             end)
         else
-            getgenv().Library:Notify("Auto Plant disabled!")
+            Library:Notify("Auto Plant disabled!")
         end
     end
 })
@@ -1354,7 +1354,7 @@ do
             end; return n
         end
 
-        while _G.autoDinoQuest and not getgenv().Library.Unloaded do
+        while _G.autoDinoQuest and not Library.Unloaded do
             if bagCnt()>=200 then repeat task.wait(2) until bagCnt()<100 or not _G.autoDinoQuest end
             if not _G.autoDinoQuest then break end
 
@@ -1387,12 +1387,12 @@ do
         local hrp  = char and char:FindFirstChild("HumanoidRootPart")
         if hrp then
             plantPos = hrp.Position
-            getgenv().Library:Notify(
+            Library:Notify(
                 ("[AutoPlant] Position saved  (%.1f, %.1f, %.1f)")
                 :format(plantPos.X, plantPos.Y, plantPos.Z)
             )
         else
-            getgenv().Library:Notify("[AutoPlant] Couldn’t find HumanoidRootPart!", 3)
+            Library:Notify("[AutoPlant] Couldn’t find HumanoidRootPart!", 3)
         end
     end)
 
@@ -1401,7 +1401,7 @@ do
         if planting or not _G.autoDinoQuest then return end
 
         if not plantPos then
-            getgenv().Library:Notify("[AutoPlant] No position saved – click “Save Plant Position” first!", 4)
+            Library:Notify("[AutoPlant] No position saved – click “Save Plant Position” first!", 4)
             return
         end
 
@@ -1423,12 +1423,12 @@ do
             end
         end
 
-        while _G.autoDinoQuest and not getgenv().Library.Unloaded do
+        while _G.autoDinoQuest and not Library.Unloaded do
             local tool = findTool()
 
             if not tool then
                 if not warnedMissing then
-                    getgenv().Library:Notify("[AutoPlant] Missing \"" .. seed .. " Seed\" – equip / buy more to continue.", 4)
+                    Library:Notify("[AutoPlant] Missing \"" .. seed .. " Seed\" – equip / buy more to continue.", 4)
                     warnedMissing = true
                 end
             else
@@ -1507,7 +1507,7 @@ do
         unequipOthers()
         equipOne()
 
-        while _G.autoDinoQuest and not getgenv().Library.Unloaded do
+        while _G.autoDinoQuest and not Library.Unloaded do
             local prog, target = progress("GrowPetToAge", pname)
             if prog >= target then break end
             if prog > lastProg then lastProg, t0 = prog, os.clock() end
@@ -1604,7 +1604,7 @@ do
 		
 		local lastProg, t0 = progress("Craft", itemName), os.clock()
 
-		while _G.autoDinoQuest and not getgenv().Library.Unloaded do
+		while _G.autoDinoQuest and not Library.Unloaded do
 			if bench:GetAttribute("IsRunning") then
 				task.wait(1)
 			else
@@ -1648,7 +1648,7 @@ do
 
     local function supervisor()
         task.spawn(function()
-            while _G.autoDinoQuest and not getgenv().Library.Unloaded do
+            while _G.autoDinoQuest and not Library.Unloaded do
                 for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
                     if (cont.Name or cont.Container or cont.Type or ""):lower() == "dino" then
                         for _,q in ipairs(cont.Quests or {}) do
@@ -1678,8 +1678,8 @@ do
         Default = false,
         Callback = function(v)
             _G.autoDinoQuest = v
-            if v then getgenv().Library:Notify("[AutoDinoQuest] Enabled") supervisor()
-            else     getgenv().Library:Notify("[AutoDinoQuest] Disabled") end
+            if v then Library:Notify("[AutoDinoQuest] Enabled") supervisor()
+            else     Library:Notify("[AutoDinoQuest] Disabled") end
         end
     })
 end
@@ -1692,7 +1692,7 @@ dino:AddToggle("auto_claimq", {
 		local questSlot = {1, 2, 3}
 
 		task.spawn(function()
-			while claimQ and not getgenv().Library.Unloaded do
+			while claimQ and not Library.Unloaded do
 				for _, v in ipairs(questSlot) do
 					pcall(function()
 						game:GetService("ReplicatedStorage").GameEvents.ClaimDinoQuest:InvokeServer(v)
@@ -1737,7 +1737,7 @@ plant:AddToggle("auto_reclaim", {
 		if not state then return end
 
 		task.spawn(function()
-			while autoReclaim and not getgenv().Library.Unloaded do
+			while autoReclaim and not Library.Unloaded do
 				local didReclaim = false
 
 				if plantsFolder then
@@ -1830,7 +1830,7 @@ plant:AddToggle("auto_shovel_toggle", {
         if not state then unequip(); return end                -- 🔹 toggle-off
 
         task.spawn(function()
-            while autoRemove and not getgenv().Library.Unloaded do
+            while autoRemove and not Library.Unloaded do
                 local didSomething = false
 
                 -------------------------------------------------- main sweep
@@ -1882,7 +1882,7 @@ end
 
 -- Auto shovel loop
 task.spawn(function()
-	while not getgenv().Library.Unloaded do
+	while not Library.Unloaded do
 		if autoRemove then
 			task.wait(0.4)
 			if not game.Players.LocalPlayer.Character or not game.Players.LocalPlayer.Character:FindFirstChild("Shovel [Destroy Plants]") then continue end
@@ -1985,11 +1985,11 @@ dino:AddToggle("autodnapets",{
     Callback = function(state)
         autoDNA = state
         if not state then
-            getgenv().Library:Notify("[AutoDNA] Disabled")
+            Library:Notify("[AutoDNA] Disabled")
             return
         end
 
-        getgenv().Library:Notify("[AutoDNA] Enabled")
+        Library:Notify("[AutoDNA] Enabled")
 
         -- snapshot the user’s current selection once;   
         -- if your UI lets them change the list at runtime,  
@@ -1999,7 +1999,7 @@ dino:AddToggle("autodnapets",{
 		local character = player.Character
 		local backpack = player.Backpack
         task.spawn(function()
-            while autoDNA and not getgenv().Library.Unloaded do
+            while autoDNA and not Library.Unloaded do
                 -----------------------------------------------------
                 -- only act while machine is idle
                 -----------------------------------------------------
@@ -2044,7 +2044,7 @@ dino:AddToggle("auto_claim", {
 
 -- ▶️ Background task that always runs
 task.spawn(function()
-    while not getgenv().Library.Unloaded do
+    while not Library.Unloaded do
         if auto_claim_enabled then
             -- grab the READY label
             local label = workspace.DinoEvent.BenchRewardPart.BenchPart.BillboardPart.BillboardGui.DnaMachineLabel
@@ -2108,7 +2108,7 @@ pet:AddInput("MinWeight", {
     Placeholder = "Default 0",
     Callback = function(value)
         minPetWeight = tonumber(value)
-        getgenv().Library:Notify("Min weight set to: " .. (minPetWeight or "none"))
+        Library:Notify("Min weight set to: " .. (minPetWeight or "none"))
     end
 })
 -- local minPetWeight = 999
@@ -2117,7 +2117,7 @@ pet:AddInput("MaxWeight", {
     Placeholder = "Default: 999",
     Callback = function(value)
         maxPetWeight = tonumber(value)
-        getgenv().Library:Notify("Max weight set to: " .. (maxPetWeight or "none"))
+        Library:Notify("Max weight set to: " .. (maxPetWeight or "none"))
     end
 })
 
@@ -2126,7 +2126,7 @@ pet:AddInput("MinAge", {
     Placeholder = "e.g. 2",
     Callback = function(value)
         minPetAge = tonumber(value)
-        getgenv().Library:Notify("Min age set to: " .. (minPetAge or "none"))
+        Library:Notify("Min age set to: " .. (minPetAge or "none"))
     end
 })
 
@@ -2146,7 +2146,7 @@ pet:AddToggle("togglesellpet", {
             task.spawn(function()
                 local sellRemote = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("SellPet_RE")
 
-                while autosellpets and not getgenv().Library.Unloaded do
+                while autosellpets and not Library.Unloaded do
                     for _, selectedName in ipairs(getSelectedNamess()) do
                         for _, tool in ipairs(backpack:GetChildren()) do
                             if tool:GetAttribute("ItemType") == "Pet" then
@@ -2235,9 +2235,9 @@ pet:AddToggle("autogiftpets", {
 
         if autogiftpets then
             task.spawn(function()
-                getgenv().Library:Notify("[AutoGift] Enabled")
+                Library:Notify("[AutoGift] Enabled")
 
-                while autogiftpets and not getgenv().Library.Unloaded do
+                while autogiftpets and not Library.Unloaded do
                     local targetPlayer = getClosestPlayer()
 
                     if targetPlayer and backpack then
@@ -2280,10 +2280,10 @@ pet:AddToggle("autogiftpets", {
                     task.wait(1)
                 end
 
-                getgenv().Library:Notify("[AutoGift] Disabled")
+                Library:Notify("[AutoGift] Disabled")
             end)
         else
-            getgenv().Library:Notify("[AutoGift] Turned Off")
+            Library:Notify("[AutoGift] Turned Off")
         end
     end
 })
@@ -2435,7 +2435,7 @@ local function isOnCooldown(bench)
 end
 
 task.spawn(function()
-    while not getgenv().Library.Unloaded do
+    while not Library.Unloaded do
         if auto_craft_enabled and selected_recipe and selected_machine_type then
 
             -- pause if either bench is still cooling down
@@ -2477,7 +2477,7 @@ task.spawn(function()
                         for slot, input_req in ipairs(recipes_by_name[selected_recipe].Inputs or {}) do
                             local uuid = uuid_for_input(input_req)
                             if not uuid then
-                                getgenv().Library:Notify(("❌ Missing %s"):format(input_req.ItemData.ItemName), 3)
+                                Library:Notify(("❌ Missing %s"):format(input_req.ItemData.ItemName), 3)
                                 task.wait(5)
                                 missing = true
                                 break

@@ -1311,7 +1311,7 @@ do
 
     local buffer   = buffer.fromstring("\1\1\0\1")
     local PetsRE   = game:GetService("ReplicatedStorage").GameEvents.PetsService
-    local farm     = util.myFarm()
+    
 
     local STALL_TIME = 5       -- seconds with 0 progress → abandon quest
 
@@ -1335,7 +1335,7 @@ do
     end
     local function backPackCount()
         local n = 0
-        for _,t in ipairs(player.LocalPlayer.Backpack:GetChildren()) do
+        for _,t in ipairs(player.Backpack:GetChildren()) do
             if t:FindFirstChild("Weight") and t:FindFirstChild("Variant") then n += 1 end
         end
         return n
@@ -1359,7 +1359,7 @@ do
             if not _G.autoDinoQuest then break end
 
             -- one sweep
-            local pf = farm and farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Plants_Physical")
+            local pf = myFarm and myFarm:FindFirstChild("Important") and myFarm.Important:FindFirstChild("Plants_Physical")
             if pf then
                 for _,pl in ipairs(pf:GetChildren()) do
                     if (pl.Name:match("^(.-) %[[^%]]+%]$") or pl.Name)==crop then

@@ -5,9 +5,9 @@ function u.getBaseName(name)
     local base = name:match("^(.-) %[[^%]]+%]$")
     if base then
         return base
+    else
+        return (name:gsub("%s*%b[]", ""):gsub("^%s*(.-)%s*$", "%1"))
     end
-    -- Fallback: remove all bracketed sections and trim
-    return (name:gsub("%s*%b[]", ""):gsub("^%s*(.-)%s*$", "%1"))
 end
 
 

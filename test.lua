@@ -1690,21 +1690,25 @@ do
         return n
     end
 
-    local harvesting=false
+    local harvesting = false
     local function harvestCrop(crop)
         if harvesting then return end
         harvesting = true
         local lastProg, stallT = progress("Harvest",crop)
         local t0 = os.clock()
 
-        local function bagCnt() local n=0
+        local function bagCnt() 
+			local n = 0
             for _,it in ipairs(player.Backpack:GetChildren()) do
                 if it:FindFirstChild("Weight") and it:FindFirstChild("Variant") then n+=1 end
             end; return n
         end
 
         while _G.autoDinoQuest and not Library.Unloaded do
-            if bagCnt()>=200 then repeat task.wait(2) until bagCnt()<100 or not _G.autoDinoQuest end
+            if bagCnt()>=200 then 
+				Library:Notify("Sell some fruits first.")
+				repeat task.wait(2) until bagCnt()<150 or not _G.autoDinoQuest 
+			end
             if not _G.autoDinoQuest then break end
 
             -- one sweep
@@ -1777,7 +1781,7 @@ do
 
             if not tool then
                 if not warnedMissing then
-                    Library:Notify("[AutoPlant] Missing \"" .. seed .. " Seed\" – equip / buy more to continue.", 4)
+                    -- Library:Notify("[AutoPlant] Missing \"" .. seed .. " Seed\" – equip / buy more to continue.", 4)
                     warnedMissing = true
                 end
             else
@@ -2026,31 +2030,70 @@ do
 		crafting = false
 	end
 
+	local stalledTasks = {}
     local function supervisor()
-        task.spawn(function()
-            while _G.autoDinoQuest and not Library.Unloaded do
-                for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
-                    local name = (cont.Name or cont.Container or cont.Type or ""):lower()
+		task.spawn(function()
+			while _G.autoDinoQuest and not Library.Unloaded do
+				for _, cont in pairs(DataService:GetData().QuestContainers or {}) do
+					local name = (cont.Name or cont.Container or cont.Type or ""):lower()
 					if name:find("dino") then
-                        for _,q in ipairs(cont.Quests or {}) do
-                            local prog, tgt = q.Progress or 0, goal(q)
-                            if prog >= tgt then continue end
+						for _, q in ipairs(cont.Quests or {}) do
+							local prog, tgt = q.Progress or 0, goal(q)
+							if prog >= tgt then continue end
 
-                            local arg1 = (q.Arguments or q.Args or {})[1]
-                            if     q.Type == "Harvest"       then task.spawn(harvestCrop , arg1)
-                            elseif q.Type == "Plant"         then task.spawn(plantSeed   , arg1)
-                            elseif q.Type == "GrowPetToAge"  then task.spawn(growPet     , arg1)
-                            elseif q.Type == "Craft" then
+							local key = tostring(q.Type) .. "_" .. tostring(q.Arguments and q.Arguments[1])
+
+							if stalledTasks[key] and os.clock() - stalledTasks[key] < 10 then
+								-- Skip stalled quests for 10 seconds
+								continue
+							end
+
+							local arg1 = (q.Arguments or q.Args or {})[1]
+
+							if q.Type == "Harvest" then
+								task.spawn(function()
+									local before = q.Progress or 0
+									harvestCrop(arg1)
+									if (q.Progress or 0) == before then
+										stalledTasks[key] = os.clock()
+									end
+								end)
+							elseif q.Type == "Plant" then
+								task.spawn(function()
+									local before = q.Progress or 0
+									plantSeed(arg1)
+									if (q.Progress or 0) == before then
+										stalledTasks[key] = os.clock()
+									end
+								end)
+							elseif q.Type == "GrowPetToAge" then
+								task.spawn(function()
+									local before = q.Progress or 0
+									growPet(arg1)
+									if (q.Progress or 0) == before then
+										stalledTasks[key] = os.clock()
+									end
+								end)
+							elseif q.Type == "Craft" then
 								local itemName = (q.Arguments or q.Args or {})[2]
-								if itemName then task.spawn(craftItem, itemName) end
-                            end
-                        end
-                    end
-                end
-                task.wait(0.1)
-            end
-        end)
-    end
+								if itemName then
+									task.spawn(function()
+										local before = q.Progress or 0
+										craftItem(itemName)
+										if (q.Progress or 0) == before then
+											stalledTasks[key] = os.clock()
+										end
+									end)
+								end
+							end
+						end
+					end
+				end
+				task.wait(1)
+			end
+		end)
+	end
+
 
     _G.autoDinoQuest = false
     dino:AddToggle("auto_dino_quest", {
@@ -2070,7 +2113,7 @@ dino:AddToggle("auto_claimq", {
 	Default = false,
 	Callback = function(state)
 		claimQ = state
-		local questSlot = {1, 2, 3}
+		local questSlot = {1, 2, 3, 4, 5}
 
 		task.spawn(function()
 			while claimQ and not Library.Unloaded do

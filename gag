@@ -1534,7 +1534,10 @@ do
 	end
 
 	local ReversedItemTypeEnums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
-	
+	local item_codes = {}
+	for k, v in pairs(util.item_types) do
+		item_codes[v] = k
+	end
 	local function fetchInput(req)
 		print("🎯 Looking for input:")
 		print("   ItemType →", tostring(req.ItemType))
@@ -1547,7 +1550,7 @@ do
 			local attrItemType = tool:GetAttribute("b")
 			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or toolName
 
-			local decodedType = util.item_codes[attrItemType] or "???"
+			local decodedType = item_codes[attrItemType] or "???"
 			local base = baseName(toolName)
 
 			print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",

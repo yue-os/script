@@ -661,4 +661,26 @@ function u.nextRandomPos()
                    canPlant.Position.Z + dz)
 end
 
+function u.getNextPlantPosition()
+    if getgenv().plantMode == "Selected Position" and getgenv().plantPos then
+        return getgenv().plantPos
+    end
+
+    local canPlant = plant_locations:FindFirstChild("Can_Plant")
+    if not (canPlant and canPlant:IsA("BasePart")) then
+        Library:Notify("❌ Missing Can_Plant part!", 3)
+        return nil
+    end
+
+    local halfX, halfZ = canPlant.Size.X * 0.5, canPlant.Size.Z * 0.5
+    local dx = (math.random() * 2 - 1) * halfX
+    local dz = (math.random() * 2 - 1) * halfZ
+
+    return Vector3.new(
+        canPlant.Position.X + dx,
+        canPlant.Position.Y + 0.1,
+        canPlant.Position.Z + dz
+    )
+end
+
 return u

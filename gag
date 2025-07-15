@@ -1550,6 +1550,24 @@ do
 		["SprayMutationName"] = "m",
 		["Type"] = "n"
 	}
+	function equipTool(tool)
+		local char     = player.Character or player.CharacterAdded:Wait()
+		local humanoid = char:FindFirstChildOfClass("Humanoid")
+		if not humanoid or not tool then return false end
+
+		-- already holding?
+		if char:FindFirstChild(tool.Name) == tool then return true end
+
+		humanoid:UnequipTools()
+		humanoid:EquipTool(tool)
+
+		-- wait up to ½ s for server replication
+		for i = 1, 10 do
+			if char:FindFirstChild(tool.Name) then return true end
+			task.wait(0.05)
+		end
+		return false
+	end
 	local item_codes = {}
 	for k, v in pairs(util.item_types) do
 		item_codes[v] = k
@@ -1565,7 +1583,7 @@ do
 			local toolName = baseName(tool.Name)
 			local attrItemType = tool:GetAttribute("b")
 			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or toolName
-
+			local attrUUIDKey = inventory_enums["ITEM_UUID"]
 			local decodedType = item_codes[attrItemType] or "???"
 			local base = baseName(toolName)
 
@@ -1577,15 +1595,9 @@ do
 			local matchesName = attrItemName and req.ItemData and string.lower(attrItemName) == string.lower(req.ItemData.ItemName)
 
 			if matchesType and matchesName then
-				print("✅ MATCH FOUND:", base)
 				tool.Parent = player.Character
-
-				if util.equipTool(tool) then
-					local attrUUIDKey = inventory_enums["ITEM_UUID"]
-					return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
-				else
-					warn("⚠️ Failed to equip:", base)
-				end
+				equipTool(tool)
+				return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
 			end
 		end
 

@@ -1565,7 +1565,7 @@ do
 				tool.Parent = player.Character
 
 				if util.equipTool(tool) then
-					local attrUUIDKey = inventory_enums["ITEM_UUID"]
+					local attrUUIDKey = util.inventory_enums["ITEM_UUID"]
 					return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
 				else
 					warn("⚠️ Failed to equip:", base)

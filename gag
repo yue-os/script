@@ -1563,10 +1563,13 @@ do
 			if matchesType and matchesName then
 				print("✅ MATCH FOUND:", base)
 				tool.Parent = player.Character
-				util.equipTool(tool)
 
-				local attrUUIDKey = inventory_enums["ITEM_UUID"]
-				return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
+				if util.equipTool(tool) then
+					local attrUUIDKey = inventory_enums["ITEM_UUID"]
+					return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
+				else
+					warn("⚠️ Failed to equip:", base)
+				end
 			end
 		end
 

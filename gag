@@ -1570,7 +1570,7 @@ do
 			print("  Expected Name:", req.ItemData.ItemName)
 			print("  Expected Type:", req.ItemType)
 			-- Matching check
-			if --[[ decodedType == req.ItemType and  ]]attrItemName == req.ItemData.ItemName then
+			if (decodedType == req.ItemType or nil) and attrItemName == req.ItemData.ItemName then
 				-- print("✅ MATCHED:", decodedType, "|", attrItemName)
 				tool.Parent = player.Character
 				equipTool(tool)

@@ -1542,30 +1542,36 @@ do
 		-- print("🎯 Looking for input:")
 		-- print("   ItemType →", tostring(req.ItemType))
 		-- print("   ItemName →", tostring(req.ItemData and req.ItemData.ItemName))
+
 		local player = game:GetService("Players").LocalPlayer
-		for _, tool in ipairs(player.Backpack:GetChildren()) do
+		local bp = player:WaitForChild("Backpack")
+
+		for _, tool in ipairs(bp:GetChildren()) do
 			if not tool:IsA("Tool") then continue end
 
 			local toolName = baseName(tool.Name)
-			local attrItemType = tool:GetAttribute("b")
-			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or toolName
 
-			local decodedType = item_codes[attrItemType] or "???"
+			-- 🔎 Attribute keys from enums
+			local attrTypeKey = util.inventory_enums["ITEM_TYPE"]
+			local attrNameKey = util.inventory_enums["ItemName"]
+			local attrUUIDKey = util.inventory_enums["ITEM_UUID"]
+
+			local attrItemType = tool:GetAttribute(attrTypeKey)
+			local attrItemName = tool:GetAttribute(attrNameKey) or tool:GetAttribute("f") or tool:GetAttribute("l") or toolName
+
+			local decodedType = util.item_codes and util.item_codes[attrItemType] or "???"
 			local base = baseName(toolName)
 
 			-- print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",
 			-- 	toolName, tostring(attrItemType), decodedType, tostring(attrItemName), base))
 
-			-- Type/Name fallback logic
 			local matchesType = (not req.ItemType) or (decodedType == req.ItemType)
 			local matchesName = attrItemName and req.ItemData and string.lower(attrItemName) == string.lower(req.ItemData.ItemName)
 
 			if matchesType and matchesName then
 				print("✅ MATCH FOUND:", base)
-				tool.Parent = player.Character
 
 				if util.equipTool(tool) then
-					local attrUUIDKey = util.inventory_enums["ITEM_UUID"]
 					return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
 				else
 					warn("⚠️ Failed to equip:", base)
@@ -1576,6 +1582,7 @@ do
 		warn("❌ No match for → Type:", req.ItemType, "Name:", req.ItemData.ItemName)
 		return nil
 	end
+
 
 
 	local function modelFor(machineType)

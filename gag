@@ -1536,41 +1536,40 @@ do
 	local ReversedItemTypeEnums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
 	
 	local function fetchInput(req)
+		print("🎯 Looking for input:")
+		print("   ItemType →", tostring(req.ItemType))
+		print("   ItemName →", tostring(req.ItemData and req.ItemData.ItemName))
+
 		for _, tool in ipairs(player.Backpack:GetChildren()) do
 			if not tool:IsA("Tool") then continue end
 
-			local attrType = tool:GetAttribute("b")
-			local attrName = tool:GetAttribute("f") or tool:GetAttribute("l") or baseName(tool.Name)
-			local attrUUID = tool:GetAttribute("c") or tool:GetAttribute("ITEM_UUID")
-			local attrSeed = tool:GetAttribute("Seed")
-			local decodedType = item_codes[attrType] or "???"
+			local toolName = baseName(tool.Name)
+			local attrItemType = tool:GetAttribute("b")
+			local attrItemName = tool:GetAttribute("f") or tool:GetAttribute("l") or baseName(toolName)
 
-			local requiredName = req.ItemData and req.ItemData.ItemName
-			local requiredType = req.ItemType
+			local decodedType = item_codes[attrItemType] or "???"
+			local base = baseName(toolName)
 
-			-- Type fallback: allow matching even if type is missing or doesn't decode properly
-			local typeMatch = (not requiredType) or (decodedType == requiredType)
+			print(string.format("🧰 Tool: %s | TypeAttr: %s (%s) | NameAttr: %s | Base: %s",
+				toolName, tostring(attrItemType), decodedType, tostring(attrItemName), base))
 
-			-- Try matching via Seed attribute too
-			local nameMatch = false
-			if attrName and requiredName then
-				nameMatch = string.lower(attrName) == string.lower(requiredName)
-			elseif attrSeed and requiredName then
-				nameMatch = string.lower(attrSeed) == string.lower(requiredName)
-			end
+			-- Type/Name fallback logic
+			local matchesType = (not req.ItemType) or (decodedType == req.ItemType)
+			local matchesName = attrItemName and req.ItemData and string.lower(attrItemName) == string.lower(req.ItemData.ItemName)
 
-			if typeMatch and nameMatch then
-				print("✅ MATCH FOUND:", tool.Name)
+			if matchesType and matchesName then
+				print("✅ MATCH FOUND:", base)
 				tool.Parent = player.Character
 				equipTool(tool)
-				return attrUUID
+
+				local attrUUIDKey = inventory_enums["ITEM_UUID"]
+				return tool:GetAttribute(attrUUIDKey) or tool:GetAttribute("c")
 			end
 		end
 
-		warn("❌ No match for → Type:", req.ItemType, "Name:", req.ItemData and req.ItemData.ItemName)
+		warn("❌ No match for → Type:", req.ItemType, "Name:", req.ItemData.ItemName)
 		return nil
 	end
-
 
 
 	local function modelFor(machineType)

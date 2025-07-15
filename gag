@@ -1656,7 +1656,8 @@ do
         task.spawn(function()
             while _G.autoDinoQuest and not Library.Unloaded do
                 for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
-                    if (cont.Name or cont.Container or cont.Type or ""):lower() == "dino" then
+                    local name = (cont.Name or cont.Container or cont.Type or ""):lower()
+					if name:find("dino") then
                         for _,q in ipairs(cont.Quests or {}) do
                             local prog, tgt = q.Progress or 0, goal(q)
                             if prog >= tgt then continue end

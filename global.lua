@@ -54,9 +54,10 @@ function u.removeHighlight()
         getgenv().currentBillboard = nil
     end
 end
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local MutationHandler = require(ReplicatedStorage:WaitForChild("Mutation_Handler"))
-local ItemModule = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Item_Module"))
+-- local MutationHandler = require(ReplicatedStorage:WaitForChild("Mutation_Handler"))
+-- local ItemModule = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Item_Module"))
 function u.CalculatePlantValue(plant)
 	local itemString = plant:FindFirstChild("Item_String")
 	local itemName = itemString and itemString.Value or plant.Name

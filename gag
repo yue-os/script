@@ -1534,7 +1534,7 @@ do
 	end
 
 	local ReversedItemTypeEnums = require(game:GetService("ReplicatedStorage").Data.EnumRegistry.ReversedItemTypeEnums)
-	inventory_enums = {
+	local inventory_enums = {
 		["OWNER"] = "a",
 		["ITEM_TYPE"] = "b",
 		["ITEM_UUID"] = "c",
@@ -1641,6 +1641,7 @@ do
 						missing = true
 						break
 					end
+					task.wait(1)
 					craftingRemote:FireServer(
 						"InputItem",
 						bench, machineType, slot,

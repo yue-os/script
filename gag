@@ -2510,9 +2510,9 @@ seedShop:AddDropdown("seedpack_dropdown", {
 	Multi = true,
 	Default = {},
 	Callback = function(selection)
-		if typeof(selection) == "table" and #selection > 0 then
-			selectedPacks = selection
-			print("📦 Selected Packs:", table.concat(selection, ", "))
+		selectedPacks = util.keysOf(selection) -- converts dictionary to array
+		if #selectedPacks > 0 then
+			print("📦 Selected Packs:", table.concat(selectedPacks, ", "))
 		else
 			selectedPacks = {}
 			print("⚠️ No seed packs selected.")

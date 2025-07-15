@@ -68,14 +68,14 @@ function u.CalculatePlantValue(plant)
 	local weight = plant:FindFirstChild("Weight")
 	if not weight then return 0 end
 
-	local baseData = ItemModule.Return_Data(itemName)
+	local baseData = getgenv().ItemModule.Return_Data(itemName)
 	if not baseData or #baseData < 3 then
 		warn("Invalid ItemData for:", itemName)
 		return 0
 	end
 
-	local variantMultiplier = ItemModule.Return_Multiplier(variant.Value)
-	local valueMulti = MutationHandler:CalcValueMulti(plant)
+	local variantMultiplier = getgenv().ItemModule.Return_Multiplier(variant.Value)
+	local valueMulti = getgenv().MutationHandler:CalcValueMulti(plant)
 	local clamp = math.clamp(weight.Value / baseData[2], 0.95, 1e8)
 
 	return math.round(baseData[3] * valueMulti * variantMultiplier * (clamp * clamp))

@@ -36,6 +36,7 @@ local playerGui = player:WaitForChild("PlayerGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local character = player.Character or player.CharacterAdded:Wait()
+getgenv().petHungerList = getgenv().petHungerList or {}
 -- local getgenv().Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/getgenv().Library.lua"))()
 
 
@@ -682,7 +683,6 @@ function u.getNextPlantPosition()
     )
 end
 
-
 function u.equipFruitTool(fruitName)
 	local backpack = game.Players.LocalPlayer:WaitForChild("Backpack")
 	local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
@@ -696,7 +696,7 @@ function u.equipFruitTool(fruitName)
 
 	-- Look in backpack
 	for _, item in ipairs(backpack:GetChildren()) do
-		if item:IsA("Tool") and item.Name:lower():find(fruitName:lower()) then
+		if item:IsA("Tool") and item.Name:lower():find(fruitName:lower()) and not item.Name:lower():find("seed") then
 			item.Parent = character
 			task.wait(0.1) -- Let the server see it
 			return true
@@ -730,34 +730,36 @@ function u.isHungry(uuid)
 end
 
 function u.feed()
-  task.spawn(function()
-    while getgenv().autoFeed and not Library.Unloaded do
-      u.scanPetHunger()
+    function u.feed()
+        task.spawn(function()
+            while getgenv().autoFeed and not Library.Unloaded do
+                u.scanPetHunger()
 
-      for uuid, hunger in pairs(getgenv().petHungerList) do
-        if u.isHungry(uuid) then
-          local fruitToUse = getgenv().selectedPlantsss and getgenv().selectedPlantsss[1] -- pick first selected fruit
-          if not fruitToUse then
-            Library:Notify("❌ No plant selected!")
-            break
-          end
+                for uuid, hunger in pairs(getgenv().petHungerList) do
+                    if u.isHungry(uuid) then
+                        local fruitToUse = getgenv().selectedPlantsss and getgenv().selectedPlantsss[1]
+                        if not fruitToUse then
+                            Library:Notify("❌ No plant selected!")
+                            break -- exit entire loop if no plant was ever selected
+                        end
 
-          local equipped = u.equipFruitTool(fruitToUse)
-          if equipped then
-            task.wait(0.2)
-            game.ReplicatedStorage.GameEvents.ActivePetService:FireServer("Feed", uuid)
-            print("✅ Fed pet:", uuid, "with:", fruitToUse)
-          else
-            warn("❌ Couldn't equip fruit:", fruitToUse)
-          end
+                        local equipped = u.equipFruitTool(fruitToUse)
+                        if not equipped then
+                            warn("❌ Couldn't equip fruit:", fruitToUse)
+                            continue -- skip to next pet
+                        end
 
-          task.wait(0.3)
-        end
-      end
+                        task.wait(0.2)
+                        game.ReplicatedStorage.GameEvents.ActivePetService:FireServer("Feed", uuid)
+                        print("✅ Fed pet:", uuid, "with:", fruitToUse)
+                        task.wait(0.3)
+                    end
+                end
 
-      task.wait(2)
+                task.wait(2)
+            end
+        end)
     end
-  end)
 end
 
 return u

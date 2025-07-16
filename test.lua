@@ -1984,6 +1984,7 @@ do
 
 		local machineType = recipe.MachineTypes[1]
 		local bench = modelFor(machineType)
+		print(bench:GetAttribute("IsRunning"))
 		if not bench then
 			Library:Notify("[AutoCraft] Missing bench for "..machineType, 3)
 			crafting = false
@@ -2046,7 +2047,7 @@ do
                             local prog, tgt = q.Progress or 0, goal(q)
                             if prog >= tgt then continue end
 							local key = tostring(q.Type) .. "_" .. tostring(q.Arguments and q.Arguments[1])
-							-- print(key)
+							print(key)
 
 							if stalledTasks[key] and os.clock() - stalledTasks[key] < 5 then
 								-- print(stalledTasks[key] and os.clock() - stalledTasks[key])

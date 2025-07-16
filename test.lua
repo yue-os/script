@@ -1984,7 +1984,7 @@ do
 
 		local machineType = recipe.MachineTypes[1]
 		local bench = modelFor(machineType)
-		print(bench:GetAttribute("IsRunning"))
+		print("IsRunning:", bench:GetAttribute("IsRunning"))
 		if not bench then
 			Library:Notify("[AutoCraft] Missing bench for "..machineType, 3)
 			crafting = false

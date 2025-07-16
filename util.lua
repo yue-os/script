@@ -62,7 +62,6 @@ end
 -- end
 
 function u.getBaseName(name)
-  function u.getBaseName(name)
     name = name:gsub("%b[]", "")
     name = name:gsub("%s[xX]%d+$", "")
     name = name:gsub("%sSeed$", "") -- Remove "Seed" only if at the end

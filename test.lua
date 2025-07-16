@@ -1998,7 +1998,7 @@ do
 
 		local machineType = recipe.MachineTypes[1]
 		local bench = modelFor(machineType)
-		print("IsRunning:", bench:GetAttribute("IsRunning"))
+		-- print("IsRunning:", bench:GetAttribute("IsRunning"))
 		if not bench then
 			Library:Notify("[AutoCraft] Missing bench for "..machineType, 3)
 			crafting = false
@@ -2074,7 +2074,7 @@ do
 								task.spawn(function()
 									local before = q.Progress or 0
 									harvestCrop(arg1)
-									print("harvest quest")
+									-- print("harvest quest")
 									if (q.Progress or 0) == before then
 										stalledTasks[key] = os.clock()
 									end
@@ -2083,7 +2083,7 @@ do
 								task.spawn(function()
 									local before = q.Progress or 0
 									plantSeed(arg1)
-									print("plant quest")
+									-- print("plant quest")
 									if (q.Progress or 0) == before then
 										stalledTasks[key] = os.clock()
 									end
@@ -2092,7 +2092,7 @@ do
 								task.spawn(function()
 									local before = q.Progress or 0
 									growPet(arg1)
-									print("grow quest")
+									-- print("grow quest")
 									if (q.Progress or 0) == before then
 										stalledTasks[key] = os.clock()
 									end
@@ -2103,7 +2103,7 @@ do
 									task.spawn(function()
 										local before = q.Progress or 0
 										craftItem(itemName)
-										print("craft quest")
+										-- print("craft quest")
 											if (q.Progress or 0) == before then
 											stalledTasks[key] = os.clock()
 										end

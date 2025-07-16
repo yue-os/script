@@ -1,3 +1,7 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local u = {}
 
 function u.getBaseName(name)
@@ -303,33 +307,63 @@ function u.isHungry(uuid)
 end
 
 function u.feed()
-task.spawn(function()
-  while getgenv().autoFeed and not Library.Unloaded do
-    u.scanPetHunger()
+  task.spawn(function()
+    while getgenv().autoFeed and not Library.Unloaded do
+      u.scanPetHunger()
 
-    for uuid, hunger in pairs(getgenv().petHungerList) do
-      if u.isHungry(uuid) then
-        local fruitToUse = getgenv().selectedPlantsss and getgenv().selectedPlantsss[1] -- pick first selected fruit
-        if not fruitToUse then
-          Library:Notify("❌ No plant selected!")
-          break
+      for uuid, hunger in pairs(getgenv().petHungerList) do
+        if u.isHungry(uuid) then
+          local fruitToUse = getgenv().selectedPlantsss and getgenv().selectedPlantsss[1] -- pick first selected fruit
+          if not fruitToUse then
+            Library:Notify("❌ No plant selected!")
+            break
+          end
+
+          local equipped = u.equipFruitTool(fruitToUse)
+          if equipped then
+            task.wait(0.2)
+            game.ReplicatedStorage.GameEvents.ActivePetService:FireServer("Feed", uuid)
+            print("✅ Fed pet:", uuid, "with:", fruitToUse)
+          else
+            warn("❌ Couldn't equip fruit:", fruitToUse)
+          end
+
+          task.wait(0.3)
         end
-
-        local equipped = u.equipFruitTool(fruitToUse)
-        if equipped then
-          task.wait(0.2)
-          game.ReplicatedStorage.GameEvents.ActivePetService:FireServer("Feed", uuid)
-          print("✅ Fed pet:", uuid, "with:", fruitToUse)
-        else
-          warn("❌ Couldn't equip fruit:", fruitToUse)
-        end
-
-        task.wait(0.3)
       end
-    end
 
-    task.wait(2)
-  end
-end)
+      task.wait(2)
+    end
+  end)
 end
+
+
+function u.savePosition()
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if hrp then
+		getgenv().savedPosition = hrp.CFrame
+		Library:Notify("🌍 Position saved!")
+	else
+		Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
+	end
+end
+
+
+local function sellInventory()
+    ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
+    Library:Notify("Inventory sold!")
+end
+
+local function teleportSellReturn()
+    u.savePosition()
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    local cFrame = getgenv.myFarm.Spawn_Point.CFrame
+    if not hrp then return end
+    hrp.CFrame = CFrame.new(86.57965850830078, 2.999999761581421, 0.4267919063568115)
+    task.wait(0.25)
+    sellInventory()
+    task.wait(0.2)
+    hrp.CFrame = cFrame
+end
+
 return u

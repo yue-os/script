@@ -760,33 +760,4 @@ function u.feed()
   end)
 end
 
-
-function u.savePosition()
-	local hrp = character:FindFirstChild("HumanoidRootPart")
-	if hrp then
-		getgenv().savedPosition = hrp.CFrame
-		Library:Notify("🌍 Position saved!")
-	else
-		Library:Notify("❌ Could not save position (HumanoidRootPart missing).")
-	end
-end
-
-
-function u.sellInventory()
-    ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
-    Library:Notify("Inventory sold!")
-end
-
-function u.teleportSellReturn()
-    u.savePosition()
-    local hrp = character:FindFirstChild("HumanoidRootPart")
-    local cFrame = u.myFarm().Spawn_Point.CFrame
-    if not hrp then return end
-    hrp.CFrame = CFrame.new(86.57965850830078, 2.999999761581421, 0.4267919063568115)
-    task.wait(0.25)
-    sellInventory()
-    task.wait(0.2)
-    hrp.CFrame = cFrame
-end
-
 return u

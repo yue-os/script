@@ -1650,6 +1650,20 @@ local function equip_tool_reliable(tool)
     return false
 end
 
+local CS   = require(ReplicatedStorage.Modules.CraftingService.CraftingGlobalObjectService)
+
+local function isOnCooldown(bench)
+    local data = CS:GetIndividualCraftingMachineData(
+        bench,
+        bench:GetAttribute("CraftingObjectType")
+    )
+    if data and data.CraftingItems and data.CraftingItems[1] then
+		-- print(bench, "is Running | Timer: ", data.CraftingItems[1].TimeRemaining)
+        return data.CraftingItems[1].TimeRemaining > 0
+    end
+    return false
+end
+
 do
 	local DataService    = require(game:GetService("ReplicatedStorage").Modules.DataService)
     local RecipeRegistry = require(game:GetService("ReplicatedStorage").Data.CraftingData.CraftingRecipeRegistry)
@@ -1994,8 +2008,9 @@ do
 		local lastProg, t0 = progress("Craft", itemName), os.clock()
 
 		while _G.autoDinoQuest and not Library.Unloaded do
-			if bench:GetAttribute("IsRunning") then
-				task.wait(1)
+			if isOnCooldown(bench) then
+                task.wait(2)
+                continue
 			else
 				craftingRemote:FireServer("SetRecipe", bench, machineType, itemName)
 				task.wait(0.25)
@@ -2870,18 +2885,7 @@ local function uuid_for_input(input_req)
 	return nil
 end
 
-local CS   = require(ReplicatedStorage.Modules.CraftingService.CraftingGlobalObjectService)
-
-local function isOnCooldown(bench)
-    local data = CS:GetIndividualCraftingMachineData(
-        bench,
-        bench:GetAttribute("CraftingObjectType")
-    )
-    if data and data.CraftingItems and data.CraftingItems[1] then
-        return data.CraftingItems[1].TimeRemaining > 0
-    end
-    return false
-end
+-- isOnCooldown(workspace.CraftingTables.EventCraftingWorkBench)
 
 task.spawn(function()
     while not Library.Unloaded do
@@ -2889,6 +2893,7 @@ task.spawn(function()
 
             -- pause if either bench is still cooling down
             local tbl = workspace.CraftingTables
+			-- isOnCooldown(tbl.EventCraftingWorkBench)
             if isOnCooldown(tbl.EventCraftingWorkBench)
             or  isOnCooldown(tbl.SeedEventCraftingWorkBench) then
                 task.wait(2)

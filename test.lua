@@ -2,7 +2,7 @@
 local function removeGui()
 	for _, v in ipairs(game:GetService("CoreGui"):GetDescendants()) do
 		if v:IsA("ScreenGui") and v.Name == "Obsidian" then
-			Library.Unloaded = true
+			-- Library.Unloaded = true
 			v:Destroy()
 			for _, v2 in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetDescendants()) do
 				if v2:isA("ScreenGui") and v2.Name == "GearTeleportGui" then
@@ -1654,7 +1654,7 @@ do
 	local DataService    = require(game:GetService("ReplicatedStorage").Modules.DataService)
     local RecipeRegistry = require(game:GetService("ReplicatedStorage").Data.CraftingData.CraftingRecipeRegistry)
 
-    local buffer   = buffer.fromstring("\1\1\0\1")
+    local buffer   = buffer.fromstring("\001\001\000\001")
     local PetsRE   = game:GetService("ReplicatedStorage").GameEvents.PetsService
     
 
@@ -1692,6 +1692,7 @@ do
 
     local harvesting = false
     local function harvestCrop(crop)
+	-- print(crop)
         if harvesting then return end
         harvesting = true
         local lastProg, stallT = progress("Harvest",crop)
@@ -1714,15 +1715,19 @@ do
             -- one sweep
             local pf = myFarm and myFarm:FindFirstChild("Important") and myFarm.Important:FindFirstChild("Plants_Physical")
             if pf then
+				local found = false
                 for _,pl in ipairs(pf:GetChildren()) do
-                    if (pl.Name:match("^(.-) %[[^%]]+%]$") or pl.Name)==crop then
+                    if (pl.Name:match("^(.-) %[[^%]]+%]$") or pl.Name) == crop then
+						found = true
                         game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer,{pl})
                         local fr = pl:FindFirstChild("Fruits")
                         if fr then for _,f in ipairs(fr:GetChildren()) do game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer,{f}) end end
                     end
                 end
             end
-
+			if not found then
+				Library:Notify("No " .. crop .. " to harvest for quest", 1)
+			end
             -- progress check / stall logic
             local prog,target = progress("Harvest",crop)
             if prog>=target then break end
@@ -2041,38 +2046,51 @@ do
                             local prog, tgt = q.Progress or 0, goal(q)
                             if prog >= tgt then continue end
 							local key = tostring(q.Type) .. "_" .. tostring(q.Arguments and q.Arguments[1])
+							-- print(key)
 
-							if stalledTasks[key] and os.clock() - stalledTasks[key] < 10 then
+							if stalledTasks[key] and os.clock() - stalledTasks[key] < 5 then
+								-- print(stalledTasks[key] and os.clock() - stalledTasks[key])
 								-- Skip stalled quests for 10 seconds
 								continue
 							end
                             local arg1 = (q.Arguments or q.Args or {})[1]
-                            if     q.Type == "Harvest"       then task.spawn(function()
-								local before = q.Progress or 0
-								harvestCrop, arg1
-								if (q.Progress or 0) == before then
-                                    stalledTasks[key] = os.clock()
-                                end
-							end)
-                            elseif q.Type == "Plant"         then task.spawn(function()
+                            if q.Type == "Harvest" then 
+								task.spawn(function()
 									local before = q.Progress or 0
-									plantSeed, arg1
+									harvestCrop(arg1)
+									print("harvest quest")
 									if (q.Progress or 0) == before then
 										stalledTasks[key] = os.clock()
-									end)
-                            elseif q.Type == "GrowPetToAge"  then task.spawn(function()
+									end
+								end)
+                            elseif q.Type == "Plant" then 
+								task.spawn(function()
 									local before = q.Progress or 0
-									growPet, arg1
+									plantSeed(arg1)
+									print("plant quest")
 									if (q.Progress or 0) == before then
 										stalledTasks[key] = os.clock()
-									end)
+									end
+								end)
+                            elseif q.Type == "GrowPetToAge"  then 
+								task.spawn(function()
+									local before = q.Progress or 0
+									growPet(arg1)
+									print("grow quest")
+									if (q.Progress or 0) == before then
+										stalledTasks[key] = os.clock()
+									end
+								end)
                             elseif q.Type == "Craft" then
 								local itemName = (q.Arguments or q.Args or {})[2]
-								if itemName then task.spawn(function()
-									local before = q.Progress or 0
-									craftItem, itemName
-										if (q.Progress or 0) == before then
-										stalledTasks[key] = os.clock()
+								if itemName then 
+									task.spawn(function()
+										local before = q.Progress or 0
+										craftItem(itemName)
+										print("craft quest")
+											if (q.Progress or 0) == before then
+											stalledTasks[key] = os.clock()
+										end
 									end) 
 								end
                             end

@@ -726,7 +726,7 @@ function u.scanPetHunger()
 end
 
 function u.isHungry(uuid)
-	return getgenv().petHungerList[uuid] == 0
+	return getgenv().petHungerList[uuid] < 10
 end
 
 function u.feed()
@@ -772,12 +772,12 @@ function u.savePosition()
 end
 
 
-local function sellInventory()
+function u.sellInventory()
     ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Sell_Inventory"):FireServer()
     Library:Notify("Inventory sold!")
 end
 
-local function teleportSellReturn()
+function u.teleportSellReturn()
     u.savePosition()
     local hrp = character:FindFirstChild("HumanoidRootPart")
     local cFrame = u.myFarm().Spawn_Point.CFrame

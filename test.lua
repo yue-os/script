@@ -1677,7 +1677,8 @@ end
 do
 	local DataService    = require(game:GetService("ReplicatedStorage").Modules.DataService)
     local RecipeRegistry = require(game:GetService("ReplicatedStorage").Data.CraftingData.CraftingRecipeRegistry)
-
+	local questData = DataService:GetData()
+	local containers = questData and questData.QuestContainers or {}
     local buffer   = buffer.fromstring("\001\001\000\001")
     local PetsRE   = game:GetService("ReplicatedStorage").GameEvents.PetsService
     
@@ -1692,7 +1693,7 @@ do
     
     local function progress(kind, key)
 		task.wait()
-		for _, cont in pairs(DataService:GetData().QuestContainers) do
+		for _, cont in pairs(containers) do
 			local name = (cont.Name or cont.Container or cont.Type or ""):lower()
 			if name:find("dino") then
 				for _, q in ipairs(cont.Quests or {}) do
@@ -2061,65 +2062,37 @@ do
     local function supervisor()
         task.spawn(function()
             while _G.autoDinoQuest and not Library.Unloaded do
-                for _,cont in pairs(DataService:GetData().QuestContainers or {}) do
+                for _,cont in pairs(containers) do
                     local name = (cont.Name or cont.Container or cont.Type or ""):lower()
 					if name:find("dino") then
                         for _,q in ipairs(cont.Quests or {}) do
                             local prog, tgt = q.Progress or 0, goal(q)
                             if prog >= tgt then continue end
-							local key = tostring(q.Type) .. "_" .. tostring(q.Arguments and q.Arguments[1])
-							print(key)
+							local key = tostring(q.Type) .. "_" .. tostring((q.Arguments or q.Args or {})[1])
+							if stalledTasks[key] and os.clock() - stalledTasks[key] < 5 then continue end
 
-							if stalledTasks[key] and os.clock() - stalledTasks[key] < 5 then
-								-- print(stalledTasks[key] and os.clock() - stalledTasks[key])
-								-- Skip stalled quests for 10 seconds
-								continue
-							end
-                            local arg1 = (q.Arguments or q.Args or {})[1]
-                            if q.Type == "Harvest" then 
-								task.spawn(function()
-									local before = q.Progress or 0
-									harvestCrop(arg1)
-									-- print("harvest quest")
-									if (q.Progress or 0) == before then
-										stalledTasks[key] = os.clock()
-									end
-								end)
-                            elseif q.Type == "Plant" then 
-								task.spawn(function()
-									local before = q.Progress or 0
-									plantSeed(arg1)
-									-- print("plant quest")
-									if (q.Progress or 0) == before then
-										stalledTasks[key] = os.clock()
-									end
-								end)
-                            elseif q.Type == "GrowPetToAge"  then 
-								task.spawn(function()
-									local before = q.Progress or 0
-									growPet(arg1)
-									-- print("grow quest")
-									if (q.Progress or 0) == before then
-										stalledTasks[key] = os.clock()
-									end
-								end)
-                            elseif q.Type == "Craft" then
+							local arg1 = (q.Arguments or q.Args or {})[1]
+							local before = prog
+
+							if q.Type == "Harvest" then
+								harvestCrop(arg1)
+							elseif q.Type == "Plant" then
+								plantSeed(arg1)
+							elseif q.Type == "GrowPetToAge" then
+								growPet(arg1)
+							elseif q.Type == "Craft" then
 								local itemName = (q.Arguments or q.Args or {})[2]
-								if itemName then 
-									task.spawn(function()
-										local before = q.Progress or 0
-										craftItem(itemName)
-										-- print("craft quest")
-											if (q.Progress or 0) == before then
-											stalledTasks[key] = os.clock()
-										end
-									end) 
-								end
-                            end
+								if itemName then craftItem(itemName) end
+							end
+
+							if (q.Progress or 0) == before then
+								stalledTasks[key] = os.clock()
+							end
+							task.wait(0.15)
                         end
                     end
                 end
-                game:GetService("RunService").Heartbeat:Wait()
+                task.wait(1.5)
             end
         end)
     end

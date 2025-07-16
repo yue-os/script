@@ -1394,6 +1394,13 @@ group2:AddInput("max_weight_input", {
     end
 })
 
+function backPackCount()
+	local n = 0
+	for _,t in ipairs(player.Backpack:GetChildren()) do
+		if t:FindFirstChild("Weight") and t:FindFirstChild("Variant") then n += 1 end
+	end
+	return n
+end
 
 local autoCollect = false
 group2:AddToggle("auto_collect_toggle", {
@@ -1405,7 +1412,10 @@ group2:AddToggle("auto_collect_toggle", {
             Library:Notify("Auto Collect enabled!")
             task.spawn(function()
                 while autoCollect and not Library.Unloaded do
-                    
+					if backPackCount()>=200 then 
+						Library:Notify("Sell some fruits first.")
+						repeat task.wait(2) until backPackCount()<200
+					end
                     local buffer = buffer.fromstring("\1\1\0\1")
 
                     for _, v in next, myFarm.Important.Plants_Physical:GetChildren() do
@@ -1681,6 +1691,7 @@ do
     end
     
     local function progress(kind, key)
+		task.wait()
 		for _, cont in pairs(DataService:GetData().QuestContainers) do
 			local name = (cont.Name or cont.Container or cont.Type or ""):lower()
 			if name:find("dino") then
@@ -1696,13 +1707,7 @@ do
 		return 0, 1
 	end
 	
-    local function backPackCount()
-        local n = 0
-        for _,t in ipairs(player.Backpack:GetChildren()) do
-            if t:FindFirstChild("Weight") and t:FindFirstChild("Variant") then n += 1 end
-        end
-        return n
-    end
+    
 
     local harvesting = false
     local function harvestCrop(crop)
@@ -1733,15 +1738,15 @@ do
                 for _,pl in ipairs(pf:GetChildren()) do
                     if (pl.Name:match("^(.-) %[[^%]]+%]$") or pl.Name) == crop then
 						found = true
-                        game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer,{pl})
+                        game:GetService("ReplicatedStorage").ByteNetReliable:FireServer(buffer,{pl})
                         local fr = pl:FindFirstChild("Fruits")
-                        if fr then for _,f in ipairs(fr:GetChildren()) do game:GetService("ReplicatedStorage"):WaitForChild("ByteNetReliable"):FireServer(buffer,{f}) end end
+                        if fr then for _,f in ipairs(fr:GetChildren()) do game:GetService("ReplicatedStorage").ByteNetReliable:FireServer(buffer,{f}) end end
                     end
                 end
             end
-			if not found then
-				Library:Notify("No " .. crop .. " to harvest for quest", 1)
-			end
+			-- if not found then
+			-- 	Library:Notify("No " .. crop .. " to harvest for quest", 1)
+			-- end
             -- progress check / stall logic
             local prog,target = progress("Harvest",crop)
             if prog>=target then break end
@@ -1779,7 +1784,7 @@ do
 
         planting = true
         local char   = player.Character or player.CharacterAdded:Wait()
-        local bp     = player:WaitForChild("Backpack")
+        local bp     = player.Backpack
 
         local lastProg, t0 = progress("Plant", seed)
         local warnedMissing = false             -- so we don’t spam
@@ -1837,7 +1842,7 @@ do
         growing = true
         local PetsRE     = game:GetService("ReplicatedStorage").GameEvents.PetsService
         local player     = Players.LocalPlayer
-        local bp         = player:WaitForChild("Backpack")
+        local bp         = player.Backpack
         local char       = player.Character or player.CharacterAdded:Wait()
         local lastProg, t0 = progress("GrowPetToAge", pname)
 
@@ -2012,6 +2017,7 @@ do
                 task.wait(2)
                 continue
 			else
+				craftingRemote:FireServer("Claim", bench, machineType, 1)
 				craftingRemote:FireServer("SetRecipe", bench, machineType, itemName)
 				task.wait(0.25)
 				
@@ -2113,7 +2119,7 @@ do
                         end
                     end
                 end
-                task.wait(0.1)
+                game:GetService("RunService").Heartbeat:Wait()
             end
         end)
     end

@@ -707,6 +707,19 @@ function u.equipFruitTool(fruitName)
 	return false
 end
 
+function u.getFirstEquippableFruit()
+	local selected = getgenv().selectedPlantsss or {}
+	for _, fruit in ipairs(selected) do
+		if not fruit:lower():find("seed") then
+			if u.equipFruitTool(fruit) then
+				return fruit -- success
+			end
+		end
+	end
+	return nil -- none found
+end
+
+
 function u.scanPetHunger()
 	table.clear(getgenv().petHungerList)
 
@@ -737,7 +750,7 @@ function u.feed()
 
                 for uuid, hunger in pairs(getgenv().petHungerList) do
                     if u.isHungry(uuid) then
-                        local fruitToUse = getgenv().selectedPlantsss and getgenv().selectedPlantsss[1]
+                        local fruitToUse = u.getFirstEquippableFruit()
                         if not fruitToUse then
                             Library:Notify("❌ No plant selected!")
                             break -- exit entire loop if no plant was ever selected

@@ -483,20 +483,41 @@ btn.MouseButton1Click:Connect(function()
 end)
 
 function u.harvestFilter(item, minW, maxW)
-    if not item then return false end
-    local weightObj = item:FindFirstChild("Weight")
-    if not weightObj then return false end
-    local weight = tonumber(weightObj.Value)
-    if not weight then return false end
+	if not item then return false end
+	local weightObj = item:FindFirstChild("Weight")
+	if not weightObj then return false end
+	local weight = tonumber(weightObj.Value)
+	if not weight then return false end
 
-    local baseName = u.getBaseName(item.Name)
+	local baseName = u.getBaseName(item.Name)
 
-    if #getgenv().selectedPlants == 0 then
-        return weight >= minW and weight <= maxW
-    end
+	local passesPlantFilter = #getgenv().selectedPlants == 0 or table.find(getgenv().selectedPlants, baseName)
+	local passesWeightFilter = weight >= minW and weight <= maxW
 
-    return table.find(getgenv().selectedPlants, baseName) and weight >= minW and weight <= maxW
+	if not (passesPlantFilter and passesWeightFilter) then
+		return false
+	end
+
+	local selectedMutations = getgenv().selected_mutations
+	if selectedMutations and next(selectedMutations) then
+		local mutations = MutationHandler:GetPlantMutations(item)
+
+		local hasSelectedMutation = false
+		for _, mut in ipairs(mutations) do
+			if selectedMutations[mut.Name] then
+				hasSelectedMutation = true
+				break
+			end
+		end
+
+		if not hasSelectedMutation then
+			return false
+		end
+	end
+
+	return true
 end
+
 
 
 function u.getTrowel()

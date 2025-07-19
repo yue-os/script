@@ -1381,25 +1381,33 @@ end)
 --     game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 -- end)
 
+-- local Players = game:GetService("Players")
+-- local LocalPlayer = Players.LocalPlayer
+
 local GC = getconnections or get_signal_cons
 
 -- Prefer disabling roblox idle connections if possible
 if GC and typeof(GC) == "function" then
-	for _, conn in ipairs(GC(player.Idled)) do
-		if conn.Disable then
-			pcall(function() conn:Disable() end)
-		elseif conn.Disconnect then
-			pcall(function() conn:Disconnect() end)
+	local idleConnections = GC(player.Idled)
+	if typeof(idleConnections) == "table" then
+		for _, conn in ipairs(idleConnections) do
+			if conn.Disable then
+				pcall(function() conn:Disable() end)
+			elseif conn.Disconnect then
+				pcall(function() conn:Disconnect() end)
+			end
 		end
 	end
 end
 
 -- Fallback: Use VirtualUser to simulate activity
-local vu = cloneref(game:GetService("VirtualUser"))
+local vu = cloneref and cloneref(game:GetService("VirtualUser")) or game:GetService("VirtualUser")
+
 player.Idled:Connect(function()
 	vu:CaptureController()
 	vu:ClickButton2(Vector2.zero)
 end)
+
 
 local minWeight, maxWeight = 0, 9999
 local harvestFruitNames = {}

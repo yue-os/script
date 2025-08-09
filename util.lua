@@ -4,7 +4,7 @@ local player = game.Players.LocalPlayer
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local byte_net_reliable = ReplicatedStorage:WaitForChild("ByteNetReliable")
+-- local byte_net_reliable = ReplicatedStorage:WaitForChild("ByteNetReliable")
 local autoSubmit = false
 local fruitThreshold = 10
 local autoSell = false
@@ -230,7 +230,7 @@ function u.highlightBiggestFruit()
         u.removeHighlight()
         getgenv().lastBiggest = biggest
         if biggest and biggest:IsA("Model") then
-            
+
             local highlight = Instance.new("Highlight")
             highlight.FillTransparency = 0.3
             highlight.OutlineTransparency = 0
@@ -308,7 +308,7 @@ function u.cleanPlantName(name)
 end
 
 function u.allPlants()
-    local seeds = { "All" } 
+    local seeds = { "All" }
 
     for _, data in pairs(seedData) do
         local cleanedName = u.cleanPlantName(data.SeedName)
@@ -356,7 +356,7 @@ function u.getShopSeeds()
                 local seedText = mainFrame:FindFirstChild("Seed_Text")
                 if seedText and seedText:IsA("TextLabel") then
                     local rawName = seedText.Text or ""
-                    
+
                     local cleaned = rawName:gsub("%s*[sS]eed%s*", ""):gsub("^%s*(.-)%s*$", "%1")
                     table.insert(seedList, cleaned)
                 end
@@ -483,41 +483,20 @@ btn.MouseButton1Click:Connect(function()
 end)
 
 function u.harvestFilter(item, minW, maxW)
-	if not item then return false end
-	local weightObj = item:FindFirstChild("Weight")
-	if not weightObj then return false end
-	local weight = tonumber(weightObj.Value)
-	if not weight then return false end
+    if not item then return false end
+    local weightObj = item:FindFirstChild("Weight")
+    if not weightObj then return false end
+    local weight = tonumber(weightObj.Value)
+    if not weight then return false end
 
-	local baseName = u.getBaseName(item.Name)
+    local baseName = u.getBaseName(item.Name)
 
-	local passesPlantFilter = #getgenv().selectedPlants == 0 or table.find(getgenv().selectedPlants, baseName)
-	local passesWeightFilter = weight >= minW and weight <= maxW
+    if #getgenv().selectedPlants == 0 then
+        return weight >= minW and weight <= maxW
+    end
 
-	if not (passesPlantFilter and passesWeightFilter) then
-		return false
-	end
-
-	local selectedMutations = getgenv().selected_mutations
-	if selectedMutations and next(selectedMutations) then
-		local mutations = MutationHandler:GetPlantMutations(item)
-
-		local hasSelectedMutation = false
-		for _, mut in ipairs(mutations) do
-			if selectedMutations[mut.Name] then
-				hasSelectedMutation = true
-				break
-			end
-		end
-
-		if not hasSelectedMutation then
-			return false
-		end
-	end
-
-	return true
+    return table.find(getgenv().selectedPlants, baseName) and weight >= minW and weight <= maxW
 end
-
 
 
 function u.getTrowel()
@@ -548,7 +527,7 @@ function u.moveSelectedPlantType()
 	end
 
 	local trowelRemote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TrowelRemote")
-	
+
 	if not plantFolder then
 		warn("❌ Could not find Plants_Physical.")
 		return
@@ -621,9 +600,9 @@ task.spawn(function()
 				and tool:GetAttribute(u.inventory_enums.ITEM_TYPE) == u.item_types.PetEgg
 				and table.find(getgenv().selectedeggs, tool:GetAttribute(u.inventory_enums.EggName))
             then
-              if not u.equipTool(tool) then 
+              if not u.equipTool(tool) then
 				    getgenv().Library:Notify(string.format("NO: ", selectedeggs), 3)
-				break 
+				break
 			end
 
               local uses = tool:GetAttribute(u.inventory_enums.Uses) or 1
@@ -642,7 +621,7 @@ task.spawn(function()
 
                 EggRE:FireServer("CreateEgg", pos)
                 task.wait(0.25)
-				
+
                 if #object_physical:GetChildren() > totalEgg then
                   break
                 end
@@ -810,5 +789,7 @@ function u.feed()
         end)
     end
 end
+
+
 
 return u

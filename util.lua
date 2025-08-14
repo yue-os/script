@@ -61,11 +61,35 @@ end
 -- 	return base or itemName
 -- end
 
+local mutationPrefixes = {}
+for mutationName, data in pairs(require(ReplicatedStorage.Data.PetRegistry.PetMutationRegistry).PetMutationRegistry) do
+	mutationPrefixes[mutationName:lower()] = true
+end
+
 function u.getBaseName(name)
-    name = name:gsub("%s*%b[]", "")
-    name = name:gsub("%s[xX]%d+$", "")
-    name = name:gsub("%sSeed$", "") -- Remove "Seed" only if at the end
-    return name:match("^%s*(.-)%s*$")
+	-- Step 1: Remove brackets like [Fire], [Dark], etc.
+	name = name:gsub("%s*%b[]", "")
+	-- Step 2: Remove trailing suffix like X1, x5
+	name = name:gsub("%s[xX]%d+$", "")
+	-- Step 3: Remove 'Seed' if it's at the end
+	name = name:gsub("%sSeed$", "")
+	-- Step 4: Trim whitespace
+	name = name:match("^%s*(.-)%s*$")
+
+	-- Step 5: Remove prefix mutations
+	local words = name:split(" ")
+	local i = 1
+	while mutationPrefixes[words[i]:lower()] and i <= #words do
+		i += 1
+	end
+
+	-- Join the rest as the base name
+	local baseWords = {}
+	for j = i, #words do
+		table.insert(baseWords, words[j])
+	end
+
+	return table.concat(baseWords, " ")
 end
 
 function u.isSeed(toolName)

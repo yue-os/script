@@ -4,7 +4,6 @@ local player = game.Players.LocalPlayer
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
--- local byte_net_reliable = ReplicatedStorage:WaitForChild("ByteNetReliable")
 local autoSubmit = false
 local fruitThreshold = 10
 local autoSell = false
@@ -37,10 +36,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local character = player.Character or player.CharacterAdded:Wait()
 getgenv().petHungerList = getgenv().petHungerList or {}
--- local getgenv().Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/getgenv().Library.lua"))()
-
-
--- getgenv().gag = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/script/refs/heads/main/gag", true))()
 
 function u.myFarm()
 	local player = game:GetService("Players").LocalPlayer
@@ -52,14 +47,6 @@ function u.myFarm()
 	end
 	return nil
 end
--- local myFarm = u.myFarm()
-
-
--- ========== BASIC UTILS ==========
--- function u.getBaseName(itemName)
--- 	local base = itemName:match("^(.-) %[[^%]]+%]$")
--- 	return base or itemName
--- end
 
 local mutationPrefixes = {}
 for mutationName, data in pairs(require(ReplicatedStorage.Data.PetRegistry.PetMutationRegistry).PetMutationRegistry) do
@@ -67,23 +54,17 @@ for mutationName, data in pairs(require(ReplicatedStorage.Data.PetRegistry.PetMu
 end
 
 function u.getBaseName(name)
-	-- Step 1: Remove brackets like [Fire], [Dark], etc.
 	name = name:gsub("%s*%b[]", "")
-	-- Step 2: Remove trailing suffix like X1, x5
 	name = name:gsub("%s[xX]%d+$", "")
-	-- Step 3: Remove 'Seed' if it's at the end
 	name = name:gsub("%sSeed$", "")
-	-- Step 4: Trim whitespace
 	name = name:match("^%s*(.-)%s*$")
 
-	-- Step 5: Remove prefix mutations
 	local words = name:split(" ")
 	local i = 1
 	while mutationPrefixes[words[i]:lower()] and i <= #words do
 		i += 1
 	end
 
-	-- Join the rest as the base name
 	local baseWords = {}
 	for j = i, #words do
 		table.insert(baseWords, words[j])

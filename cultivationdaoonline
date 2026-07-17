@@ -1,441 +1,428 @@
-local a = {}
-local g = function(b, c)
-  if (((1 + 1) == 2) and a[b]) then
-    return a[b]
-  end
-  local d = {}
-  for e = 1, #b do
-    d[e] = string.char(bit32.bxor(b[e], c))
-  end
-  local f = table.concat(d)
-  a[b] = f
-  return f
-end
-local function h()
-  for i, j in ipairs(game:GetService(g({25, 53, 40, 63, 29, 47, 51}, 90)):GetDescendants()) do
-    if (((15 * 15) == 225) and (j:IsA(g({9, 57, 40, 63, 63, 52, 29, 47, 51}, 90)) and (j.Name == g({21, 56, 41, 51, 62, 51, 59, 52}, 90)))) then
-      j:Destroy()
-      for k, l in ipairs(game:GetService(g({10, 54, 59, 35, 63, 40, 41}, 90)).LocalPlayer.PlayerGui:GetDescendants()) do
-        if (((100 % 7) == 2) and (l:isA(g({9, 57, 40, 63, 63, 52, 29, 47, 51}, 90)) and (l.Name == g({29, 63, 59, 40, 14, 63, 54, 63, 42, 53, 40, 46, 29, 47, 51}, 90)))) then
-          l:Destroy()
+local function a()
+  for b, c in ipairs(game:GetService("CoreGui"):GetDescendants()) do
+    if (c:IsA("ScreenGui") and (c.Name == "Obsidian")) then
+      c:Destroy()
+      for d, e in ipairs(game:GetService("Players").LocalPlayer.PlayerGui:GetDescendants()) do
+        if (e:isA("ScreenGui") and (e.Name == "GearTeleportGui")) then
+          e:Destroy()
         end
       end
     end
   end
 end
-h()
-local m = g({54, 53, 59, 62, 41, 46, 40, 51, 52, 61, 114, 61, 59, 55, 63, 96, 18, 46, 46, 42, 29, 63, 46, 114, 125, 50, 46, 46, 42, 41, 96, 117, 117, 40, 59, 45, 116, 61, 51, 46, 50, 47, 56, 47, 41, 63, 40, 57, 53, 52, 46, 63, 52, 46, 116, 57, 53, 55, 117, 35, 47, 63, 119, 53, 41, 117, 104, 106, 104, 108, 40, 53, 56, 54, 53, 34, 41, 57, 40, 51, 42, 46, 41, 117, 40, 63, 60, 41, 117, 50, 63, 59, 62, 41, 117, 55, 59, 51, 52, 117, 25, 47, 54, 46, 51, 44, 59, 46, 51, 53, 52, 21, 52, 54, 51, 52, 63, 116, 54, 47, 59, 47, 125, 115, 115, 114, 115}, 90)
-local n = loadstring(game:HttpGet(g({50, 46, 46, 42, 41, 96, 117, 117, 40, 59, 45, 116, 61, 51, 46, 50, 47, 56, 47, 41, 63, 40, 57, 53, 52, 46, 63, 52, 46, 116, 57, 53, 55, 117, 35, 47, 63, 119, 53, 41, 117, 104, 106, 104, 108, 40, 53, 56, 54, 53, 34, 41, 57, 40, 51, 42, 46, 41, 117, 40, 63, 60, 41, 117, 50, 63, 59, 62, 41, 117, 55, 59, 51, 52, 117, 29, 59, 55, 63, 30, 59, 46, 59, 41, 116, 54, 47, 59}, 90)))()
-local o = loadstring(game:HttpGet(g({50, 46, 46, 42, 41, 96, 117, 117, 40, 59, 45, 116, 61, 51, 46, 50, 47, 56, 47, 41, 63, 40, 57, 53, 52, 46, 63, 52, 46, 116, 57, 53, 55, 117, 35, 47, 63, 119, 53, 41, 117, 21, 56, 41, 51, 62, 51, 59, 52, 15, 51, 117, 40, 63, 60, 41, 117, 50, 63, 59, 62, 41, 117, 46, 63, 41, 46, 117, 22, 51, 56, 40, 59, 40, 35, 116, 54, 47, 59}, 90)))()
-local p = loadstring(game:HttpGet(g({50, 46, 46, 42, 41, 96, 117, 117, 40, 59, 45, 116, 61, 51, 46, 50, 47, 56, 47, 41, 63, 40, 57, 53, 52, 46, 63, 52, 46, 116, 57, 53, 55, 117, 35, 47, 63, 119, 53, 41, 117, 21, 56, 41, 51, 62, 51, 59, 52, 15, 51, 117, 40, 63, 60, 41, 117, 50, 63, 59, 62, 41, 117, 55, 59, 51, 52, 117, 59, 62, 62, 53, 52, 41, 117, 9, 59, 44, 63, 23, 59, 52, 59, 61, 63, 40, 116, 54, 47, 59}, 90)))()
-local q = loadstring(game:HttpGet(g({50, 46, 46, 42, 41, 96, 117, 117, 40, 59, 45, 116, 61, 51, 46, 50, 47, 56, 47, 41, 63, 40, 57, 53, 52, 46, 63, 52, 46, 116, 57, 53, 55, 117, 35, 47, 63, 119, 53, 41, 117, 21, 56, 41, 51, 62, 51, 59, 52, 15, 51, 117, 40, 63, 60, 41, 117, 50, 63, 59, 62, 41, 117, 55, 59, 51, 52, 117, 59, 62, 62, 53, 52, 41, 117, 14, 50, 63, 55, 63, 23, 59, 52, 59, 61, 63, 40, 116, 54, 47, 59}, 90)))()
-local Players = game:GetService(g({10, 54, 59, 35, 63, 40, 41}, 90))
-local r = game:GetService(g({8, 63, 42, 54, 51, 57, 59, 46, 63, 62, 9, 46, 53, 40, 59, 61, 63}, 90))
-local s = Players.LocalPlayer
-local workspace = game:GetService(g({13, 53, 40, 49, 41, 42, 59, 57, 63}, 90))
-local t = s:WaitForChild(g({10, 54, 59, 35, 63, 40, 29, 47, 51}, 90))
-local u = t:WaitForChild(g({23, 59, 51, 52}, 90))
-local v = u:WaitForChild(g({28, 40, 59, 55, 63, 41}, 90)):WaitForChild(g({29, 47, 51, 62, 63}, 90)):WaitForChild(g({25, 53, 52, 46, 59, 51, 52, 63, 40}, 90))
-local w = game:GetService(g({12, 51, 40, 46, 47, 59, 54, 15, 41, 63, 40}, 90))
-local x = game:GetService(g({18, 46, 46, 42, 9, 63, 40, 44, 51, 57, 63}, 90))
-local y = game:GetService(g({14, 63, 54, 63, 42, 53, 40, 46, 9, 63, 40, 44, 51, 57, 63}, 90))
-local z = game.JobId
-local aa = game.PlaceId
-local ab = workspace:WaitForChild(g({23, 53, 56, 41}, 90))
-local ac = workspace:WaitForChild(g({18, 63, 40, 56, 41}, 90))
-local ad = game:GetService(g({10, 54, 59, 35, 63, 40, 41}, 90)).LocalPlayer.PlayerGui.Main.Frames.Shop.BodyConstitution.Current
-local af, ag = pcall(function()
-  local ae = game:GetService(g({25, 53, 40, 63, 29, 47, 51}, 90)).RobloxGui:FindFirstChild(g({25, 53, 40, 63, 9, 57, 40, 51, 42, 46, 41, 117, 20, 63, 46, 45, 53, 40, 49, 10, 59, 47, 41, 63}, 90))
-  if (((12 * 12) == 144) and ae) then
-    ae:Destroy()
+a()
+local f = "loadstring(game:HttpGet('https://raw.githubusercontent.com/yue-os/2026robloxscripts/refs/heads/main/CultivationOnline.luau'))()"
+local g = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/2026robloxscripts/refs/heads/main/GameDatas.lua"))()
+local h = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/test/Library.lua"))()
+local i = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/SaveManager.lua"))()
+local j = loadstring(game:HttpGet("https://raw.githubusercontent.com/yue-os/ObsidianUi/refs/heads/main/addons/ThemeManager.lua"))()
+local Players = game:GetService("Players")
+local k = game:GetService("ReplicatedStorage")
+local l = Players.LocalPlayer
+local workspace = game:GetService("Workspace")
+local m = l:WaitForChild("PlayerGui")
+local n = m:WaitForChild("Main")
+local o = n:WaitForChild("Frames"):WaitForChild("Guide"):WaitForChild("Container")
+local p = game:GetService("VirtualUser")
+local q = game:GetService("HttpService")
+local r = game:GetService("TeleportService")
+local s = game.JobId
+local t = game.PlaceId
+local u = workspace:WaitForChild("Mobs")
+local v = workspace:WaitForChild("Herbs")
+local w = game:GetService("Players").LocalPlayer.PlayerGui.Main.Frames.Shop.BodyConstitution.Current
+local y, z = pcall(function()
+  local x = game:GetService("CoreGui").RobloxGui:FindFirstChild("CoreScripts/NetworkPause")
+  if x then
+    x:Destroy()
   end
 end)
-local function ah()
-  if (((3 ^ 2) == 9) and (type(identifyexecutor) == g({60, 47, 52, 57, 46, 51, 53, 52}, 90))) then
-    local ai, aj = pcall(identifyexecutor)
-    if (((7 * 7) == 49) and (ai and aj)) then
-      return aj
+local function aa()
+  if (type(identifyexecutor) == "function") then
+    local ab, ac = pcall(identifyexecutor)
+    if (ab and ac) then
+      return ac
     end
   end
-  if (((1 + 1) == 2) and (type(getexecutorname) == g({60, 47, 52, 57, 46, 51, 53, 52}, 90))) then
-    local ak, al = pcall(getexecutorname)
-    if (((15 * 15) == 225) and (ak and al)) then
-      return al
+  if (type(getexecutorname) == "function") then
+    local ad, ae = pcall(getexecutorname)
+    if (ad and ae) then
+      return ae
     end
   end
-  return g({15, 52, 49, 52, 53, 45, 52}, 90)
+  return "Unknown"
 end
-local am = ah()
-local an = (string.find(string.lower(am), g({62, 63, 54, 46, 59}, 90)) ~= nil)
-local ao
-if (((100 % 7) == 2) and an) then
-  print(g({55399, 57050, 122, 30, 63, 54, 46, 59, 122, 62, 63, 46, 63, 57, 46, 63, 62, 123, 122, 22, 53, 59, 62, 51, 52, 61, 122, 52, 59, 46, 51, 44, 63, 122, 10, 54, 59, 35, 63, 40, 9, 63, 40, 44, 51, 57, 63, 122, 8, 63, 42, 54, 51, 57, 59, 116, 116, 116}, 90))
+local af = aa()
+local ag = (string.find(string.lower(af), "delta") ~= nil)
+local ah
+if ag then
+  print("🚀 Delta detected! Loading native PlayerService Replica...")
   pcall(function()
-    ao = require(r.Shared.Services.PlayerService.PlayerServiceClient)
+    ah = require(k.Shared.Services.PlayerService.PlayerServiceClient)
   end)
 end
-local ap = {}
-local aq = false
-local ar = false
-local as = n.zoneCFrames[1]
-local at = {}
-local au = {}
-for av = 1, 6 do
-  local aw = (g({24, 53, 62, 35, 0, 53, 52, 63, 41}, 90) .. tostring(av))
-  local ax = v:FindFirstChild(aw)
-  if (((12 * 12) == 144) and ax) then
-    local ay = ax:FindFirstChild(g({14, 51, 46, 54, 63}, 90))
-    local az = ax:FindFirstChild(g({9, 47, 56, 46, 51, 46, 54, 63}, 90))
-    if (((3 ^ 2) == 9) and (ay and az)) then
-      local ba = (ay.Text .. (g({122, 38, 122}, 90) .. az.Text))
-      table.insert(au, ba)
-      at[ba] = n.zoneCFrames[av]
+local ai = {}
+local aj = false
+local ak = false
+local al = g.zoneCFrames[1]
+local am = {}
+local an = {}
+for ao = 1, 6 do
+  local ap = ("BodyZones" .. tostring(ao))
+  local aq = o:FindFirstChild(ap)
+  if aq then
+    local ar = aq:FindFirstChild("Title")
+    local as = aq:FindFirstChild("Subtitle")
+    if (ar and as) then
+      local at = (ar.Text .. (" | " .. as.Text))
+      table.insert(an, at)
+      am[at] = g.zoneCFrames[ao]
     end
   end
 end
+local function au(av)
+  local aw = l.Character
+  if (aw and aw:FindFirstChild("HumanoidRootPart")) then
+    local ax = aw.HumanoidRootPart
+    ax.CFrame = (av.CFrame + Vector3.new(0, 5, 0))
+    ax.AssemblyLinearVelocity = Vector3.zero
+    ax.AssemblyAngularVelocity = Vector3.zero
+  end
+end
+local function ay(az)
+  if ((az and az:FindFirstChild("HumanoidRootPart")) and al) then
+    az.HumanoidRootPart.CFrame = al
+  end
+end
+local ba = {}
 local function bb(bc)
-  local bd = s.Character
-  if (((7 * 7) == 49) and (bd and bd:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))) then
-    local be = bd.HumanoidRootPart
-    be.CFrame = (bc.CFrame + Vector3.new(0, 5, 0))
-    be.AssemblyLinearVelocity = Vector3.zero
-    be.AssemblyAngularVelocity = Vector3.zero
-  end
-end
-local function bf(bg)
-  if (((1 + 1) == 2) and ((bg and bg:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))) and as)) then
-    bg.HumanoidRootPart.CFrame = as
-  end
-end
-local bh = {}
-local function bi(bj)
-  if (((15 * 15) == 225) and ((((bj:IsA(g({23, 53, 62, 63, 54}, 90)) or bj:IsA(g({28, 53, 54, 62, 63, 40}, 90)))) and bj.Parent) and (bj.Parent.Parent == ab))) then
-    local bk = bj.Parent.Name
-    if (((100 % 7) == 2) and not bh[bk]) then
-      bh[bk] = {}
+  if ((((bc:IsA("Model") or bc:IsA("Folder"))) and bc.Parent) and (bc.Parent.Parent == u)) then
+    local bd = bc.Parent.Name
+    if not ba[bd] then
+      ba[bd] = {}
     end
-    if (((12 * 12) == 144) and not table.find(bh[bk], bj)) then
-      table.insert(bh[bk], bj)
+    if not table.find(ba[bd], bc) then
+      table.insert(ba[bd], bc)
     end
   end
 end
-local function bl(bm)
-  if (((3 ^ 2) == 9) and ((((bm:IsA(g({23, 53, 62, 63, 54}, 90)) or bm:IsA(g({28, 53, 54, 62, 63, 40}, 90)))) and bm.Parent) and (bm.Parent.Parent == ab))) then
-    local bn = bm.Parent.Name
-    if (((7 * 7) == 49) and bh[bn]) then
-      local bo = table.find(bh[bn], bm)
-      if (((1 + 1) == 2) and bo) then
-        table.remove(bh[bn], bo)
+local function be(bf)
+  if ((((bf:IsA("Model") or bf:IsA("Folder"))) and bf.Parent) and (bf.Parent.Parent == u)) then
+    local bg = bf.Parent.Name
+    if ba[bg] then
+      local bh = table.find(ba[bg], bf)
+      if bh then
+        table.remove(ba[bg], bh)
       end
     end
   end
 end
-for bp, bq in ipairs(ab:GetChildren()) do
-  if (((15 * 15) == 225) and (bq:IsA(g({28, 53, 54, 62, 63, 40}, 90)) or bq:IsA(g({23, 53, 62, 63, 54}, 90)))) then
-    for br, bs in ipairs(bq:GetChildren()) do
-      bi(bs)
+for bi, bj in ipairs(u:GetChildren()) do
+  if (bj:IsA("Folder") or bj:IsA("Model")) then
+    for bk, bl in ipairs(bj:GetChildren()) do
+      bb(bl)
     end
   end
 end
-ab.DescendantAdded:Connect(bi)
-ab.DescendantRemoving:Connect(bl)
-local function bt(bu, bv)
-  bv = (bv or 4)
-  local bw = s.Character
-  if (((100 % 7) == 2) and not bw) then
+u.DescendantAdded:Connect(bb)
+u.DescendantRemoving:Connect(be)
+local function bm(bn, bo)
+  bo = (bo or 4)
+  local bp = l.Character
+  if not bp then
     return
   end
-  local bx = bw:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))
-  local by = bu:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))
-  if (((12 * 12) == 144) and (bx and by)) then
-    local bz = ((by.CFrame * CFrame.new(0, 0, bv))).Position
-    local ca = RaycastParams.new()
-    ca.FilterDescendantsInstances = {bw, bu}
-    ca.FilterType = Enum.RaycastFilterType.Exclude
-    local cb = workspace:Raycast(bz, Vector3.new(0, -500, 0), ca)
-    local cc = bz.Y
-    if (((3 ^ 2) == 9) and cb) then
-      cc = (cb.Position.Y + 3)
+  local bq = bp:FindFirstChild("HumanoidRootPart")
+  local br = bn:FindFirstChild("HumanoidRootPart")
+  if (bq and br) then
+    local bs = ((br.CFrame * CFrame.new(0, 0, bo))).Position
+    local bt = RaycastParams.new()
+    bt.FilterDescendantsInstances = {bp, bn}
+    bt.FilterType = Enum.RaycastFilterType.Exclude
+    local bu = workspace:Raycast(bs, Vector3.new(0, -500, 0), bt)
+    local bv = bs.Y
+    if bu then
+      bv = (bu.Position.Y + 3)
     end
-    local cd = Vector3.new(bz.X, cc, bz.Z)
-    local ce = Vector3.new(by.Position.X, cd.Y, by.Position.Z)
-    bx.CFrame = CFrame.new(cd, ce)
-    bx.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-    bx.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    local bw = Vector3.new(bs.X, bv, bs.Z)
+    local bx = Vector3.new(br.Position.X, bw.Y, br.Position.Z)
+    bq.CFrame = CFrame.new(bw, bx)
+    bq.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+    bq.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
   end
 end
-local function cf(cg)
-  local ch = (g({83}, 90) .. (string.pack(g({102, 19, 104}, 90), #cg) .. cg))
-  return {buffer.fromstring(ch)}
+local function by(bz)
+  local ca = ("\t" .. (string.pack("<I2", #bz) .. bz))
+  return {buffer.fromstring(ca)}
 end
-local function ci(cj, ck, cl)
-  local cm = (g({91}, 90) .. (string.pack(g({102, 19, 104}, 90), #cj) .. (cj .. (string.pack(g({102, 19, 110}, 90), ck) .. (string.pack(g({102, 19, 104}, 90), #(g({24, 47, 35}, 90))) .. (g({24, 47, 35}, 90) .. (string.pack(g({102, 19, 104}, 90), #cl) .. cl)))))))
-  return {buffer.fromstring(cm)}
+local function cb(cc, cd, ce)
+  local cf = ("\1" .. (string.pack("<I2", #cc) .. (cc .. (string.pack("<I4", cd) .. (string.pack("<I2", #("Buy")) .. ("Buy" .. (string.pack("<I2", #ce) .. ce)))))))
+  return {buffer.fromstring(cf)}
 end
-local function cn(co)
-  local cp = (g({91}, 90) .. (string.pack(g({102, 19, 104}, 90), #co) .. (co .. (string.pack(g({102, 19, 110}, 90), 2) .. (string.pack(g({102, 19, 104}, 90), #(g({9, 63, 54, 54}, 90))) .. (g({9, 63, 54, 54}, 90) .. (string.pack(g({102, 19, 104}, 90), #(g({29, 40, 59, 41, 41, 54, 59, 52, 62}, 90))) .. g({29, 40, 59, 41, 41, 54, 59, 52, 62}, 90))))))))
-  return {buffer.fromstring(cp)}
+local function cg(ch)
+  local ci = ("\1" .. (string.pack("<I2", #ch) .. (ch .. (string.pack("<I4", 2) .. (string.pack("<I2", #("Sell")) .. ("Sell" .. (string.pack("<I2", #("Grassland")) .. "Grassland")))))))
+  return {buffer.fromstring(ci)}
 end
-local function cq(cr)
-  local cs = (g({65}, 90) .. (string.pack(g({102, 19, 104}, 90), #cr) .. cr))
-  return {buffer.fromstring(cs)}
+local function cj(ck)
+  local cl = ("\27" .. (string.pack("<I2", #ck) .. ck))
+  return {buffer.fromstring(cl)}
 end
-local function ct()
-  local cu = {}
-  local cv = game:HttpGet((g({50, 46, 46, 42, 41, 96, 117, 117, 61, 59, 55, 63, 41, 116, 40, 53, 56, 54, 53, 34, 116, 57, 53, 55, 117, 44, 107, 117, 61, 59, 55, 63, 41, 117}, 90) .. (aa .. g({117, 41, 63, 40, 44, 63, 40, 41, 117, 10, 47, 56, 54, 51, 57, 101, 41, 53, 40, 46, 21, 40, 62, 63, 40, 103, 30, 63, 41, 57, 124, 54, 51, 55, 51, 46, 103, 107, 106, 106, 124, 63, 34, 57, 54, 47, 62, 63, 28, 47, 54, 54, 29, 59, 55, 63, 41, 103, 46, 40, 47, 63}, 90))))
-  local cw = x:JSONDecode(cv)
-  if (((7 * 7) == 49) and (cw and cw.data)) then
-    for cx, cy in next, cw.data do
-      if (((1 + 1) == 2) and (((((type(cy) == g({46, 59, 56, 54, 63}, 90)) and tonumber(cy.playing)) and tonumber(cy.maxPlayers)) and (cy.playing < cy.maxPlayers)) and (cy.id ~= z))) then
-        table.insert(cu, 1, cy.id)
+local function cm()
+  local cn = {}
+  local co = game:HttpGet(("https://games.roblox.com/v1/games/" .. (t .. "/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true")))
+  local cp = q:JSONDecode(co)
+  if (cp and cp.data) then
+    for cq, cr in next, cp.data do
+      if (((((type(cr) == "table") and tonumber(cr.playing)) and tonumber(cr.maxPlayers)) and (cr.playing < cr.maxPlayers)) and (cr.id ~= s)) then
+        table.insert(cn, 1, cr.id)
       end
     end
   end
-  if (((15 * 15) == 225) and (#cu > 0)) then
-    y:TeleportToPlaceInstance(aa, cu[math.random(1, #cu)], s)
+  if (#cn > 0) then
+    r:TeleportToPlaceInstance(t, cn[math.random(1, #cn)], l)
   else
-    o:Notify(g({9, 63, 40, 44, 63, 40, 50, 53, 42, 96, 122, 25, 53, 47, 54, 62, 52, 125, 46, 122, 60, 51, 52, 62, 122, 59, 122, 41, 63, 40, 44, 63, 40, 116}, 90))
+    h:Notify("Serverhop: Couldn't find a server.")
   end
 end
-local function cz()
-  local da = {}
-  for db, dc in pairs(n.ItemConfig) do
-    table.insert(da, db)
+local function cs()
+  local ct = {}
+  for cu, cv in pairs(g.ItemConfig) do
+    table.insert(ct, cu)
+  end
+  return ct
+end
+local function cw(cx)
+  if (type(cx) ~= "string") then
+    return 0
+  end
+  cx = string.lower(string.gsub(cx, "[,%s]", ""))
+  local cy, cz = string.match(cx, "^([%d%.]+)([a-z]*)$")
+  if not cy then
+    return 0
+  end
+  local da = (tonumber(cy) or 0)
+  local db = {k = 1e3, m = 1e6, b = 1e9, t = 1e12, qa = 1e15, qi = 1e18, sx = 1e21, sp = 1e24, oc = 1e27, no = 1e30, dc = 1e33}
+  if ((cz and (cz ~= "")) and db[cz]) then
+    return (da * db[cz])
   end
   return da
 end
-local function dd(de)
-  if (((100 % 7) == 2) and (type(de) ~= g({41, 46, 40, 51, 52, 61}, 90))) then
-    return 0
-  end
-  de = string.lower(string.gsub(de, g({1, 118, 127, 41, 7}, 90), ""))
-  local df, dg = string.match(de, g({4, 114, 1, 127, 62, 127, 116, 7, 113, 115, 114, 1, 59, 119, 32, 7, 112, 115, 126}, 90))
-  if (((12 * 12) == 144) and not df) then
-    return 0
-  end
-  local dh = (tonumber(df) or 0)
-  local di = {k = 1e3, m = 1e6, b = 1e9, t = 1e12, qa = 1e15, qi = 1e18, sx = 1e21, sp = 1e24, oc = 1e27, no = 1e30, dc = 1e33}
-  if (((3 ^ 2) == 9) and ((dg and (dg ~= "")) and di[dg])) then
-    return (dh * di[dg])
-  end
-  return dh
-end
-local function dj(dk)
-  if (((7 * 7) == 49) and (type(dk) ~= g({41, 46, 40, 51, 52, 61}, 90))) then
+local function dc(dd)
+  if (type(dd) ~= "string") then
     return ""
   end
-  local dl = string.split(dk, g({1}, 90))[1]
-  if (((1 + 1) == 2) and dl) then
-    return string.match(dl, g({4, 127, 41, 112, 114, 116, 119, 115, 127, 41, 112, 126}, 90))
+  local de = string.split(dd, "[")[1]
+  if de then
+    return string.match(de, "^%s*(.-)%s*$")
   end
-  return dk
+  return dd
 end
-local function dm()
-  local dn = {Qi = 0, Realm = 1, Health = 0, Body = 1}
-  if (((15 * 15) == 225) and (an and ao)) then
-    local dp, dq = pcall(ao.GetData)
-    if (((100 % 7) == 2) and (dp and (type(dq) == g({46, 59, 56, 54, 63}, 90)))) then
-      dn.Qi = ((tonumber(dq.Qi) or tonumber(dq.qi)) or dn.Qi)
-      dn.Health = (((tonumber(dq.Health) or tonumber(dq.HP)) or tonumber(dq.Hp)) or dn.Health)
-      dn.Realm = ((tonumber(dq.Realm) or tonumber(dq.RealmLevel)) or dn.Realm)
-      dn.Body = ((tonumber(dq.Body) or tonumber(dq.BodyLevel)) or dn.Body)
-      dn.SpiritRoot = ((dq.SpiritRoot or dq.Root) or dq.spiritRoot)
-      dn.BodyConstitution = ((dq.BodyConstitution or dq.Constitution) or dq.bodyConstitution)
-      if (((12 * 12) == 144) and (dq.Qi or dq.qi)) then
-        return dn
+local function df()
+  local dg = {Qi = 0, Realm = 1, Health = 0, Body = 1}
+  if (ag and ah) then
+    local dh, di = pcall(ah.GetData)
+    if (dh and (type(di) == "table")) then
+      dg.Qi = ((tonumber(di.Qi) or tonumber(di.qi)) or dg.Qi)
+      dg.Health = (((tonumber(di.Health) or tonumber(di.HP)) or tonumber(di.Hp)) or dg.Health)
+      dg.Realm = ((tonumber(di.Realm) or tonumber(di.RealmLevel)) or dg.Realm)
+      dg.Body = ((tonumber(di.Body) or tonumber(di.BodyLevel)) or dg.Body)
+      dg.SpiritRoot = ((di.SpiritRoot or di.Root) or di.spiritRoot)
+      dg.BodyConstitution = ((di.BodyConstitution or di.Constitution) or di.bodyConstitution)
+      if (di.Qi or di.qi) then
+        return dg
       end
     end
   end
-  if (((3 ^ 2) == 9) and (not t or not u)) then
-    return dn
+  if (not m or not n) then
+    return dg
   end
-  local dr = (((u:FindFirstChild(g({18, 15, 30}, 90)) and u.HUD:FindFirstChild(g({12, 51, 46, 59, 54, 41}, 90))) and u.HUD.Vitals:FindFirstChild(g({11, 51}, 90))) and u.HUD.Vitals.Qi:FindFirstChild(g({27, 55, 53, 47, 52, 46}, 90)))
-  if (((7 * 7) == 49) and (dr and dr:IsA(g({14, 63, 34, 46, 22, 59, 56, 63, 54}, 90)))) then
-    dn.Qi = dd(dr.Text)
+  local dj = (((n:FindFirstChild("HUD") and n.HUD:FindFirstChild("Vitals")) and n.HUD.Vitals:FindFirstChild("Qi")) and n.HUD.Vitals.Qi:FindFirstChild("Amount"))
+  if (dj and dj:IsA("TextLabel")) then
+    dg.Qi = cw(dj.Text)
   end
-  local ds = (((u:FindFirstChild(g({18, 15, 30}, 90)) and u.HUD:FindFirstChild(g({12, 51, 46, 59, 54, 41}, 90))) and u.HUD.Vitals:FindFirstChild(g({18, 10}, 90))) and u.HUD.Vitals.HP:FindFirstChild(g({27, 55, 53, 47, 52, 46}, 90)))
-  if (((1 + 1) == 2) and (ds and ds:IsA(g({14, 63, 34, 46, 22, 59, 56, 63, 54}, 90)))) then
-    dn.Health = dd(ds.Text)
+  local dk = (((n:FindFirstChild("HUD") and n.HUD:FindFirstChild("Vitals")) and n.HUD.Vitals:FindFirstChild("HP")) and n.HUD.Vitals.HP:FindFirstChild("Amount"))
+  if (dk and dk:IsA("TextLabel")) then
+    dg.Health = cw(dk.Text)
   end
-  for dt, du in pairs(workspace.Characters:GetChildren()) do
-    if (((15 * 15) == 225) and (du.Name == s.Name)) then
-      local dv = du:GetAttribute(g({24, 53, 62, 35}, 90))
-      if (((100 % 7) == 2) and dv) then
-        dn.Body = tonumber(dv)
+  for dl, dm in pairs(workspace.Characters:GetChildren()) do
+    if (dm.Name == l.Name) then
+      local dn = dm:GetAttribute("Body")
+      if dn then
+        dg.Body = tonumber(dn)
       end
-      local dw = du:GetAttribute(g({8, 63, 59, 54, 55}, 90))
-      if (((12 * 12) == 144) and dw) then
-        dn.Realm = tonumber(dw)
+      local dp = dm:GetAttribute("Realm")
+      if dp then
+        dg.Realm = tonumber(dp)
       end
       break
     end
   end
-  local dx = (((u:FindFirstChild(g({28, 40, 59, 55, 63, 41}, 90)) and u.Frames:FindFirstChild(g({9, 50, 53, 42}, 90))) and u.Frames.Shop:FindFirstChild(g({9, 42, 51, 40, 51, 46, 8, 53, 53, 46}, 90))) and u.Frames.Shop.SpiritRoot:FindFirstChild(g({25, 47, 40, 40, 63, 52, 46}, 90)))
-  if (((3 ^ 2) == 9) and (dx and dx:IsA(g({14, 63, 34, 46, 22, 59, 56, 63, 54}, 90)))) then
-    dn.SpiritRoot = dj(dx.Text)
+  local dq = (((n:FindFirstChild("Frames") and n.Frames:FindFirstChild("Shop")) and n.Frames.Shop:FindFirstChild("SpiritRoot")) and n.Frames.Shop.SpiritRoot:FindFirstChild("Current"))
+  if (dq and dq:IsA("TextLabel")) then
+    dg.SpiritRoot = dc(dq.Text)
   end
-  local dy = (((u:FindFirstChild(g({28, 40, 59, 55, 63, 41}, 90)) and u.Frames:FindFirstChild(g({9, 50, 53, 42}, 90))) and u.Frames.Shop:FindFirstChild(g({24, 53, 62, 35, 25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52}, 90))) and u.Frames.Shop.BodyConstitution:FindFirstChild(g({25, 47, 40, 40, 63, 52, 46}, 90)))
-  if (((7 * 7) == 49) and (dy and dy:IsA(g({14, 63, 34, 46, 22, 59, 56, 63, 54}, 90)))) then
-    dn.BodyConstitution = dj(dy.Text)
+  local dr = (((n:FindFirstChild("Frames") and n.Frames:FindFirstChild("Shop")) and n.Frames.Shop:FindFirstChild("BodyConstitution")) and n.Frames.Shop.BodyConstitution:FindFirstChild("Current"))
+  if (dr and dr:IsA("TextLabel")) then
+    dg.BodyConstitution = dc(dr.Text)
   end
-  return dn
+  return dg
 end
-local function dz()
-  local ea = {}
-  for eb, ec in ipairs(n.Roots) do
-    table.insert(ea, ec[1])
+local function ds()
+  local dt = {}
+  for du, dv in ipairs(g.Roots) do
+    table.insert(dt, dv[1])
   end
-  return ea
+  return dt
 end
-local function ed()
-  local ee = {}
-  for ef, eg in ipairs(n.Constitution) do
-    table.insert(ee, eg[1])
+local function dw()
+  local dx = {}
+  for dy, dz in ipairs(g.Constitution) do
+    table.insert(dx, dz[1])
   end
-  return ee
+  return dx
 end
-local function eh()
-  local ei = {}
-  local ej = {}
-  for ek = 1, 9 do
-    local el = (g({11, 51, 0, 53, 52, 63, 41}, 90) .. tostring(ek))
-    local em = v:FindFirstChild(el)
-    if (((1 + 1) == 2) and em) then
-      local en = em:FindFirstChild(g({14, 51, 46, 54, 63}, 90))
-      local eo = em:FindFirstChild(g({9, 47, 56, 46, 51, 46, 54, 63}, 90))
-      if (((15 * 15) == 225) and (en and eo)) then
-        local ep = (en.Text .. (g({122, 38, 122}, 90) .. eo.Text))
-        table.insert(ei, ep)
-        ej[ep] = n.qiZoneCFrames[ek]
+local function ea()
+  local eb = {}
+  local ec = {}
+  for ed = 1, 9 do
+    local ee = ("QiZones" .. tostring(ed))
+    local ef = o:FindFirstChild(ee)
+    if ef then
+      local eg = ef:FindFirstChild("Title")
+      local eh = ef:FindFirstChild("Subtitle")
+      if (eg and eh) then
+        local ei = (eg.Text .. (" | " .. eh.Text))
+        table.insert(eb, ei)
+        ec[ei] = g.qiZoneCFrames[ed]
       end
     end
   end
-  return ei, ej
+  return eb, ec
 end
-local function eq(er)
-  local es = math.ceil((er / 10))
-  if (((100 % 7) == 2) and (es > 31)) then
-    es = 31
+local function ej(ek)
+  local el = math.ceil((ek / 10))
+  if (el > 31) then
+    el = 31
   end
-  if (((12 * 12) == 144) and (es < 1)) then
-    es = 1
+  if (el < 1) then
+    el = 1
   end
-  local et = n.realmBaseQi[es]
-  local eu = (et * ((1.15 ^ ((er - 1)))))
-  return math.floor(eu)
+  local em = g.realmBaseQi[el]
+  local en = (em * ((1.15 ^ ((ek - 1)))))
+  return math.floor(en)
 end
-local function ev(ew)
-  local ex = math.ceil((ew / 10))
-  if (((3 ^ 2) == 9) and (ex > 33)) then
-    ex = 33
+local function eo(ep)
+  local eq = math.ceil((ep / 10))
+  if (eq > 33) then
+    eq = 33
   end
-  if (((7 * 7) == 49) and (ex < 1)) then
-    ex = 1
+  if (eq < 1) then
+    eq = 1
   end
-  local ey = n.realmBaseBody[ex]
-  local ez = (ey * ((1.11 ^ ((ew - 1)))))
-  return math.floor(ez)
+  local er = g.realmBaseBody[eq]
+  local es = (er * ((1.11 ^ ((ep - 1)))))
+  return math.floor(es)
 end
-s.Idled:Connect(function()
-  w:CaptureController()
-  w:ClickButton2(Vector2.new())
+l.Idled:Connect(function()
+  p:CaptureController()
+  p:ClickButton2(Vector2.new())
 end)
-local function fa()
-  if (((1 + 1) == 2) and (syn and syn.queue_on_teleport)) then
-    syn.queue_on_teleport(m)
-  elseif (((15 * 15) == 225) and queue_on_teleport) then
-    queue_on_teleport(m)
+local function et()
+  if (syn and syn.queue_on_teleport) then
+    syn.queue_on_teleport(f)
+  elseif queue_on_teleport then
+    queue_on_teleport(f)
   else
-    warn(g({3, 53, 47, 40, 122, 63, 34, 63, 57, 47, 46, 53, 40, 122, 62, 53, 63, 41, 122, 52, 53, 46, 122, 41, 47, 42, 42, 53, 40, 46, 122, 43, 47, 63, 47, 63, 5, 53, 52, 5, 46, 63, 54, 63, 42, 53, 40, 46}, 90))
+    warn("Your executor does not support queue_on_teleport")
   end
 end
-local function fb()
-  local fc = {}
-  if (((100 % 7) == 2) and not t) then
-    return fc
+local function eu()
+  local ev = {}
+  if not m then
+    return ev
   end
-  local fd = (((t:FindFirstChild(g({23, 59, 51, 52}, 90)) and t.Main:FindFirstChild(g({28, 40, 59, 55, 63, 41}, 90))) and t.Main.Frames:FindFirstChild(g({19, 52, 44, 63, 52, 46, 53, 40, 35}, 90))) and t.Main.Frames.Inventory:FindFirstChild(g({25, 53, 52, 46, 59, 51, 52, 63, 40}, 90)))
-  if (((12 * 12) == 144) and fd) then
-    for fe, ff in ipairs(fd:GetChildren()) do
-      if (((3 ^ 2) == 9) and (ff:IsA(g({14, 63, 34, 46, 24, 47, 46, 46, 53, 52}, 90)) and (ff.Name ~= g({14, 63, 55, 42, 54, 59, 46, 63}, 90)))) then
-        table.insert(fc, ff.Name)
+  local ew = (((m:FindFirstChild("Main") and m.Main:FindFirstChild("Frames")) and m.Main.Frames:FindFirstChild("Inventory")) and m.Main.Frames.Inventory:FindFirstChild("Container"))
+  if ew then
+    for ex, ey in ipairs(ew:GetChildren()) do
+      if (ey:IsA("TextButton") and (ey.Name ~= "Template")) then
+        table.insert(ev, ey.Name)
       end
     end
   end
-  return fc
+  return ev
 end
-local function fg(fh)
-  local fi = (g({73}, 90) .. (string.pack(g({102, 19, 104}, 90), #fh) .. fh))
-  return {buffer.fromstring(fi), nil}
+local function ez(fa)
+  local fb = ("\19" .. (string.pack("<I2", #fa) .. fa))
+  return {buffer.fromstring(fb), nil}
 end
-local function fj(fk, fl)
-  local fm = tostring(fk)
-  local fn = (g({78}, 90) .. (string.pack(g({102, 19, 104}, 90), #fm) .. (fm .. (string.pack(g({102, 19, 104}, 90), #fl) .. fl))))
-  return {buffer.fromstring(fn)}
+local function fc(fd, fe)
+  local ff = tostring(fd)
+  local fg = ("\20" .. (string.pack("<I2", #ff) .. (ff .. (string.pack("<I2", #fe) .. fe))))
+  return {buffer.fromstring(fg)}
 end
-local fo = {600, 1200, 2400, 3600, 4800, 10800}
-local function fp(fq)
-  local fr = (tostring(fq) .. g({96, 31, 44, 63, 52, 46, 10, 54, 59, 35, 46, 51, 55, 63}, 90))
-  local fs = (g({78}, 90) .. (string.pack(g({102, 19, 104}, 90), #fr) .. fr))
-  return {buffer.fromstring(fs)}
+local fh = {600, 1200, 2400, 3600, 4800, 10800}
+local function fi(fj)
+  local fk = (tostring(fj) .. ":EventPlaytime")
+  local fl = ("\20" .. (string.pack("<I2", #fk) .. fk))
+  return {buffer.fromstring(fl)}
 end
-local function ft()
-  local fu = {}
-  local fv = {}
-  for fw, fx in ipairs(ab:GetChildren()) do
-    if (((7 * 7) == 49) and (fx:IsA(g({28, 53, 54, 62, 63, 40}, 90)) or fx:IsA(g({23, 53, 62, 63, 54}, 90)))) then
-      for fy, fz in ipairs(fx:GetChildren()) do
-        if (((1 + 1) == 2) and ((fz:IsA(g({23, 53, 62, 63, 54}, 90)) and fz.Name) and not fv[fz.Name])) then
-          fv[fz.Name] = true
-          table.insert(fu, fz.Name)
+local function fm()
+  local fn = {}
+  local fo = {}
+  for fp, fq in ipairs(u:GetChildren()) do
+    if (fq:IsA("Folder") or fq:IsA("Model")) then
+      for fr, fs in ipairs(fq:GetChildren()) do
+        if ((fs:IsA("Model") and fs.Name) and not fo[fs.Name]) then
+          fo[fs.Name] = true
+          table.insert(fn, fs.Name)
         end
       end
     end
   end
-  table.sort(fu)
-  return fu
+  table.sort(fn)
+  return fn
 end
-local ga = ft()
-local gb = {}
-local function gc(gd)
-  for ge, gf in pairs(bh) do
-    for gg, gh in ipairs(gf) do
-      if (((15 * 15) == 225) and (gh.Name == gd)) then
-        local gi = gh:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-        local gj = gh:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))
-        if (((100 % 7) == 2) and ((gi and (gi.Health > 0)) and gj)) then
-          return gh
-        end
-      end
-    end
-  end
-  return nil
-end
-local function gk()
-  local gl = {}
-  for gm, gn in ipairs(gb) do
-    gl[gn] = true
-  end
-  for go, gp in pairs(bh) do
-    for gq, gr in ipairs(gp) do
-      if (((12 * 12) == 144) and gl[gr.Name]) then
-        local gs = gr:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-        local gt = gr:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))
-        if (((3 ^ 2) == 9) and ((gs and (gs.Health > 0)) and gt)) then
-          return gr
+local ft = fm()
+local fu = {}
+local function fv(fw)
+  for fx, fy in pairs(ba) do
+    for fz, ga in ipairs(fy) do
+      if (ga.Name == fw) then
+        local gb = ga:FindFirstChild("Humanoid")
+        local gc = ga:FindFirstChild("HumanoidRootPart")
+        if ((gb and (gb.Health > 0)) and gc) then
+          return ga
         end
       end
     end
   end
   return nil
 end
-local function gu(gv)
+local function gd()
+  local ge = {}
+  for gf, gg in ipairs(fu) do
+    ge[gg] = true
+  end
+  for gh, gi in pairs(ba) do
+    for gj, gk in ipairs(gi) do
+      if ge[gk.Name] then
+        local gl = gk:FindFirstChild("Humanoid")
+        local gm = gk:FindFirstChild("HumanoidRootPart")
+        if ((gl and (gl.Health > 0)) and gm) then
+          return gk
+        end
+      end
+    end
+  end
+  return nil
+end
+local function gn(go)
   task.spawn(function()
-    while (((7 * 7) == 49) and gv) do
-      for gw, gx in ipairs(workspace:GetDescendants()) do
-        if (((1 + 1) == 2) and gx:IsA(g({10, 40, 53, 34, 51, 55, 51, 46, 35, 10, 40, 53, 55, 42, 46}, 90))) then
-          if (((15 * 15) == 225) and (gx.HoldDuration ~= 0)) then
-            gx.HoldDuration = 0
+    while go do
+      for gp, gq in ipairs(workspace:GetDescendants()) do
+        if gq:IsA("ProximityPrompt") then
+          if (gq.HoldDuration ~= 0) then
+            gq.HoldDuration = 0
           end
         end
       end
@@ -443,155 +430,155 @@ local function gu(gv)
     end
   end)
 end
-Players.LocalPlayer.OnTeleport:Connect(function(gy)
-  fa()
+Players.LocalPlayer.OnTeleport:Connect(function(gr)
+  et()
 end)
-Players.PlayerAdded:Connect(function(gz)
-  gu(true)
+Players.PlayerAdded:Connect(function(gs)
+  gn(true)
 end)
-local ha = o:CreateWindow({Title = g({3, 119, 18, 47, 56}, 90), Center = true, Icon = 128171209017859, AutoShow = true, Size = UDim2.fromOffset(650, 460), ShowCustomCursor = false, ToggleKeybind = Enum.KeyCode.LeftControl})
-local hb = ha:AddTab(g({23, 59, 51, 52}, 90), g({56, 53, 53, 49, 119, 47, 41, 63, 40}, 90))
-local hc = ha:AddTab(g({23, 51, 41, 57}, 90), g({41, 63, 40, 44, 63, 40}, 90))
-local hd = ha:AddTab(g({9, 63, 46, 46, 51, 52, 61, 41}, 90), g({57, 53, 61}, 90))
-local he = hb:AddLeftGroupbox(g({9, 42, 51, 52}, 90))
-local hf = hb:AddRightGroupbox(g({27, 54, 57, 50, 63, 55, 35}, 90))
-local hg = hb:AddRightGroupbox(g({11, 51, 122, 59, 52, 62, 122, 14, 40, 59, 51, 52, 51, 52, 61}, 90))
-local hh = hb:AddLeftGroupbox(g({23, 63, 40, 57, 50, 59, 52, 46}, 90))
-local hi = hb:AddRightGroupbox(g({11, 47, 63, 41, 46, 41}, 90))
-local hj = hc:AddLeftGroupbox(g({31, 34, 42, 63, 40, 51, 55, 63, 52, 46, 59, 54}, 90))
-local hk = hc:AddRightGroupbox(g({10, 54, 59, 35, 46, 51, 55, 63, 122, 8, 63, 45, 59, 40, 62, 41}, 90))
-local hm = he:AddDropdown(g({8, 53, 53, 46, 41}, 90), {Values = dz(), Default = {}, Multi = true, Text = g({9, 63, 54, 63, 57, 46, 122, 8, 53, 53, 46}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 46, 50, 63, 122, 40, 53, 53, 46, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 41, 42, 51, 52, 122, 46, 53, 116}, 90), Callback = function(hl)
+local gt = h:CreateWindow({Title = "Y-Hub", Center = true, Icon = 128171209017859, AutoShow = true, Size = UDim2.fromOffset(650, 460), ShowCustomCursor = false, ToggleKeybind = Enum.KeyCode.LeftControl})
+local gu = gt:AddTab("Main", "book-user")
+local gv = gt:AddTab("Misc", "server")
+local gw = gt:AddTab("Settings", "cog")
+local gx = gu:AddLeftGroupbox("Spin")
+local gy = gu:AddRightGroupbox("Alchemy")
+local gz = gu:AddRightGroupbox("Qi and Training")
+local ha = gu:AddLeftGroupbox("Merchant")
+local hb = gu:AddRightGroupbox("Quests")
+local hc = gv:AddLeftGroupbox("Experimental")
+local hd = gv:AddRightGroupbox("Playtime Rewards")
+local hf = gx:AddDropdown("Roots", {Values = ds(), Default = {}, Multi = true, Text = "Select Root", Tooltip = "Select the root you want to spin to.", Callback = function(he)
 
 end})
-local ia = he:AddToggle(g({9, 42, 51, 52, 122, 8, 53, 53, 46}, 90), {Text = g({9, 42, 51, 52, 122, 8, 53, 53, 46}, 90), Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 41, 42, 51, 52, 41, 122, 35, 53, 47, 40, 122, 40, 53, 53, 46, 116}, 90), Callback = function(hn)
-  ar = hn
+local ht = gx:AddToggle("Spin Root", {Text = "Spin Root", Tooltip = "Automatically spins your root.", Callback = function(hg)
+  ak = hg
   task.spawn(function()
-    while (((100 % 7) == 2) and ar) do
-      local ho = hm.Value
-      local hp = dm()
-      if (((12 * 12) == 144) and ((hp and hp.SpiritRoot) and ho[hp.SpiritRoot])) then
-        o:Notify((g({55398, 57299, 122, 9, 47, 57, 57, 63, 41, 41, 60, 47, 54, 54, 35, 122, 40, 53, 54, 54, 63, 62, 122, 8, 53, 53, 46, 96, 122}, 90) .. tostring(hp.SpiritRoot)))
-        ar = false
+    while ak do
+      local hh = hf.Value
+      local hi = df()
+      if ((hi and hi.SpiritRoot) and hh[hi.SpiritRoot]) then
+        h:Notify(("🎉 Successfully rolled Root: " .. tostring(hi.SpiritRoot)))
+        ak = false
         break
       end
-      if (((3 ^ 2) == 9) and u) then
-        local hq = (((u:FindFirstChild(g({28, 40, 59, 55, 63, 41}, 90)) and u.Frames:FindFirstChild(g({9, 50, 53, 42}, 90))) and u.Frames.Shop:FindFirstChild(g({9, 42, 51, 40, 51, 46, 8, 53, 53, 46}, 90))) and u.Frames.Shop.SpiritRoot:FindFirstChild(g({9, 49, 51, 42}, 90)))
-        if (((7 * 7) == 49) and (hq and hq:IsA(g({29, 47, 51, 24, 47, 46, 46, 53, 52}, 90)))) then
-          local hr = hq.BackgroundColor3
-          local hs = math.round((hr.R * 255))
-          local ht = math.round((hr.G * 255))
-          local hu = math.round((hr.B * 255))
-          if (((1 + 1) == 2) and (((hs == 255) and (ht == 42)) and (hu == 42))) then
-            if (((15 * 15) == 225) and getconnections) then
-              for hv, hw in ipairs(getconnections(hq.MouseButton1Click)) do
-                hw:Fire()
+      if n then
+        local hj = (((n:FindFirstChild("Frames") and n.Frames:FindFirstChild("Shop")) and n.Frames.Shop:FindFirstChild("SpiritRoot")) and n.Frames.Shop.SpiritRoot:FindFirstChild("Skip"))
+        if (hj and hj:IsA("GuiButton")) then
+          local hk = hj.BackgroundColor3
+          local hl = math.round((hk.R * 255))
+          local hm = math.round((hk.G * 255))
+          local hn = math.round((hk.B * 255))
+          if (((hl == 255) and (hm == 42)) and (hn == 42)) then
+            if getconnections then
+              for ho, hp in ipairs(getconnections(hj.MouseButton1Click)) do
+                hp:Fire()
               end
-              for hx, hy in ipairs(getconnections(hq.Activated)) do
-                hy:Fire()
+              for hq, hr in ipairs(getconnections(hj.Activated)) do
+                hr:Fire()
               end
             end
           end
         end
       end
-      local hz = {buffer.fromstring(g({68, 90}, 90)), ho}
-      r.ByteNetReliable:FireServer(unpack(hz))
+      local hs = {buffer.fromstring("\30\0"), hh}
+      k.ByteNetReliable:FireServer(unpack(hs))
       task.wait(0.5)
     end
   end)
 end})
-local ic = he:AddDropdown(g({25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52}, 90), {Values = ed(), Default = {}, Multi = true, Text = g({9, 63, 54, 63, 57, 46, 122, 25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 46, 50, 63, 122, 57, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 41, 42, 51, 52, 122, 46, 53, 116}, 90), Callback = function(ib)
+local hv = gx:AddDropdown("Constitution", {Values = dw(), Default = {}, Multi = true, Text = "Select Constitution", Tooltip = "Select the constitution you want to spin to.", Callback = function(hu)
 
 end})
-local is = he:AddToggle(g({9, 42, 51, 52, 122, 25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52}, 90), {Text = g({9, 42, 51, 52, 122, 25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52}, 90), Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 41, 42, 51, 52, 41, 122, 35, 53, 47, 40, 122, 57, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52, 116}, 90), Callback = function(id)
-  aq = id
+local ik = gx:AddToggle("Spin Constitution", {Text = "Spin Constitution", Tooltip = "Automatically spins your constitution.", Callback = function(hw)
+  aj = hw
   task.spawn(function()
-    while (((100 % 7) == 2) and aq) do
-      local ie = ic.Value
-      local ig = dm()
-      if (((12 * 12) == 144) and ((ig and ig.BodyConstitution) and ie[ig.BodyConstitution])) then
-        o:Notify((g({55398, 57299, 122, 9, 47, 57, 57, 63, 41, 41, 60, 47, 54, 54, 35, 122, 40, 53, 54, 54, 63, 62, 122, 25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52, 96, 122}, 90) .. tostring(ig.BodyConstitution)))
-        aq = false
+    while aj do
+      local hx = hv.Value
+      local hy = df()
+      if ((hy and hy.BodyConstitution) and hx[hy.BodyConstitution]) then
+        h:Notify(("🎉 Successfully rolled Constitution: " .. tostring(hy.BodyConstitution)))
+        aj = false
         break
       end
-      if (((3 ^ 2) == 9) and u) then
-        local ih = (((u:FindFirstChild(g({28, 40, 59, 55, 63, 41}, 90)) and u.Frames:FindFirstChild(g({9, 50, 53, 42}, 90))) and u.Frames.Shop:FindFirstChild(g({24, 53, 62, 35, 25, 53, 52, 41, 46, 51, 46, 47, 46, 51, 53, 52}, 90))) and u.Frames.Shop.BodyConstitution:FindFirstChild(g({9, 49, 51, 42}, 90)))
-        if (((7 * 7) == 49) and (ih and ih:IsA(g({29, 47, 51, 24, 47, 46, 46, 53, 52}, 90)))) then
-          local ii = ih.BackgroundColor3
-          local ij = math.round((ii.R * 255))
-          local ik = math.round((ii.G * 255))
-          local il = math.round((ii.B * 255))
-          if (((1 + 1) == 2) and (((ij == 255) and (ik == 42)) and (il == 42))) then
-            if (((15 * 15) == 225) and getconnections) then
-              for im, io in ipairs(getconnections(ih.MouseButton1Click)) do
-                io:Fire()
+      if n then
+        local hz = (((n:FindFirstChild("Frames") and n.Frames:FindFirstChild("Shop")) and n.Frames.Shop:FindFirstChild("BodyConstitution")) and n.Frames.Shop.BodyConstitution:FindFirstChild("Skip"))
+        if (hz and hz:IsA("GuiButton")) then
+          local ia = hz.BackgroundColor3
+          local ib = math.round((ia.R * 255))
+          local ic = math.round((ia.G * 255))
+          local id = math.round((ia.B * 255))
+          if (((ib == 255) and (ic == 42)) and (id == 42)) then
+            if getconnections then
+              for ie, ig in ipairs(getconnections(hz.MouseButton1Click)) do
+                ig:Fire()
               end
-              for ip, iq in ipairs(getconnections(ih.Activated)) do
-                iq:Fire()
+              for ih, ii in ipairs(getconnections(hz.Activated)) do
+                ii:Fire()
               end
             end
           end
         end
       end
-      local ir = {buffer.fromstring(g({69, 90}, 90)), ie}
-      r.ByteNetReliable:FireServer(unpack(ir))
+      local ij = {buffer.fromstring("\31\0"), hx}
+      k.ByteNetReliable:FireServer(unpack(ij))
       task.wait(0.5)
     end
   end)
 end})
-local it = g({29, 51, 52, 41, 63, 52, 61}, 90)
-local iu = n.ItemConfig[it].Location[1]
-local iv = {}
-local iw = 1
-local ja = hh:AddDropdown(g({23, 63, 40, 57, 50, 59, 52, 46, 122, 19, 46, 63, 55}, 90), {Values = cz(), Default = {}, Multi = true, Text = g({9, 63, 54, 63, 57, 46, 122, 19, 46, 63, 55, 41}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 55, 47, 54, 46, 51, 42, 54, 63, 122, 51, 46, 63, 55, 41, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 59, 47, 46, 53, 122, 56, 47, 35, 116}, 90), Searchable = true, Callback = function(ix)
-  iv = {}
-  for iy, iz in pairs(ix) do
-    if (((100 % 7) == 2) and iz) then
-      table.insert(iv, iy)
+local il = "Ginseng"
+local im = g.ItemConfig[il].Location[1]
+local io = {}
+local ip = 1
+local it = ha:AddDropdown("Merchant Item", {Values = cs(), Default = {}, Multi = true, Text = "Select Items", Tooltip = "Select multiple items you want to auto buy.", Searchable = true, Callback = function(iq)
+  io = {}
+  for ir, is in pairs(iq) do
+    if is then
+      table.insert(io, ir)
     end
   end
 end})
-local jc = hh:AddSlider(g({27, 55, 53, 47, 52, 46}, 90), {Text = g({27, 55, 53, 47, 52, 46}, 90), Min = 1, Max = 100, Default = 1, Rounding = 0, Callback = function(jb)
-  iw = jb
+local iv = ha:AddSlider("Amount", {Text = "Amount", Min = 1, Max = 100, Default = 1, Rounding = 0, Callback = function(iu)
+  ip = iu
 end})
-local jd = false
-local je = false
-local jf = {}
-local jt = hh:AddToggle(g({27, 47, 46, 53, 122, 24, 47, 35}, 90), {Text = g({27, 47, 46, 53, 122, 24, 47, 35}, 90), Tooltip = g({14, 63, 54, 63, 42, 53, 40, 46, 41, 122, 53, 52, 57, 63, 122, 46, 53, 122, 63, 59, 57, 50, 122, 52, 63, 57, 63, 41, 41, 59, 40, 35, 122, 55, 63, 40, 57, 50, 59, 52, 46, 122, 42, 63, 40, 122, 61, 59, 55, 63, 118, 122, 46, 50, 63, 52, 122, 56, 47, 35, 41, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 51, 46, 63, 55, 41, 116}, 90), Callback = function(jg)
-  jd = jg
+local iw = false
+local ix = false
+local iy = {}
+local jm = ha:AddToggle("Auto Buy", {Text = "Auto Buy", Tooltip = "Teleports once to each necessary merchant per game, then buys selected items.", Callback = function(iz)
+  iw = iz
   task.spawn(function()
-    while (((12 * 12) == 144) and jd) do
-      for jh, ji in ipairs(iv) do
-        if (((3 ^ 2) == 9) and not jd) then
+    while iw do
+      for ja, jb in ipairs(io) do
+        if not iw then
           break
         end
-        local jj = n.ItemConfig[ji]
-        if (((7 * 7) == 49) and (jj and jj.Location)) then
-          for jk, jl in ipairs(jj.Location) do
-            if (((1 + 1) == 2) and not jd) then
+        local jc = g.ItemConfig[jb]
+        if (jc and jc.Location) then
+          for jd, je in ipairs(jc.Location) do
+            if not iw then
               break
             end
-            if (((15 * 15) == 225) and (n.MerchantLocations[jl] and not jf[jl])) then
-              local jm = s.Character
-              local jn = (jm and jm:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))
-              if (((100 % 7) == 2) and jn) then
-                print((g({55399, 57050, 122, 14, 63, 54, 63, 42, 53, 40, 46, 51, 52, 61, 122, 46, 53, 122}, 90) .. (jl .. g({122, 23, 63, 40, 57, 50, 59, 52, 46, 122, 114, 28, 51, 40, 41, 46, 122, 46, 51, 55, 63, 122, 53, 52, 54, 35, 115, 116, 116, 116}, 90))))
-                jn.CFrame = n.MerchantLocations[jl]
-                jf[jl] = true
+            if (g.MerchantLocations[je] and not iy[je]) then
+              local jf = l.Character
+              local jg = (jf and jf:FindFirstChild("HumanoidRootPart"))
+              if jg then
+                print(("🚀 Teleporting to " .. (je .. " Merchant (First time only)...")))
+                jg.CFrame = g.MerchantLocations[je]
+                iy[je] = true
                 task.wait(1.5)
               end
             end
-            local jo = s.PlayerGui.Main.Frames.Merchant.Container:FindFirstChild(ji)
-            local jp = 0
-            if (((12 * 12) == 144) and (jo and jo:FindFirstChild(g({9, 46, 53, 57, 49}, 90)))) then
-              local jq = string.match(jo.Stock.Text, g({127, 62, 113}, 90))
-              if (((3 ^ 2) == 9) and jq) then
-                jp = tonumber(jq)
+            local jh = l.PlayerGui.Main.Frames.Merchant.Container:FindFirstChild(jb)
+            local ji = 0
+            if (jh and jh:FindFirstChild("Stock")) then
+              local jj = string.match(jh.Stock.Text, "%d+")
+              if jj then
+                ji = tonumber(jj)
               end
             end
-            if (((7 * 7) == 49) and (jp > 0)) then
-              local jr = math.min(iw, jp)
-              local js = ci(ji, jr, jl)
-              r.ByteNetReliable:FireServer(unpack(js))
+            if (ji > 0) then
+              local jk = math.min(ip, ji)
+              local jl = cb(jb, jk, je)
+              k.ByteNetReliable:FireServer(unpack(jl))
               task.wait(0.25)
             end
           end
@@ -601,24 +588,24 @@ local jt = hh:AddToggle(g({27, 47, 46, 53, 122, 24, 47, 35}, 90), {Text = g({27,
     end
   end)
 end})
-local jx = hi:AddDropdown(g({9, 42, 63, 57, 51, 60, 51, 57, 23, 53, 56}, 90), {Values = ga, Default = {}, Multi = true, Text = g({9, 63, 54, 63, 57, 46, 122, 9, 42, 63, 57, 51, 60, 51, 57, 122, 23, 53, 56, 41}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 55, 47, 54, 46, 51, 42, 54, 63, 122, 55, 53, 56, 41, 122, 51, 52, 122, 46, 50, 63, 122, 61, 59, 55, 63, 122, 46, 53, 122, 60, 59, 40, 55, 116}, 90), Searchable = true, Callback = function(ju)
-  gb = {}
-  for jv, jw in pairs(ju) do
-    if (((1 + 1) == 2) and jw) then
-      table.insert(gb, jv)
+local jq = hb:AddDropdown("SpecificMob", {Values = ft, Default = {}, Multi = true, Text = "Select Specific Mobs", Tooltip = "Select multiple mobs in the game to farm.", Searchable = true, Callback = function(jn)
+  fu = {}
+  for jo, jp in pairs(jn) do
+    if jp then
+      table.insert(fu, jo)
     end
   end
 end})
-local jy = false
-hi:AddToggle(g({27, 47, 46, 53, 28, 59, 40, 55, 9, 42, 63, 57, 51, 60, 51, 57, 23, 53, 56, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 28, 59, 40, 55, 122, 9, 42, 63, 57, 51, 60, 51, 57, 122, 23, 53, 56, 41}, 90), Tooltip = g({25, 53, 52, 46, 51, 52, 47, 53, 47, 41, 54, 35, 122, 50, 47, 52, 46, 41, 122, 62, 53, 45, 52, 122, 59, 52, 35, 122, 53, 60, 122, 46, 50, 63, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 55, 53, 56, 41, 122, 47, 52, 46, 51, 54, 122, 46, 50, 63, 35, 122, 59, 40, 63, 122, 62, 63, 59, 62, 116}, 90), Callback = function(jz)
-  jy = jz
+local jr = false
+hb:AddToggle("AutoFarmSpecificMobToggle", {Text = "Auto Farm Specific Mobs", Tooltip = "Continuously hunts down any of the selected mobs until they are dead.", Callback = function(js)
+  jr = js
   task.spawn(function()
-    while (((15 * 15) == 225) and jy) do
-      local ka = gk()
-      if (((100 % 7) == 2) and ka) then
-        local kb = ka:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-        while (((12 * 12) == 144) and (((jy and ka.Parent) and kb) and (kb.Health > 0))) do
-          bt(ka, 4)
+    while jr do
+      local jt = gd()
+      if jt then
+        local ju = jt:FindFirstChild("Humanoid")
+        while (((jr and jt.Parent) and ju) and (ju.Health > 0)) do
+          bm(jt, 4)
           task.wait(0.1)
         end
       else
@@ -628,58 +615,58 @@ hi:AddToggle(g({27, 47, 46, 53, 28, 59, 40, 55, 9, 42, 63, 57, 51, 60, 51, 57, 2
     end
   end)
 end})
-hi:AddButton({Text = g({8, 63, 60, 40, 63, 41, 50, 122, 23, 53, 56, 122, 22, 51, 41, 46}, 90), DoubleClick = false, Tooltip = g({8, 63, 60, 40, 63, 41, 50, 63, 41, 122, 46, 50, 63, 122, 62, 40, 53, 42, 62, 53, 45, 52, 122, 45, 51, 46, 50, 122, 59, 52, 35, 122, 52, 63, 45, 54, 35, 122, 41, 42, 59, 45, 52, 63, 62, 122, 55, 53, 56, 41, 122, 51, 52, 122, 35, 53, 47, 40, 122, 57, 50, 47, 52, 49, 116}, 90), Func = function()
-  local kc = ft()
-  jx:SetValues(kc)
-  o:Notify(g({55399, 56670, 122, 23, 53, 56, 122, 54, 51, 41, 46, 122, 40, 63, 60, 40, 63, 41, 50, 63, 62, 123}, 90))
+hb:AddButton({Text = "Refresh Mob List", DoubleClick = false, Tooltip = "Refreshes the dropdown with any newly spawned mobs in your chunk.", Func = function()
+  local jv = fm()
+  jq:SetValues(jv)
+  h:Notify("🔄 Mob list refreshed!")
 end})
-local kd = n.QuestConfig[1]
-local kh = hi:AddDropdown(g({11, 47, 63, 41, 46}, 90), {Values = n.QuestConfig, Default = 1, Multi = false, Text = g({9, 63, 54, 63, 57, 46, 122, 11, 47, 63, 41, 46}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 46, 50, 63, 122, 43, 47, 63, 41, 46, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 57, 53, 55, 42, 54, 63, 46, 63, 116}, 90), Searchable = true, Callback = function(ke)
-  kd = ke
-  local kf = {buffer.fromstring(g({83, 92, 90, 25, 59, 52, 57, 63, 54}, 90))}
-  r.ByteNetReliable:FireServer(unpack(kf))
+local jw = g.QuestConfig[1]
+local ka = hb:AddDropdown("Quest", {Values = g.QuestConfig, Default = 1, Multi = false, Text = "Select Quest", Tooltip = "Select the quest you want to complete.", Searchable = true, Callback = function(jx)
+  jw = jx
+  local jy = {buffer.fromstring("\t\6\0Cancel")}
+  k.ByteNetReliable:FireServer(unpack(jy))
   task.wait(0.25)
-  local kg = cf(ke)
-  r.ByteNetReliable:FireServer(unpack(kg))
+  local jz = by(jx)
+  k.ByteNetReliable:FireServer(unpack(jz))
 end})
-kh:SetValue(kd)
-local ki = false
-local function kj(kk)
-  local kl = n.QuestMap[kk]
-  if (((3 ^ 2) == 9) and not kl) then
-    local km = bh[kk]
-    if (((7 * 7) == 49) and (km and (#km > 0))) then
-      for kn, ko in ipairs(km) do
-        local kp = ko:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-        local kq = ko:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))
-        if (((1 + 1) == 2) and ((kp and (kp.Health > 0)) and kq)) then
-          return ko
+ka:SetValue(jw)
+local kb = false
+local function kc(kd)
+  local ke = g.QuestMap[kd]
+  if not ke then
+    local kf = ba[kd]
+    if (kf and (#kf > 0)) then
+      for kg, kh in ipairs(kf) do
+        local ki = kh:FindFirstChild("Humanoid")
+        local kj = kh:FindFirstChild("HumanoidRootPart")
+        if ((ki and (ki.Health > 0)) and kj) then
+          return kh
         end
       end
     end
     return nil
   end
-  local kr = bh[kl.Folder]
-  if (((15 * 15) == 225) and (kr and (#kr > 0))) then
-    for ks, kt in ipairs(kr) do
-      if (((100 % 7) == 2) and (kt.Name == kl.MobName)) then
-        local ku = kt:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-        local kv = kt:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))
-        if (((12 * 12) == 144) and ((ku and (ku.Health > 0)) and kv)) then
-          return kt
+  local kk = ba[ke.Folder]
+  if (kk and (#kk > 0)) then
+    for kl, km in ipairs(kk) do
+      if (km.Name == ke.MobName) then
+        local kn = km:FindFirstChild("Humanoid")
+        local ko = km:FindFirstChild("HumanoidRootPart")
+        if ((kn and (kn.Health > 0)) and ko) then
+          return km
         end
       end
     end
   end
   return nil
 end
-hi:AddToggle(g({27, 47, 46, 53, 28, 59, 40, 55, 14, 53, 61, 61, 54, 63}, 90), {Text = g({31, 52, 59, 56, 54, 63, 122, 27, 47, 46, 53, 122, 28, 59, 40, 55}, 90), Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 46, 63, 54, 63, 42, 53, 40, 46, 41, 122, 46, 53, 122, 59, 52, 62, 122, 60, 59, 40, 55, 41, 122, 46, 50, 63, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 43, 47, 63, 41, 46, 116}, 90), Callback = function(kw)
-  ki = kw
+hb:AddToggle("AutoFarmToggle", {Text = "Enable Auto Farm", Tooltip = "Automatically teleports to and farms the selected quest.", Callback = function(kp)
+  kb = kp
   task.spawn(function()
-    while (((3 ^ 2) == 9) and ki) do
-      local kx = kj(kd)
-      if (((7 * 7) == 49) and kx) then
-        bt(kx, 4)
+    while kb do
+      local kq = kc(jw)
+      if kq then
+        bm(kq, 4)
       else
         task.wait(1)
       end
@@ -687,64 +674,64 @@ hi:AddToggle(g({27, 47, 46, 53, 28, 59, 40, 55, 14, 53, 61, 61, 54, 63}, 90), {T
     end
   end)
 end})
-local ky = false
-hi:AddToggle(g({27, 47, 46, 53, 17, 51, 54, 54, 24, 53, 41, 41, 63, 41, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 17, 51, 54, 54, 122, 27, 54, 54, 122, 24, 53, 41, 41, 63, 41}, 90), Tooltip = g({14, 63, 54, 63, 42, 53, 40, 46, 41, 122, 46, 53, 122, 41, 42, 59, 45, 52, 122, 42, 53, 51, 52, 46, 41, 122, 46, 53, 122, 54, 53, 59, 62, 122, 46, 50, 63, 122, 57, 50, 47, 52, 49, 118, 122, 46, 50, 63, 52, 122, 50, 47, 52, 46, 41, 122, 46, 50, 63, 122, 56, 53, 41, 41, 116}, 90), Callback = function(kz)
-  ky = kz
+local kr = false
+hb:AddToggle("AutoKillBossesToggle", {Text = "Auto Kill All Bosses", Tooltip = "Teleports to spawn points to load the chunk, then hunts the boss.", Callback = function(ks)
+  kr = ks
   task.spawn(function()
-    while (((1 + 1) == 2) and ky) do
-      for la, lb in ipairs(n.bossData) do
-        if (((15 * 15) == 225) and not ky) then
+    while kr do
+      for kt, ku in ipairs(g.bossData) do
+        if not kr then
           break
         end
-        local lc = s.Character
-        if (((100 % 7) == 2) and (lc and lc:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))) then
-          lc.HumanoidRootPart.CFrame = lb.CF
+        local kv = l.Character
+        if (kv and kv:FindFirstChild("HumanoidRootPart")) then
+          kv.HumanoidRootPart.CFrame = ku.CF
           task.wait(1.5)
-          if (((12 * 12) == 144) and not ky) then
+          if not kr then
             break
           end
-          local ld = nil
-          for le, lf in ipairs(ab:GetChildren()) do
-            for lg, lh in ipairs(lf:GetChildren()) do
-              if (((3 ^ 2) == 9) and ((lh.Name == lb.Name) and lh:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))) then
-                local li = lh:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-                if (((7 * 7) == 49) and (li and (li.Health > 0))) then
-                  ld = lh
+          local kw = nil
+          for kx, ky in ipairs(u:GetChildren()) do
+            for kz, la in ipairs(ky:GetChildren()) do
+              if ((la.Name == ku.Name) and la:FindFirstChild("HumanoidRootPart")) then
+                local lb = la:FindFirstChild("Humanoid")
+                if (lb and (lb.Health > 0)) then
+                  kw = la
                   break
                 end
               end
             end
-            if (((1 + 1) == 2) and ld) then
+            if kw then
               break
             end
           end
-          if (((15 * 15) == 225) and ld) then
-            local lj = ld:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-            print((g({9934, 65109, 122}, 90) .. (lb.Name .. g({122, 54, 53, 59, 62, 63, 62, 123, 122, 31, 52, 61, 59, 61, 51, 52, 61, 116, 116, 116}, 90))))
-            local lk = false
-            while (((100 % 7) == 2) and (((ld.Parent and lj) and (lj.Health > 0)) and ky)) do
-              local ll = s.Character
-              local lm = (ll and ll:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90)))
-              if (((12 * 12) == 144) and ((not ll or not lm) or (lm.Health <= 0))) then
-                lk = true
+          if kw then
+            local lc = kw:FindFirstChild("Humanoid")
+            print(("⚔️ " .. (ku.Name .. " loaded! Engaging...")))
+            local ld = false
+            while (((kw.Parent and lc) and (lc.Health > 0)) and kr) do
+              local le = l.Character
+              local lf = (le and le:FindFirstChild("Humanoid"))
+              if ((not le or not lf) or (lf.Health <= 0)) then
+                ld = true
                 break
               end
-              if (((3 ^ 2) == 9) and not ld:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90))) then
+              if not kw:FindFirstChild("HumanoidRootPart") then
                 break
               end
-              bt(ld, 4)
+              bm(kw, 4)
               task.wait(0.1)
             end
-            if (((7 * 7) == 49) and lk) then
-              print((g({9850, 65109, 122, 3, 53, 47, 122, 62, 51, 63, 62, 122, 46, 53, 122}, 90) .. (lb.Name .. g({116, 122, 13, 59, 51, 46, 51, 52, 61, 122, 60, 53, 40, 122, 40, 63, 41, 42, 59, 45, 52, 116, 116, 116}, 90))))
-              s.CharacterAdded:Wait()
+            if ld then
+              print(("☠️ You died to " .. (ku.Name .. ". Waiting for respawn...")))
+              l.CharacterAdded:Wait()
               task.wait(2)
             else
-              print((g({55399, 56538, 122}, 90) .. (lb.Name .. g({122, 62, 63, 60, 63, 59, 46, 63, 62, 123}, 90))))
+              print(("💀 " .. (ku.Name .. " defeated!")))
               task.wait(0.5)
             end
           else
-            print((g({55399, 56353, 122}, 90) .. (lb.Name .. g({122, 50, 59, 41, 122, 52, 53, 46, 122, 40, 63, 41, 42, 59, 45, 52, 63, 62, 122, 35, 63, 46, 116}, 90))))
+            print(("👻 " .. (ku.Name .. " has not respawned yet.")))
           end
         end
       end
@@ -752,81 +739,81 @@ hi:AddToggle(g({27, 47, 46, 53, 17, 51, 54, 54, 24, 53, 41, 41, 63, 41, 14, 53, 
     end
   end)
 end})
-hj:AddToggle(g({27, 47, 46, 53, 17, 51, 54, 54, 24, 53, 41, 41, 63, 41, 27, 52, 62, 18, 53, 42, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 28, 59, 40, 55, 122, 24, 53, 41, 41, 63, 41, 122, 124, 122, 18, 53, 42}, 90), Tooltip = g({18, 47, 52, 46, 41, 122, 46, 59, 40, 61, 63, 46, 122, 56, 53, 41, 41, 63, 41, 118, 122, 46, 50, 63, 52, 122, 41, 63, 40, 44, 63, 40, 122, 50, 53, 42, 41, 122, 51, 60, 122, 59, 54, 54, 122, 59, 40, 63, 122, 62, 63, 59, 62, 116}, 90), Callback = function(ln)
-  ky = ln
+hc:AddToggle("AutoKillBossesAndHopToggle", {Text = "Auto Farm Bosses & Hop", Tooltip = "Hunts target bosses, then server hops if all are dead.", Callback = function(lg)
+  kr = lg
   task.spawn(function()
-    while (((1 + 1) == 2) and ky) do
-      local lo = false
-      local lp = {[g({29, 53, 54, 63, 55, 122, 24, 53, 41, 41}, 90)] = true, [g({23, 59, 52, 51, 59, 57, 122, 9, 45, 53, 40, 62, 122, 25, 47, 54, 46, 51, 44, 59, 46, 53, 40}, 90)] = true, [g({31, 55, 56, 63, 40, 122, 29, 53, 54, 63, 55}, 90)] = true}
-      for lq, lr in ipairs(n.bossData) do
-        if (((15 * 15) == 225) and not ky) then
+    while kr do
+      local lh = false
+      local li = {["Golem Boss"] = true, ["Maniac Sword Cultivator"] = true, ["Ember Golem"] = true}
+      for lj, lk in ipairs(g.bossData) do
+        if not kr then
           break
         end
-        local ls = s.Character
-        if (((100 % 7) == 2) and (ls and ls:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))) then
-          ls.HumanoidRootPart.CFrame = lr.CF
+        local ll = l.Character
+        if (ll and ll:FindFirstChild("HumanoidRootPart")) then
+          ll.HumanoidRootPart.CFrame = lk.CF
           task.wait(1.5)
-          if (((12 * 12) == 144) and not ky) then
+          if not kr then
             break
           end
-          local lt = nil
-          for lu, lv in ipairs(ab:GetChildren()) do
-            for lw, lx in ipairs(lv:GetChildren()) do
-              if (((3 ^ 2) == 9) and ((lx.Name == lr.Name) and lx:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))) then
-                local ly = lx:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-                if (((7 * 7) == 49) and (ly and (ly.Health > 0))) then
-                  lt = lx
+          local lm = nil
+          for ln, lo in ipairs(u:GetChildren()) do
+            for lp, lq in ipairs(lo:GetChildren()) do
+              if ((lq.Name == lk.Name) and lq:FindFirstChild("HumanoidRootPart")) then
+                local lr = lq:FindFirstChild("Humanoid")
+                if (lr and (lr.Health > 0)) then
+                  lm = lq
                   break
                 end
               end
             end
-            if (((1 + 1) == 2) and lt) then
+            if lm then
               break
             end
           end
-          if (((15 * 15) == 225) and lt) then
-            lo = true
-            local lz = lt:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-            print((g({9934, 65109, 122}, 90) .. (lr.Name .. g({122, 60, 53, 47, 52, 62, 123}, 90))))
-            while (((100 % 7) == 2) and (((lt.Parent and lz) and (lz.Health > 0)) and ky)) do
-              bt(lt, 4)
+          if lm then
+            lh = true
+            local ls = lm:FindFirstChild("Humanoid")
+            print(("⚔️ " .. (lk.Name .. " found!")))
+            while (((lm.Parent and ls) and (ls.Health > 0)) and kr) do
+              bm(lm, 4)
               task.wait(0.1)
             end
           else
-            print((g({55399, 56353, 122}, 90) .. (lr.Name .. g({122, 51, 41, 122, 62, 63, 59, 62, 122, 53, 40, 122, 55, 51, 41, 41, 51, 52, 61, 116}, 90))))
+            print(("👻 " .. (lk.Name .. " is dead or missing.")))
           end
         end
       end
-      if (((12 * 12) == 144) and (ky and not lo)) then
-        o:Notify(g({55399, 56670, 122, 27, 54, 54, 122, 46, 59, 40, 61, 63, 46, 122, 56, 53, 41, 41, 63, 41, 122, 62, 63, 59, 62, 117, 55, 51, 41, 41, 51, 52, 61, 116, 122, 9, 63, 40, 44, 63, 40, 122, 50, 53, 42, 42, 51, 52, 61, 116, 116, 116}, 90))
-        ct()
+      if (kr and not lh) then
+        h:Notify("🔄 All target bosses dead/missing. Server hopping...")
+        cm()
       end
       task.wait(2)
     end
   end)
 end})
-local ma = fb()
-local mb = {}
-local mf = hj:AddDropdown(g({23, 35, 28, 51, 54, 46, 63, 40, 63, 62, 30, 40, 53, 42, 62, 53, 45, 52}, 90), {Values = ma, Default = {}, Multi = true, Text = g({9, 63, 54, 63, 57, 46, 122, 19, 46, 63, 55, 41, 122, 46, 53, 122, 9, 63, 54, 54}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 55, 47, 54, 46, 51, 42, 54, 63, 122, 53, 45, 52, 63, 62, 122, 51, 46, 63, 55, 41, 122, 46, 53, 122, 41, 63, 54, 54, 122, 114, 13, 59, 40, 52, 96, 122, 14, 50, 51, 41, 122, 45, 51, 54, 54, 122, 41, 63, 54, 54, 122, 59, 54, 54, 122, 46, 50, 63, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 51, 46, 63, 55, 41, 122, 59, 46, 122, 55, 59, 34, 122, 43, 47, 59, 52, 46, 51, 46, 35, 115, 116}, 90), Searchable = true, Callback = function(mc)
-  mb = {}
-  for md, me in pairs(mc) do
-    if (((3 ^ 2) == 9) and me) then
-      table.insert(mb, md)
+local lt = eu()
+local lu = {}
+local ly = hc:AddDropdown("MyFilteredDropdown", {Values = lt, Default = {}, Multi = true, Text = "Select Items to Sell", Tooltip = "Select multiple owned items to sell (Warn: This will sell all the selected items at max quantity).", Searchable = true, Callback = function(lv)
+  lu = {}
+  for lw, lx in pairs(lv) do
+    if lx then
+      table.insert(lu, lw)
     end
   end
 end})
-local mg = false
-hj:AddToggle(g({27, 47, 46, 53, 9, 63, 54, 54, 9, 63, 54, 63, 57, 46, 63, 62, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 9, 63, 54, 54, 122, 9, 63, 54, 63, 57, 46, 63, 62}, 90), Tooltip = g({22, 53, 53, 42, 41, 122, 46, 50, 40, 53, 47, 61, 50, 122, 46, 50, 63, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 51, 46, 63, 55, 41, 122, 59, 52, 62, 122, 41, 63, 54, 54, 116}, 90), Default = false, Callback = function(mh)
-  mg = mh
-  if (((7 * 7) == 49) and mg) then
+local lz = false
+hc:AddToggle("AutoSellSelectedToggle", {Text = "Auto Sell Selected", Tooltip = "Loops through the selected items and sell.", Default = false, Callback = function(ma)
+  lz = ma
+  if lz then
     task.spawn(function()
-      while (((1 + 1) == 2) and mg) do
-        for mi, mj in ipairs(mb) do
-          if (((15 * 15) == 225) and not mg) then
+      while lz do
+        for mb, mc in ipairs(lu) do
+          if not lz then
             break
           end
-          local mk = cn(mj)
-          r.ByteNetReliable:FireServer(unpack(mk))
+          local md = cg(mc)
+          k.ByteNetReliable:FireServer(unpack(md))
           task.wait(0.25)
         end
         task.wait(1)
@@ -834,42 +821,42 @@ hj:AddToggle(g({27, 47, 46, 53, 9, 63, 54, 54, 9, 63, 54, 63, 57, 46, 63, 62, 14
     end)
   end
 end})
-local mm = hf:AddDropdown(g({18, 63, 40, 56, 14, 59, 40, 61, 63, 46, 9, 63, 54, 63, 57, 46}, 90), {Values = n.herbOptions, Default = 0, Multi = true, Text = g({9, 63, 54, 63, 57, 46, 122, 18, 63, 40, 56, 41, 122, 46, 53, 122, 18, 59, 40, 44, 63, 41, 46}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 53, 52, 63, 122, 53, 40, 122, 55, 53, 40, 63, 122, 50, 63, 40, 56, 41, 122, 46, 53, 122, 46, 59, 40, 61, 63, 46, 116}, 90), Callback = function(ml)
-  ap = ml
+local mf = gy:AddDropdown("HerbTargetSelect", {Values = g.herbOptions, Default = 0, Multi = true, Text = "Select Herbs to Harvest", Tooltip = "Select one or more herbs to target.", Callback = function(me)
+  ai = me
 end})
-hf:AddSlider(g({18, 59, 40, 44, 63, 41, 46, 122, 30, 63, 54, 59, 35}, 90), {Text = g({18, 59, 40, 44, 63, 41, 46, 122, 30, 63, 54, 59, 35, 122, 114, 41, 63, 57, 53, 52, 62, 41, 115}, 90), Min = 0.1, Max = 5, Default = 0.5, Rounding = 1, Tooltip = g({9, 63, 46, 122, 46, 50, 63, 122, 62, 63, 54, 59, 35, 122, 56, 63, 46, 45, 63, 63, 52, 122, 50, 59, 40, 44, 63, 41, 46, 51, 52, 61, 122, 50, 63, 40, 56, 41, 116}, 90), Callback = function(mn)
-  harvestDelay = mn
+gy:AddSlider("Harvest Delay", {Text = "Harvest Delay (seconds)", Min = 0.1, Max = 5, Default = 0.5, Rounding = 1, Tooltip = "Set the delay between harvesting herbs.", Callback = function(mg)
+  harvestDelay = mg
 end})
-local mo = false
-local mp = {}
-hf:AddToggle(g({27, 47, 46, 53, 18, 59, 40, 44, 63, 41, 46, 9, 42, 63, 57, 51, 60, 51, 57, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 18, 59, 40, 44, 63, 41, 46}, 90), Tooltip = g({14, 63, 54, 63, 42, 53, 40, 46, 41, 122, 46, 53, 122, 59, 52, 62, 122, 50, 59, 40, 44, 63, 41, 46, 41, 122, 21, 20, 22, 3, 122, 46, 50, 63, 122, 50, 63, 40, 56, 41, 122, 35, 53, 47, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 59, 56, 53, 44, 63, 116}, 90), Callback = function(mq)
-  mo = mq
+local mh = false
+local mi = {}
+gy:AddToggle("AutoHarvestSpecificToggle", {Text = "Auto Harvest", Tooltip = "Teleports to and harvests ONLY the herbs you selected above.", Callback = function(mj)
+  mh = mj
   task.spawn(function()
-    while (((100 % 7) == 2) and mo) do
+    while mh do
       task.wait(5)
-      mp = {}
+      mi = {}
     end
   end)
   task.spawn(function()
-    while (((12 * 12) == 144) and mo) do
-      local mr = false
-      for ms, mt in ipairs(ac:GetChildren()) do
-        if (((3 ^ 2) == 9) and not mo) then
+    while mh do
+      local mk = false
+      for ml, mm in ipairs(v:GetChildren()) do
+        if not mh then
           break
         end
-        if (((7 * 7) == 49) and ((mt:IsA(g({23, 63, 41, 50, 10, 59, 40, 46}, 90)) and not mp[mt]) and ap[mt.Name])) then
-          local mu = mt:FindFirstChildWhichIsA(g({10, 40, 53, 34, 51, 55, 51, 46, 35, 10, 40, 53, 55, 42, 46}, 90))
-          if (((1 + 1) == 2) and (mu and mu.Enabled)) then
-            mr = true
-            bb(mt)
+        if ((mm:IsA("MeshPart") and not mi[mm]) and ai[mm.Name]) then
+          local mn = mm:FindFirstChildWhichIsA("ProximityPrompt")
+          if (mn and mn.Enabled) then
+            mk = true
+            au(mm)
             task.wait(0.2)
-            fireproximityprompt(mu)
-            mp[mt] = true
+            fireproximityprompt(mn)
+            mi[mm] = true
             task.wait(harvestDelay)
           end
         end
       end
-      if (((15 * 15) == 225) and not mr) then
+      if not mk then
         task.wait(0.5)
       else
         task.wait()
@@ -877,44 +864,44 @@ hf:AddToggle(g({27, 47, 46, 53, 18, 59, 40, 44, 63, 41, 46, 9, 42, 63, 57, 51, 6
     end
   end)
 end})
-local mx = hg:AddDropdown(g({24, 53, 62, 35, 122, 0, 53, 52, 63}, 90), {Values = au, Default = 1, Multi = false, Text = g({9, 63, 54, 63, 57, 46, 122, 24, 53, 62, 35, 122, 0, 53, 52, 63}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 46, 50, 63, 122, 56, 53, 62, 35, 122, 32, 53, 52, 63, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 46, 40, 59, 51, 52, 122, 51, 52, 116}, 90), Callback = function(mv)
-  local mw = table.find(au, mv)
-  if (((100 % 7) == 2) and (mw and n.zoneCFrames[mw])) then
-    as = at[mv]
+local mq = gz:AddDropdown("Body Zone", {Values = an, Default = 1, Multi = false, Text = "Select Body Zone", Tooltip = "Select the body zone you want to train in.", Callback = function(mo)
+  local mp = table.find(an, mo)
+  if (mp and g.zoneCFrames[mp]) then
+    al = am[mo]
   end
 end})
-local my = 12
-local na = hg:AddSlider(g({18, 10, 122, 14, 50, 40, 63, 41, 50, 53, 54, 62}, 90), {Text = g({18, 10, 122, 14, 50, 40, 63, 41, 50, 53, 54, 62, 122, 127}, 90), Min = 1, Max = 100, Default = 12, Rounding = 0, Tooltip = g({9, 63, 46, 122, 46, 50, 63, 122, 18, 10, 122, 42, 63, 40, 57, 63, 52, 46, 59, 61, 63, 122, 46, 50, 40, 63, 41, 50, 53, 54, 62, 122, 46, 53, 122, 46, 40, 51, 61, 61, 63, 40, 122, 59, 122, 46, 63, 54, 63, 42, 53, 40, 46, 122, 59, 52, 62, 122, 40, 63, 46, 40, 59, 51, 52, 116}, 90), Callback = function(mz)
-  my = mz
+local mr = 12
+local mt = gz:AddSlider("HP Threshold", {Text = "HP Threshold %", Min = 1, Max = 100, Default = 12, Rounding = 0, Tooltip = "Set the HP percentage threshold to trigger a teleport and retrain.", Callback = function(ms)
+  mr = ms
 end})
-local nb = false
-hg:AddToggle(g({27, 47, 46, 53, 14, 40, 59, 51, 52, 14, 53, 61, 61, 54, 63}, 90), {Text = g({31, 52, 59, 56, 54, 63, 122, 27, 47, 46, 53, 122, 14, 40, 59, 51, 52}, 90), Tooltip = g({14, 63, 54, 63, 42, 53, 40, 46, 41, 122, 46, 53, 122, 32, 53, 52, 63, 118, 122, 46, 40, 51, 61, 61, 63, 40, 41, 122, 46, 40, 59, 51, 52, 51, 52, 61, 122, 53, 52, 57, 63, 118, 122, 46, 50, 63, 52, 122, 55, 59, 51, 52, 46, 59, 51, 52, 41, 122, 56, 53, 53, 41, 46, 122, 47, 52, 46, 51, 54, 122, 18, 10, 122, 51, 41, 122, 54, 53, 45, 116}, 90), Callback = function(nc)
-  nb = nc
+local mu = false
+gz:AddToggle("AutoTrainToggle", {Text = "Enable Auto Train", Tooltip = "Teleports to zone, triggers training once, then maintains boost until HP is low.", Callback = function(mv)
+  mu = mv
   task.spawn(function()
-    if (((12 * 12) == 144) and nb) then
-      bf(s.Character)
+    if mu then
+      ay(l.Character)
       task.wait(0.2)
-      local nd = {buffer.fromstring(g({76}, 90)), nil}
-      r.ByteNetReliable:FireServer(unpack(nd))
+      local mw = {buffer.fromstring("\22"), nil}
+      k.ByteNetReliable:FireServer(unpack(mw))
     end
-    while (((3 ^ 2) == 9) and nb) do
-      local ne = (s.Character or s.CharacterAdded:Wait())
-      local nf = ne:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-      if (((7 * 7) == 49) and (nf and (nf.Health > 0))) then
-        local ng = (((nf.Health / nf.MaxHealth)) * 100)
-        if (((1 + 1) == 2) and (ng < my)) then
-          nf.Health = 0
-          s.CharacterAdded:Wait()
+    while mu do
+      local mx = (l.Character or l.CharacterAdded:Wait())
+      local my = mx:FindFirstChild("Humanoid")
+      if (my and (my.Health > 0)) then
+        local mz = (((my.Health / my.MaxHealth)) * 100)
+        if (mz < mr) then
+          my.Health = 0
+          l.CharacterAdded:Wait()
           task.wait(2)
-          ne = s.Character
-          nf = ne:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-          bf(s.Character)
+          mx = l.Character
+          my = mx:FindFirstChild("Humanoid")
+          ay(l.Character)
           task.wait(0.2)
-          local nh = {buffer.fromstring(g({76}, 90)), nil}
-          r.ByteNetReliable:FireServer(unpack(nh))
+          local na = {buffer.fromstring("\22"), nil}
+          k.ByteNetReliable:FireServer(unpack(na))
         else
-          local ni = {buffer.fromstring(g({80, 82, 90, 14, 40, 59, 51, 52, 51, 52, 61}, 90))}
-          r.ByteNetReliable:FireServer(unpack(ni))
+          local nb = {buffer.fromstring("\n\b\0Training")}
+          k.ByteNetReliable:FireServer(unpack(nb))
           task.wait(0.5)
         end
       else
@@ -923,56 +910,56 @@ hg:AddToggle(g({27, 47, 46, 53, 14, 40, 59, 51, 52, 14, 53, 61, 61, 54, 63}, 90)
     end
   end)
 end})
-local nj = n.alchemyOptions[1]
-local nk = false
-local nm = hf:AddDropdown(g({27, 54, 57, 50, 63, 55, 35, 122, 10, 51, 54, 54}, 90), {Values = n.alchemyOptions, Default = nj, Multi = false, Text = g({9, 63, 54, 63, 57, 46, 122, 10, 51, 54, 54}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 46, 50, 63, 122, 42, 51, 54, 54, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 57, 40, 59, 60, 46, 116}, 90), Searchable = true, Callback = function(nl)
-  nj = nl
+local nc = g.alchemyOptions[1]
+local nd = false
+local nf = gy:AddDropdown("Alchemy Pill", {Values = g.alchemyOptions, Default = nc, Multi = false, Text = "Select Pill", Tooltip = "Select the pill you want to craft.", Searchable = true, Callback = function(ne)
+  nc = ne
 end})
-hf:AddToggle(g({27, 47, 46, 53, 27, 54, 57, 50, 63, 55, 35, 14, 53, 61, 61, 54, 63}, 90), {Text = g({31, 52, 59, 56, 54, 63, 122, 27, 47, 46, 53, 122, 27, 54, 57, 50, 63, 55, 35}, 90), Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 57, 40, 59, 60, 46, 41, 122, 46, 50, 63, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 42, 51, 54, 54, 122, 51, 60, 122, 35, 53, 47, 122, 50, 59, 44, 63, 122, 46, 50, 63, 122, 55, 59, 46, 63, 40, 51, 59, 54, 41, 116}, 90), Callback = function(nn)
-  nk = nn
+gy:AddToggle("AutoAlchemyToggle", {Text = "Enable Auto Alchemy", Tooltip = "Automatically crafts the selected pill if you have the materials.", Callback = function(ng)
+  nd = ng
   task.spawn(function()
-    while (((15 * 15) == 225) and nk) do
-      if (((100 % 7) == 2) and nj) then
-        local no = cq(nj)
-        print((g({55396, 56752, 122, 27, 46, 46, 63, 55, 42, 46, 51, 52, 61, 122, 46, 53, 122, 57, 40, 59, 60, 46, 96, 122}, 90) .. nj))
-        r.ByteNetReliable:FireServer(unpack(no))
+    while nd do
+      if nc then
+        local nh = cj(nc)
+        print(("🧪 Attempting to craft: " .. nc))
+        k.ByteNetReliable:FireServer(unpack(nh))
       end
       task.wait(1)
     end
   end)
 end})
-local np, nq = eh()
-local ns = hg:AddDropdown(g({11, 51, 122, 0, 53, 52, 63}, 90), {Values = np, Default = 1, Multi = false, Text = g({9, 63, 54, 63, 57, 46, 122, 11, 51, 122, 0, 53, 52, 63}, 90), Tooltip = g({9, 63, 54, 63, 57, 46, 122, 46, 50, 63, 122, 11, 51, 122, 32, 53, 52, 63, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 46, 53, 122, 46, 40, 59, 51, 52, 122, 51, 52, 116}, 90), Callback = function(nr)
-  if (((12 * 12) == 144) and nq[nr]) then
-    as = nq[nr]
+local ni, nj = ea()
+local nl = gz:AddDropdown("Qi Zone", {Values = ni, Default = 1, Multi = false, Text = "Select Qi Zone", Tooltip = "Select the Qi zone you want to train in.", Callback = function(nk)
+  if nj[nk] then
+    al = nj[nk]
   end
 end})
-local nt = false
-hg:AddToggle(g({27, 47, 46, 53, 25, 47, 54, 46, 51, 44, 59, 46, 63, 14, 53, 61, 61, 54, 63}, 90), {Text = g({31, 52, 59, 56, 54, 63, 122, 27, 47, 46, 53, 122, 25, 47, 54, 46, 51, 44, 59, 46, 63}, 90), Tooltip = g({14, 63, 54, 63, 42, 53, 40, 46, 41, 122, 46, 53, 122, 46, 50, 63, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 11, 51, 122, 0, 53, 52, 63, 122, 59, 52, 62, 122, 59, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 57, 47, 54, 46, 51, 44, 59, 46, 63, 41, 122, 45, 51, 46, 50, 122, 46, 59, 42, 122, 56, 53, 53, 41, 46, 41, 116}, 90), Callback = function(nu)
-  nt = nu
-  if (((3 ^ 2) == 9) and nt) then
+local nm = false
+gz:AddToggle("AutoCultivateToggle", {Text = "Enable Auto Cultivate", Tooltip = "Teleports to the selected Qi Zone and automatically cultivates with tap boosts.", Callback = function(nn)
+  nm = nn
+  if nm then
     task.spawn(function()
-      bf(s.Character)
+      ay(l.Character)
       task.wait(0.2)
-      local nv = {buffer.fromstring(g({92}, 90))}
-      r.ByteNetReliable:FireServer(unpack(nv))
-      while (((7 * 7) == 49) and nt) do
-        local nw = s.Character
-        if (((1 + 1) == 2) and nw) then
-          local nx = nw:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62}, 90))
-          if (((15 * 15) == 225) and (nx and (nx.Health > 0))) then
-            local ny = (((nx.Health / nx.MaxHealth)) * 100)
-            if (((100 % 7) == 2) and (ny < 12)) then
-              nx.Health = 0
-              s.CharacterAdded:Wait()
+      local no = {buffer.fromstring("\6")}
+      k.ByteNetReliable:FireServer(unpack(no))
+      while nm do
+        local np = l.Character
+        if np then
+          local nq = np:FindFirstChild("Humanoid")
+          if (nq and (nq.Health > 0)) then
+            local nr = (((nq.Health / nq.MaxHealth)) * 100)
+            if (nr < 12) then
+              nq.Health = 0
+              l.CharacterAdded:Wait()
               task.wait(1)
-              bf(s.Character)
+              ay(l.Character)
               task.wait(0.2)
-              local nz = {buffer.fromstring(g({92}, 90))}
-              r.ByteNetReliable:FireServer(unpack(nz))
+              local ns = {buffer.fromstring("\6")}
+              k.ByteNetReliable:FireServer(unpack(ns))
             else
-              local oa = {buffer.fromstring(g({80, 81, 90, 25, 47, 54, 46, 51, 44, 59, 46, 51, 52, 61}, 90))}
-              r.ByteNetReliable:FireServer(unpack(oa))
+              local nt = {buffer.fromstring("\n\v\0Cultivating")}
+              k.ByteNetReliable:FireServer(unpack(nt))
               task.wait(0.5)
             end
           else
@@ -984,37 +971,37 @@ hg:AddToggle(g({27, 47, 46, 53, 25, 47, 54, 46, 51, 44, 59, 46, 63, 14, 53, 61, 
       end
     end)
   else
-    local ob = {buffer.fromstring(g({92}, 90))}
-    r.ByteNetReliable:FireServer(unpack(ob))
+    local nu = {buffer.fromstring("\6")}
+    k.ByteNetReliable:FireServer(unpack(nu))
   end
 end})
-local oc = 100
-hg:AddSlider(g({24, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50, 25, 50, 59, 52, 57, 63, 9, 54, 51, 62, 63, 40}, 90), {Text = g({24, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50, 122, 25, 50, 59, 52, 57, 63, 122, 127}, 90), Min = 1, Max = 100, Default = 70, Rounding = 0, Tooltip = g({9, 63, 46, 122, 46, 50, 63, 122, 55, 51, 52, 51, 55, 47, 55, 122, 41, 47, 57, 57, 63, 41, 41, 122, 40, 59, 46, 63, 122, 35, 53, 47, 122, 45, 59, 52, 46, 122, 56, 63, 60, 53, 40, 63, 122, 59, 46, 46, 63, 55, 42, 46, 51, 52, 61, 122, 46, 53, 122, 56, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50, 116}, 90), Callback = function(od)
-  oc = od
+local nv = 100
+gz:AddSlider("BreakthroughChanceSlider", {Text = "Breakthrough Chance %", Min = 1, Max = 100, Default = 70, Rounding = 0, Tooltip = "Set the minimum success rate you want before attempting to breakthrough.", Callback = function(nw)
+  nv = nw
 end})
-local oe = false
-hg:AddToggle(g({27, 47, 46, 53, 24, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50, 14, 53, 61, 61, 54, 63}, 90), {Text = g({31, 52, 59, 56, 54, 63, 122, 27, 47, 46, 53, 122, 24, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50}, 90), Tooltip = g({14, 40, 51, 61, 61, 63, 40, 41, 122, 11, 51, 122, 59, 52, 62, 122, 24, 53, 62, 35, 122, 56, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50, 41, 122, 56, 59, 41, 63, 62, 122, 53, 52, 122, 35, 53, 47, 40, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 57, 50, 59, 52, 57, 63, 116}, 90), Callback = function(of)
-  oe = of
+local nx = false
+gz:AddToggle("AutoBreakthroughToggle", {Text = "Enable Auto Breakthrough", Tooltip = "Triggers Qi and Body breakthroughs based on your selected chance.", Callback = function(ny)
+  nx = ny
   task.spawn(function()
-    while (((12 * 12) == 144) and oe) do
-      local og = dm()
-      if (((3 ^ 2) == 9) and og) then
-        if (((7 * 7) == 49) and (og.Qi and og.Realm)) then
-          local oh = eq(og.Realm)
-          local oi = math.floor((oh * ((oc / 100))))
-          if (((1 + 1) == 2) and (og.Qi >= oi)) then
-            local oj = {buffer.fromstring(g({94, 90}, 90))}
-            r.ByteNetReliable:FireServer(unpack(oj))
+    while nx do
+      local nz = df()
+      if nz then
+        if (nz.Qi and nz.Realm) then
+          local oa = ej(nz.Realm)
+          local ob = math.floor((oa * ((nv / 100))))
+          if (nz.Qi >= ob) then
+            local oc = {buffer.fromstring("\4\0")}
+            k.ByteNetReliable:FireServer(unpack(oc))
             task.wait(2.5)
           end
         end
-        local ok = (og.Blood or og.Health)
-        if (((15 * 15) == 225) and (ok and og.Body)) then
-          local ol = ev(og.Body)
-          local om = math.floor((ol * ((oc / 100))))
-          if (((100 % 7) == 2) and (ok >= om)) then
-            local on = {buffer.fromstring(g({84, 90}, 90))}
-            r.ByteNetReliable:FireServer(unpack(on))
+        local od = (nz.Blood or nz.Health)
+        if (od and nz.Body) then
+          local oe = eo(nz.Body)
+          local of = math.floor((oe * ((nv / 100))))
+          if (od >= of) then
+            local og = {buffer.fromstring("\14\0")}
+            k.ByteNetReliable:FireServer(unpack(og))
             task.wait(2.5)
           end
         end
@@ -1023,27 +1010,27 @@ hg:AddToggle(g({27, 47, 46, 53, 24, 40, 63, 59, 49, 46, 50, 40, 53, 47, 61, 50, 
     end
   end)
 end})
-local oo = {60, 300, 600, 900, 1200, 1800, 3600, 5400, 7200}
-for op, oq in ipairs(oo) do
-  hk:AddDropdown((g({10, 54, 59, 35, 46, 51, 55, 63, 14, 51, 63, 40, 5}, 90) .. oq), {Text = (oq .. g({122, 9, 63, 57, 53, 52, 62, 41}, 90)), Values = n.playtimeRewards[oq], Default = n.selectedRewards[oq], Multi = false, Callback = function(os)
-    n.selectedRewards[oq] = os
+local oh = {60, 300, 600, 900, 1200, 1800, 3600, 5400, 7200}
+for oi, oj in ipairs(oh) do
+  hd:AddDropdown(("PlaytimeTier_" .. oj), {Text = (oj .. " Seconds"), Values = g.playtimeRewards[oj], Default = g.selectedRewards[oj], Multi = false, Callback = function(ok)
+    g.selectedRewards[oj] = ok
   end})
 end
-local ot = false
-hk:AddToggle(g({27, 47, 46, 53, 10, 54, 59, 35, 46, 51, 55, 63, 8, 63, 45, 59, 40, 62, 41, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 25, 54, 59, 51, 55, 122, 8, 63, 45, 59, 40, 62, 41}, 90), Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 57, 54, 59, 51, 55, 41, 122, 35, 53, 47, 40, 122, 41, 63, 54, 63, 57, 46, 63, 62, 122, 42, 54, 59, 35, 46, 51, 55, 63, 122, 40, 63, 45, 59, 40, 62, 41, 116}, 90), Default = false, Callback = function(ou)
-  ot = ou
-  if (((12 * 12) == 144) and ot) then
-    o:Notify(g({55398, 57307, 122, 27, 47, 46, 53, 122, 25, 54, 59, 51, 55, 122, 10, 54, 59, 35, 46, 51, 55, 63, 122, 8, 63, 45, 59, 40, 62, 41, 122, 31, 52, 59, 56, 54, 63, 62, 123}, 90))
+local ol = false
+hd:AddToggle("AutoPlaytimeRewardsToggle", {Text = "Auto Claim Rewards", Tooltip = "Automatically claims your selected playtime rewards.", Default = false, Callback = function(om)
+  ol = om
+  if ol then
+    h:Notify("🎁 Auto Claim Playtime Rewards Enabled!")
     task.spawn(function()
-      while (((3 ^ 2) == 9) and ot) do
-        for ov, ow in ipairs(oo) do
-          if (((7 * 7) == 49) and not ot) then
+      while ol do
+        for on, oo in ipairs(oh) do
+          if not ol then
             break
           end
-          local ox = n.selectedRewards[ow]
-          local oy = fj(ow, ox)
+          local op = g.selectedRewards[oo]
+          local oq = fc(oo, op)
           pcall(function()
-            r.ByteNetReliable:FireServer(unpack(oy))
+            k.ByteNetReliable:FireServer(unpack(oq))
           end)
           task.wait(0.5)
         end
@@ -1051,23 +1038,23 @@ hk:AddToggle(g({27, 47, 46, 53, 10, 54, 59, 35, 46, 51, 55, 63, 8, 63, 45, 59, 4
       end
     end)
   else
-    o:Notify(g({55399, 56971, 122, 27, 47, 46, 53, 122, 25, 54, 59, 51, 55, 122, 10, 54, 59, 35, 46, 51, 55, 63, 122, 8, 63, 45, 59, 40, 62, 41, 122, 30, 51, 41, 59, 56, 54, 63, 62, 123}, 90))
+    h:Notify("🛑 Auto Claim Playtime Rewards Disabled!")
   end
 end})
-local oz = false
-hk:AddToggle(g({27, 47, 46, 53, 31, 44, 63, 52, 46, 10, 54, 59, 35, 46, 51, 55, 63, 8, 63, 45, 59, 40, 62, 41, 14, 53, 61, 61, 54, 63}, 90), {Text = g({27, 47, 46, 53, 122, 25, 54, 59, 51, 55, 122, 31, 44, 63, 52, 46, 122, 10, 54, 59, 35, 46, 51, 55, 63}, 90), Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 57, 54, 59, 51, 55, 41, 122, 46, 50, 63, 122, 41, 42, 63, 57, 51, 59, 54, 122, 31, 44, 63, 52, 46, 122, 42, 54, 59, 35, 46, 51, 55, 63, 122, 40, 63, 45, 59, 40, 62, 41, 116}, 90), Default = false, Callback = function(pa)
-  oz = pa
-  if (((1 + 1) == 2) and oz) then
-    o:Notify(g({55398, 57308, 122, 27, 47, 46, 53, 122, 25, 54, 59, 51, 55, 122, 31, 44, 63, 52, 46, 122, 10, 54, 59, 35, 46, 51, 55, 63, 122, 31, 52, 59, 56, 54, 63, 62, 123}, 90))
+local os = false
+hd:AddToggle("AutoEventPlaytimeRewardsToggle", {Text = "Auto Claim Event Playtime", Tooltip = "Automatically claims the special Event playtime rewards.", Default = false, Callback = function(ot)
+  os = ot
+  if os then
+    h:Notify("🎆 Auto Claim Event Playtime Enabled!")
     task.spawn(function()
-      while (((15 * 15) == 225) and oz) do
-        for pb, pc in ipairs(fo) do
-          if (((100 % 7) == 2) and not oz) then
+      while os do
+        for ou, ov in ipairs(fh) do
+          if not os then
             break
           end
-          local pd = fp(pc)
+          local ow = fi(ov)
           pcall(function()
-            r.ByteNetReliable:FireServer(unpack(pd))
+            k.ByteNetReliable:FireServer(unpack(ow))
           end)
           task.wait(0.5)
         end
@@ -1075,43 +1062,43 @@ hk:AddToggle(g({27, 47, 46, 53, 31, 44, 63, 52, 46, 10, 54, 59, 35, 46, 51, 55, 
       end
     end)
   else
-    o:Notify(g({55399, 56971, 122, 27, 47, 46, 53, 122, 25, 54, 59, 51, 55, 122, 31, 44, 63, 52, 46, 122, 10, 54, 59, 35, 46, 51, 55, 63, 122, 30, 51, 41, 59, 56, 54, 63, 62, 123}, 90))
+    h:Notify("🛑 Auto Claim Event Playtime Disabled!")
   end
 end})
-hj:AddButton({Text = g({25, 53, 42, 35, 122, 25, 47, 40, 40, 63, 52, 46, 122, 22, 53, 57, 59, 46, 51, 53, 52}, 90), DoubleClick = false, Tooltip = g({25, 53, 42, 51, 63, 41, 122, 35, 53, 47, 40, 122, 63, 34, 59, 57, 46, 122, 57, 50, 59, 40, 59, 57, 46, 63, 40, 122, 25, 28, 40, 59, 55, 63, 122, 46, 53, 122, 35, 53, 47, 40, 122, 57, 54, 51, 42, 56, 53, 59, 40, 62, 116}, 90), Func = function()
-  local pe = s.Character
-  local pf = (pe and pe:FindFirstChild(g({18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46}, 90)))
-  if (((12 * 12) == 144) and pf) then
-    local pg = string.format(g({25, 28, 40, 59, 55, 63, 116, 52, 63, 45, 114, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 118, 122, 127, 60, 115}, 90), pf.CFrame:GetComponents())
-    if (((3 ^ 2) == 9) and setclipboard) then
-      setclipboard(pg)
-      o:Notify(g({55399, 56465, 122, 22, 53, 57, 59, 46, 51, 53, 52, 122, 57, 53, 42, 51, 63, 62, 122, 46, 53, 122, 57, 54, 51, 42, 56, 53, 59, 40, 62, 123}, 90))
+hc:AddButton({Text = "Copy Current Location", DoubleClick = false, Tooltip = "Copies your exact character CFrame to your clipboard.", Func = function()
+  local ox = l.Character
+  local oy = (ox and ox:FindFirstChild("HumanoidRootPart"))
+  if oy then
+    local oz = string.format("CFrame.new(%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f)", oy.CFrame:GetComponents())
+    if setclipboard then
+      setclipboard(oz)
+      h:Notify("📋 Location copied to clipboard!")
     else
-      print((g({3, 53, 47, 40, 122, 54, 53, 57, 59, 46, 51, 53, 52, 122, 60, 53, 40, 55, 59, 46, 122, 60, 53, 40, 122, 41, 57, 40, 51, 42, 46, 96, 122}, 90) .. pg))
-      o:Notify(g({9978, 65109, 122, 31, 34, 63, 57, 47, 46, 53, 40, 122, 62, 53, 63, 41, 52, 125, 46, 122, 41, 47, 42, 42, 53, 40, 46, 122, 57, 54, 51, 42, 56, 53, 59, 40, 62, 116, 122, 42, 40, 51, 52, 46, 63, 62, 122, 46, 53, 122, 28, 99, 122, 54, 53, 61, 116}, 90))
+      print(("Your location format for script: " .. oz))
+      h:Notify("⚠️ Executor doesn't support clipboard. printed to F9 log.")
     end
   else
-    o:Notify(g({10006, 122, 18, 47, 55, 59, 52, 53, 51, 62, 8, 53, 53, 46, 10, 59, 40, 46, 122, 52, 53, 46, 122, 60, 53, 47, 52, 62, 123}, 90))
+    h:Notify("❌ HumanoidRootPart not found!")
   end
 end})
-hj:AddButton({Text = g({8, 63, 62, 63, 63, 55, 122, 27, 54, 54, 122, 25, 53, 62, 63, 41}, 90), DoubleClick = true, Tooltip = g({27, 47, 46, 53, 55, 59, 46, 51, 57, 59, 54, 54, 35, 122, 41, 63, 52, 62, 41, 122, 42, 59, 57, 49, 63, 46, 41, 122, 60, 53, 40, 122, 63, 44, 63, 40, 35, 122, 49, 52, 53, 45, 52, 122, 57, 53, 62, 63, 122, 46, 53, 122, 57, 54, 59, 51, 55, 122, 40, 63, 45, 59, 40, 62, 41, 116}, 90), Func = function()
+hc:AddButton({Text = "Redeem All Codes", DoubleClick = true, Tooltip = "Automatically sends packets for every known code to claim rewards.", Func = function()
   task.spawn(function()
-    o:Notify(g({55398, 57307, 122, 8, 63, 62, 63, 63, 55, 51, 52, 61, 122, 57, 53, 62, 63, 41, 116, 116, 116, 122, 25, 50, 63, 57, 49, 122, 46, 53, 42, 122, 54, 63, 60, 46, 123}, 90))
-    for ph, pi in ipairs(n.gameCodes) do
-      local pj = fg(pi)
+    h:Notify("🎁 Redeeming codes... Check top left!")
+    for pa, pb in ipairs(g.gameCodes) do
+      local pc = ez(pb)
       pcall(function()
-        r.ByteNetReliable:FireServer(unpack(pj))
+        k.ByteNetReliable:FireServer(unpack(pc))
       end)
       task.wait(2)
     end
-    o:Notify(g({10079, 122, 28, 51, 52, 51, 41, 50, 63, 62, 122, 40, 63, 62, 63, 63, 55, 51, 52, 61, 122, 59, 54, 54, 122, 57, 53, 62, 63, 41, 123}, 90))
+    h:Notify("✅ Finished redeeming all codes!")
   end)
 end})
-q:SetLibrary(o)
-p:SetLibrary(o)
-p:SetIgnoreIndexes({g({23, 63, 52, 47, 17, 63, 35, 56, 51, 52, 62}, 90)})
-q:SetFolder(g({3, 18, 47, 56}, 90))
-p:SetFolder(g({3, 18, 47, 56, 117, 25, 47, 54, 46, 51, 44, 59, 46, 51, 53, 52, 30, 59, 53, 21, 52, 54, 51, 52, 63, 12, 104}, 90))
-q:ApplyToTab(hd)
-p:BuildConfigSection(hd)
-p:LoadAutoloadConfig()
+j:SetLibrary(h)
+i:SetLibrary(h)
+i:SetIgnoreIndexes({"MenuKeybind"})
+j:SetFolder("YHub")
+i:SetFolder("YHub/CultivationDaoOnlineV2")
+j:ApplyToTab(gw)
+i:BuildConfigSection(gw)
+i:LoadAutoloadConfig()
